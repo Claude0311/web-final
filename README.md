@@ -13,5 +13,5 @@ $ yarn start
 
 ### server
 ```
-$yarn server
+$ yarn server
 ```
