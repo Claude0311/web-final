@@ -24,18 +24,18 @@ $ yarn server
   * [其他界圖](https://sheethub.com/search?q=%E7%95%8C%E5%9C%96)
 * 之前有看過街道劃分的geojson可是現在找不到
 ### 房屋價格
-* [591(老媽推薦)](https://market.591.com.tw/)
- * 不要
+* [591](https://market.591.com.tw/)
+  * 不要，沒filter好爛
 * [內政部](https://lvr.land.moi.gov.tw/login.action#)
- * 有excel
+  * 有excel
 * [永慶](https://evertrust.yungching.com.tw/map?kw=&lat=25.0083253&lng=121.5170166&d=6&t=2&a=&c=)
- * 車位調整
- * 大樓名稱
- * 有excel
+  * 車位調整
+  * 大樓名稱
+  * 有excel
 * 條件(重要->不重要)，常態分布圖
- * (至少)5筆資料去頭尾
- * 屋型型態
- * 500m
- * 半年內
- * 樓層(3層樓+$5000/坪
+  * (至少)5筆資料去頭尾
+  * 屋型型態
+  * 500m
+  * 半年內
+  * 樓層(3層樓+$5000/坪
 
