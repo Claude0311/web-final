@@ -1,5 +1,5 @@
-# web programmin final project
-## House valuation
+# web programmin final project - House valuation
+## How to run our code
 
 ### init
 ```
