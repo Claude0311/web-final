@@ -17,10 +17,12 @@ app.use((_, res, next) => {
 })
 
 app.get('/', (_,res) => {
-    res.send('Hello world')
+	res.send('hello world')
 })
 
-app.listen(process.env.PORT || 4000, function () {
+app.listen(process.env.PORT || 4000,  () => {
+	require('./util/crawler')(true)
 	console.log('server connect')
 	console.log(`port name: ${process.env.PORT || 4000}`)
 })
+
