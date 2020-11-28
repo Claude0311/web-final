@@ -15,6 +15,33 @@ $ yarn start
 ```
 $ yarn server
 ```
+## backend
+### DB
+* House:
+```javascript
+{
+  id,//unique id from website
+  buildingType,//公寓(無電梯),大樓(有電梯10樓以下),華夏(有電梯11樓以上)
+  coordinate:{lat,lng},//緯度、經度
+  unitPrice,//每坪的價格
+  //detail, //house_detail's _id
+}
+```
+* House_detail:
+```javascript
+{
+  soldTime,//number like 10911 means 109年11月
+  address,//ex:'永和區竹林路1~30號'
+  price: {totalPrice, parkingPrice},
+  space: {totalSpace, parkingSpace},
+  floor: {floor, maxFloor},
+  age, //屋齡，年
+  parkingSpace//true/false
+}
+```
+
+### api
+* /getHouse
 
 ## ref
 ### geoJson
