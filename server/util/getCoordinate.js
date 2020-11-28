@@ -34,6 +34,6 @@ const getCor = async (address)=>{
     // console.log(middleAdd(address))
 }
 
-getCor('永和區雙和街7巷1~30號')
+// getCor('永和區雙和街7巷1~30號')
 
 module.exports = getCor

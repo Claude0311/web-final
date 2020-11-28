@@ -15,14 +15,7 @@ DB.once('open',()=>{
 	//post, get時的解碼json type
 	app.use(bodyParser.urlencoded({ extended: true }))
 	app.use(bodyParser.json())
-	app.use((_, res, next) => {
-		res.header('Access-Control-Allow-Origin', '*')
-		res.header(
-			'Access-Control-Allow-Headers',
-			'Origin, X-Requested-With, Content-Type, Accept'
-		)
-		next()
-	})
+	
 	app.use(require('./api/api'))
 	
 	app.get('/', (_,res) => {
