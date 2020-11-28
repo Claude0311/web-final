@@ -1,7 +1,8 @@
 const House = require('../../model/House')
 const House_detail = require('../../model/House_detail')
+const asyncHandler = require('express-async-handler')
 
-module.exports = async (req,res,next) => {
+const getNear = async (req,res,next) => {
     let {lat,lng} = req.body
     lat = parseFloat(lat)
     lng = parseFloat(lng)
@@ -13,3 +14,5 @@ module.exports = async (req,res,next) => {
     console.log(nears.length)
     res.send(nears)
 }
+
+module.exports = asyncHandler(getNear)
