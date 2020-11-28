@@ -2,18 +2,14 @@ const mongoose = require('mongoose'),
   Schema = mongoose.Schema
 
 const House = new Schema({
-    soldTime: String,
+    id: {type:String,unique:true},
     buildingType: String,
-    unitPrice: Number,
-    floor: {
-        floor: Number,
-        maxFloor: Number
+    coordinate: {
+        lat:Number,
+        lng:Number
     },
-    age: String,
-    parkingSpace: {
-        type:Boolean,
-        default:true
-    }
+    unitPrice: Number,
+    detail:  { type: Schema.Types.ObjectId, ref: 'House_detail' },
 })
 
 module.exports = mongoose.model('House', House)
