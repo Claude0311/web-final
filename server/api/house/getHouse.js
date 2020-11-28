@@ -4,7 +4,7 @@ const { ErrorHandler } = require('../error')
 const asyncHandler = require('express-async-handler')
 
 module.exports = asyncHandler(async (req,res,next) => {
-    const {id} = req.query.hi
+    const {id} = req.query
     console.log(id)
     const house = await House
         .findOne({id})
