@@ -41,7 +41,7 @@ $ yarn server
 ```
 
 ### api
-* 請見/server/api.md
+* 請見[/server/readme.md](https://github.com/Claude0311/web-final/tree/main/server)
 
 
 
