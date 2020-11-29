@@ -41,7 +41,17 @@ $ yarn server
 ```
 
 ### api
-* /getHouse
+* /getHouses
+
+獲取房屋的基本資訊，用來迅速呈現在地圖上
+
+GET http://localhost:4000/getHouses
+
+**參數**(無)
+|key|type|description|
+|---|---|---|
+
+
 
 ## ref
 ### geoJson
