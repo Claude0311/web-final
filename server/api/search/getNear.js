@@ -11,12 +11,11 @@ const { ErrorHandler } = require('../error')
  * @apiparam {Number} lat 緯度
  * @apiparam {Number} lng 經度
  * @apiparam {Number} buildingType 
- *  -公寓
- *  -電梯大樓
- *  -華夏
- * @apiparam {Number} buildingType 
- * @apiparam {Number} floor(optional) 
- * @apiparam {Number} age(optional) 
+ *  - 公寓
+ *  - 電梯大樓
+ *  - 華夏
+ * @apiparam {Number} floor 樓層(optional) 
+ * @apiparam {Number} age 屋齡(optional) 
  * 
  * @apiSuccess {Array} similar array of house that similar to the selected house
  * @apiSuccess {Number} avgPrice suggested price of the selected house

@@ -6,6 +6,8 @@
  - [House](#House)
    - [getHouse](#getHouse)
    - [getHouses](#getHouses)
+ - [Near](#Near)
+   - [getNear](#getNear)
 
 ___
 
@@ -67,6 +69,43 @@ GET /getHouses
 | Name     | Type       | Description                           |
 |----------|------------|---------------------------------------|
 | houses | `Array` | <p>array of House</p> |
+
+### Error response
+
+#### Error response - `Server error 500`
+
+| Name     | Type       | Description                           |
+|----------|------------|---------------------------------------|
+| statusCode | `Number` | <p>500</p> |
+| msg | `String` | <p>資料庫發生錯誤</p> |
+
+# <a name='Near'></a> Near
+
+## <a name='getNear'></a> getNear
+[Back to top](#top)
+
+```
+POST /getNear
+```
+
+### Parameters - `Parameter`
+
+| Name     | Type       | Description                           |
+|----------|------------|---------------------------------------|
+| lat | `Number` | <p>緯度</p> |
+| lng | `Number` | <p>經度</p> |
+| buildingType | `Number` | <ul> <li>公寓</li> <li>電梯大樓</li> <li>華夏</li> </ul> |
+| floor | `Number` | <p>樓層(optional)</p> |
+| age | `Number` | <p>屋齡(optional)</p> |
+
+### Success response
+
+#### Success response - `Success 200`
+
+| Name     | Type       | Description                           |
+|----------|------------|---------------------------------------|
+| similar | `Array` | <p>array of house that similar to the selected house</p> |
+| avgPrice | `Number` | <p>suggested price of the selected house</p> |
 
 ### Error response
 
