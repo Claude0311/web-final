@@ -41,7 +41,7 @@ $ yarn server
 ```
 
 ### api
-* 請見/server/api.md
+* 請見[/server/readme.md](https://github.com/Claude0311/web-final/tree/main/server)
 
 
 
@@ -68,7 +68,9 @@ $ yarn server
 * 條件：重要->不重要
   * (至少)5筆資料
   * 屋型型態
-  * 500m
+  * 1km內
+  * 2年內
+  * 500m內
   * 半年內
   * 屋齡
   * 樓層(3層樓+$5000/坪
