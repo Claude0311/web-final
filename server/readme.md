@@ -4,15 +4,15 @@
 房屋估價系統api文件
 
  - [House](#House)
-   - [獲取房屋詳細資訊](#獲取房屋詳細資訊)
-   - [獲取所有House基本資訊](#獲取所有House基本資訊)
+   - [getHouse](#getHouse)
+   - [getHouses](#getHouses)
 
 ___
 
 
 # <a name='House'></a> House
 
-## <a name='獲取房屋詳細資訊'></a> 獲取房屋詳細資訊
+## <a name='getHouse'></a> getHouse
 [Back to top](#top)
 
 ```
@@ -30,17 +30,8 @@ GET /getHouse
 | coordinate | `Object` | <p>{lat,lng} 緯度、精度</p> |
 | unitPrice | `Number` | <p>每坪房價</p> |
 | detail | `Object` | <p>house_detail</p> |
-| detail.soldTime | `Number` | <p>販賣時間 ex. 10911</p> |
-| detail.address | `String` | <p>地址</p> |
-| detail.price | `Object` | <p>販賣價格 {totalPrice:Number, parkingPrice:Number}</p> |
-| detail.space | `Object` | <p>坪數 {totalSpace:Number, parkingSpace:Number}</p> |
-| detail.floor | `Object` |  |
-| detail.floor.floor | `Number` | <p>樓層</p> |
-| detail.floor.maxFloor | `Number` | <p>最高樓層</p> |
-| detail.age | `Number` | <p>屋齡(年)</p> |
-| detail.hasParking | `Boolean` | <p>有無停車位</p> |
 
-## <a name='獲取所有House基本資訊'></a> 獲取所有House基本資訊
+## <a name='getHouses'></a> getHouses
 [Back to top](#top)
 
 ```

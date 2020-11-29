@@ -3,7 +3,7 @@ const { ErrorHandler } = require('../error')
 const asyncHandler = require('express-async-handler')
 
 /**
- * @api {get} /getHouses 獲取所有House基本資訊
+ * @api {get} /getHouses getHouses
  * @apiName GetHouses
  * @apiGroup House
  *
