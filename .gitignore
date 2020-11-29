@@ -26,3 +26,4 @@ yarn-error.log*
 template.html
 /server/htmlfile
 test.js
+/server/apidoc-out

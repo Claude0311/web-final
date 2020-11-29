@@ -13,15 +13,6 @@ const asyncHandler = require('express-async-handler')
  * @apiSuccess {Object} coordinate {lat,lng} 緯度、精度
  * @apiSuccess {Number} unitPrice 每坪房價
  * @apiSuccess {Object} detail house_detail
- * @apiSuccess {Number} detail.soldTime 販賣時間 ex. 10911
- * @apiSuccess {String} detail.address 地址
- * @apiSuccess {Object} detail.price 販賣價格 {totalPrice:Number, parkingPrice:Number}
- * @apiSuccess {Object} detail.space 坪數 {totalSpace:Number, parkingSpace:Number}
- * @apiSuccess {Object} detail.floor
- * @apiSuccess {Number} detail.floor.floor 樓層
- * @apiSuccess {Number} detail.floor.maxFloor 最高樓層
- * @apiSuccess {Number} detail.age 屋齡(年)
- * @apiSuccess {Boolean} detail.hasParking 有無停車位
  * 
  */
 const getHouse = async (req,res,next) => {
