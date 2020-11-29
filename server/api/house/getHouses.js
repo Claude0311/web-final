@@ -2,6 +2,13 @@ const House = require('../../model/House')
 const { ErrorHandler } = require('../error')
 const asyncHandler = require('express-async-handler')
 
+/**
+ * @api {get} /getHouses 獲取所有House基本資訊
+ * @apiName GetHouses
+ * @apiGroup House
+ *
+ * @apiSuccess {Array} houses array of Houses
+ */
 const getHouses = async (req,res,next) => {
     const houses = await House
         .find({},{_id:0,id:1,buildingType:1,coordinate:1,unitPrice:1})

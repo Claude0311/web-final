@@ -17,9 +17,9 @@ const House_detail = new Schema({
         maxFloor: Number
     },
     age: Number,
-    parkingSpace: {
+    hasParking: {
         type:Boolean,
-        default:true
+        default:false
     }
 })
 
