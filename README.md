@@ -41,7 +41,9 @@ $ yarn server
 ```
 
 ### api
-* /getHouse
+* 請見/server/api.md
+
+
 
 ## ref
 ### geoJson
