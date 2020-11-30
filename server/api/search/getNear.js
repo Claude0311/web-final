@@ -4,9 +4,9 @@ const asyncHandler = require('express-async-handler')
 const { ErrorHandler } = require('../error')
 
 /**
- * @api {post} /getNear getNear
- * @apiName GetNear
- * @apiGroup Near
+ * @api {post} /askPrice askPrice
+ * @apiName AskPrice
+ * @apiGroup Valuate
  * @apiDescription 給定座標和房屋資訊，提供附近相似房子以及預估價錢
  *
  * @apiHeader {String} content-type

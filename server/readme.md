@@ -6,8 +6,8 @@
  - [House](#markdown-header-house)
    - [getHouse](#markdown-header-gethouse)
    - [getHouses](#markdown-header-gethouses)
- - [Near](#markdown-header-near)
-   - [getNear](#markdown-header-getnear)
+ - [Valuate](#markdown-header-valuate)
+   - [askPrice](#markdown-header-askprice)
 
 ___
 
@@ -89,15 +89,15 @@ GET /getHouses
 | statusCode | `Number` | 500 |
 | msg | `String` | 資料庫發生錯誤 |
 
-# Near
+# Valuate
 
-## getNear
+## askPrice
 [Back to top](#top)
 
 給定座標和房屋資訊，提供附近相似房子以及預估價錢
 
 ```
-POST /getNear
+POST /askPrice
 ```
 
 ### Headers - `Header`
