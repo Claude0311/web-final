@@ -28,3 +28,4 @@ template.html
 test.js
 /server/apidoc-out
 debug.log
+/server/docTemplate
