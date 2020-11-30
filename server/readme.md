@@ -34,7 +34,7 @@ GET /getHouse?id=
 | Name     | Type       | Description                           |
 |----------|------------|---------------------------------------|
 | id | `String` | ID from永慶網站 |
-| buildingType | `String` | <ul> <li>公寓(無電梯)</li> <li>大樓(10樓以下有電梯)</li> <li>華夏(11樓以上有電梯)</li> </ul> |
+| buildingType | `String` |  <li>公寓(無電梯)</li> <li>大樓(10樓以下有電梯)</li> <li>華夏(11樓以上有電梯)</li>  |
 | coordinate | `Object` | {lat,lng} 緯度、精度 |
 | unitPrice | `Number` | 每坪房價 |
 | detail | `Object` | house_detail |
@@ -94,7 +94,7 @@ POST /getNear
 |----------|------------|---------------------------------------|
 | lat | `Number` | 緯度 |
 | lng | `Number` | 經度 |
-| buildingType | `Number` | <ul> <li>公寓</li> <li>電梯大樓</li> <li>華夏</li> </ul> |
+| buildingType | `Number` | <li>公寓</li> <li>電梯大樓</li> <li>華夏</li>  |
 | floor | `Number` | 樓層(optional) |
 | age | `Number` | 屋齡(optional) |
 
