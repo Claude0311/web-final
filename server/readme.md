@@ -3,18 +3,18 @@
 
 房屋估價系統api文件
 
- - [House](#House)
-   - [getHouse](#getHouse)
-   - [getHouses](#getHouses)
- - [Near](#Near)
-   - [getNear](#getNear)
+ - [House](#markdown-header-house)
+   - [getHouse](#markdown-header-gethouse)
+   - [getHouses](#markdown-header-gethouses)
+ - [Near](#markdown-header-near)
+   - [getNear](#markdown-header-getnear)
 
 ___
 
 
-# <a name='House'></a> House
+# House
 
-## <a name='getHouse'></a> getHouse
+## getHouse
 [Back to top](#top)
 
 ```
@@ -25,7 +25,7 @@ GET /getHouse?id=
 
 | Name     | Type       | Description                           |
 |----------|------------|---------------------------------------|
-| id | `String` | <p>ID from /getHouses</p> |
+| id | `String` | ID from /getHouses |
 
 ### Success response
 
@@ -33,11 +33,11 @@ GET /getHouse?id=
 
 | Name     | Type       | Description                           |
 |----------|------------|---------------------------------------|
-| id | `String` | <p>ID from永慶網站</p> |
+| id | `String` | ID from永慶網站 |
 | buildingType | `String` | <ul> <li>公寓(無電梯)</li> <li>大樓(10樓以下有電梯)</li> <li>華夏(11樓以上有電梯)</li> </ul> |
-| coordinate | `Object` | <p>{lat,lng} 緯度、精度</p> |
-| unitPrice | `Number` | <p>每坪房價</p> |
-| detail | `Object` | <p>house_detail</p> |
+| coordinate | `Object` | {lat,lng} 緯度、精度 |
+| unitPrice | `Number` | 每坪房價 |
+| detail | `Object` | house_detail |
 
 ### Error response
 
@@ -45,17 +45,17 @@ GET /getHouse?id=
 
 | Name     | Type       | Description                           |
 |----------|------------|---------------------------------------|
-| statusCode | `Number` | <p>404</p> |
-| msg | `String` | <p>查無此房</p> |
+| statusCode | `Number` | 404 |
+| msg | `String` | 查無此房 |
 
 #### Error response - `Server error 500`
 
 | Name     | Type       | Description                           |
 |----------|------------|---------------------------------------|
-| statusCode | `Number` | <p>500</p> |
-| msg | `String` | <p>資料庫發生錯誤</p> |
+| statusCode | `Number` | 500 |
+| msg | `String` | 資料庫發生錯誤 |
 
-## <a name='getHouses'></a> getHouses
+## getHouses
 [Back to top](#top)
 
 ```
@@ -68,7 +68,7 @@ GET /getHouses
 
 | Name     | Type       | Description                           |
 |----------|------------|---------------------------------------|
-| houses | `Array` | <p>array of House</p> |
+| houses | `Array` | array of House |
 
 ### Error response
 
@@ -76,12 +76,12 @@ GET /getHouses
 
 | Name     | Type       | Description                           |
 |----------|------------|---------------------------------------|
-| statusCode | `Number` | <p>500</p> |
-| msg | `String` | <p>資料庫發生錯誤</p> |
+| statusCode | `Number` | 500 |
+| msg | `String` | 資料庫發生錯誤 |
 
-# <a name='Near'></a> Near
+# Near
 
-## <a name='getNear'></a> getNear
+## getNear
 [Back to top](#top)
 
 ```
@@ -92,11 +92,11 @@ POST /getNear
 
 | Name     | Type       | Description                           |
 |----------|------------|---------------------------------------|
-| lat | `Number` | <p>緯度</p> |
-| lng | `Number` | <p>經度</p> |
+| lat | `Number` | 緯度 |
+| lng | `Number` | 經度 |
 | buildingType | `Number` | <ul> <li>公寓</li> <li>電梯大樓</li> <li>華夏</li> </ul> |
-| floor | `Number` | <p>樓層(optional)</p> |
-| age | `Number` | <p>屋齡(optional)</p> |
+| floor | `Number` | 樓層(optional) |
+| age | `Number` | 屋齡(optional) |
 
 ### Success response
 
@@ -104,8 +104,8 @@ POST /getNear
 
 | Name     | Type       | Description                           |
 |----------|------------|---------------------------------------|
-| similar | `Array` | <p>array of house that similar to the selected house</p> |
-| avgPrice | `Number` | <p>suggested price of the selected house</p> |
+| similar | `Array` | array of house that similar to the selected house |
+| avgPrice | `Number` | suggested price of the selected house |
 
 ### Error response
 
@@ -113,5 +113,5 @@ POST /getNear
 
 | Name     | Type       | Description                           |
 |----------|------------|---------------------------------------|
-| statusCode | `Number` | <p>500</p> |
-| msg | `String` | <p>資料庫發生錯誤</p> |
+| statusCode | `Number` | 500 |
+| msg | `String` | 資料庫發生錯誤 |
