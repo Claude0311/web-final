@@ -17,9 +17,17 @@ ___
 ## getHouse
 [Back to top](#top)
 
+給定id獲得房子的詳細資訊
+
 ```
 GET /getHouse?id=
 ```
+
+### Headers - `Header`
+
+| Name    | Type      | Description                          |
+|---------|-----------|--------------------------------------|
+| content-type | `String` | axios預設'application/x-www-form-urlencoded'，不用特別修改。<br/> 或者'application/json'也行 |
 
 ### Parameters - `Parameter`
 
@@ -58,6 +66,8 @@ GET /getHouse?id=
 ## getHouses
 [Back to top](#top)
 
+拿到所有房子的座標、房屋型態、價格(顯示在地圖上)
+
 ```
 GET /getHouses
 ```
@@ -84,9 +94,17 @@ GET /getHouses
 ## getNear
 [Back to top](#top)
 
+給定座標和房屋資訊，提供附近相似房子以及預估價錢
+
 ```
 POST /getNear
 ```
+
+### Headers - `Header`
+
+| Name    | Type      | Description                          |
+|---------|-----------|--------------------------------------|
+| content-type | `String` | axios預設'application/x-www-form-urlencoded'，不用特別修改。<br/> 或者'application/json'也行 |
 
 ### Parameters - `Parameter`
 

@@ -7,7 +7,11 @@ const asyncHandler = require('express-async-handler')
  * @api {get} /getHouse?id= getHouse
  * @apiName GetHouse
  * @apiGroup House
+ * @apiDescription 給定id獲得房子的詳細資訊
  *
+ * @apiHeader {String} content-type
+ *  axios預設'application/x-www-form-urlencoded'，不用特別修改。<br/>
+ *  或者'application/json'也行
  * @apiparam {String} id ID from /getHouses
  * 
  * @apiSuccess {String} id ID from永慶網站

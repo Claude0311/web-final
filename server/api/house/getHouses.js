@@ -6,6 +6,7 @@ const asyncHandler = require('express-async-handler')
  * @api {get} /getHouses getHouses
  * @apiName GetHouses
  * @apiGroup House
+ * @apiDescription 拿到所有房子的座標、房屋型態、價格(顯示在地圖上)
  *
  * @apiSuccess {Array} houses array of House
  * 
