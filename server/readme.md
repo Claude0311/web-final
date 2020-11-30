@@ -94,7 +94,7 @@ POST /getNear
 |----------|------------|---------------------------------------|
 | lat | `Number` | 緯度 |
 | lng | `Number` | 經度 |
-| buildingType | `Number` | <li>公寓</li> <li>電梯大樓</li> <li>華夏</li>  |
+| buildingType | `Number` |  <li>公寓</li> <li>電梯大樓</li> <li>華夏</li>  |
 | floor | `Number` | 樓層(optional) |
 | age | `Number` | 屋齡(optional) |
 

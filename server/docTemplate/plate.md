@@ -57,7 +57,7 @@ ___
 | Name     | Type       | Description                           |
 |----------|------------|---------------------------------------|
 <% parametersGroupContent.forEach(param => { -%>
-| <%- param.field -%> | <%- param.type ? `\`${param.type}\`` : '' %> | <%- param.optional ? '**optional** ' : '' -%><%- param.description.replace('<p>', '').replace('</p>', ''); -%>
+| <%- param.field -%> | <%- param.type ? `\`${param.type}\`` : '' %> | <%- param.optional ? '**optional** ' : '' -%><%- param.description.replace('<p>', '').replace('</p>', '').replace('<ul>','').replace('</ul>',''); -%>
 <% if (param.defaultValue) { -%>
 _Default value: <%= param.defaultValue %>_<br><% } -%>
 <% if (param.size) { -%>
