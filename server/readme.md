@@ -8,6 +8,7 @@
    - [getHouses](#markdown-header-gethouses)
  - [Valuate](#markdown-header-valuate)
    - [askPrice](#markdown-header-askprice)
+   - [get all uncheck Valuation](#markdown-header-get-all-uncheck-valuation)
 
 ___
 
@@ -43,9 +44,24 @@ GET /getHouse?id=
 |----------|------------|---------------------------------------|
 | id | `String` | ID from永慶網站 |
 | buildingType | `String` |  <li>公寓(無電梯)</li> <li>大樓(10樓以下有電梯)</li> <li>華夏(11樓以上有電梯)</li>  |
-| coordinate | `Object` | {lat,lng} 緯度、精度 |
+| coordinate | `Object` | 經緯度 |
+| &ensp;lat | `Number` | 緯度 |
+| &ensp;lng | `Number` | 經度 |
 | unitPrice | `Number` | 每坪房價 |
 | detail | `Object` | house_detail |
+| &ensp;soldTime | `Number` | 出售時間10911 |
+| &ensp;addres | `String` | 地址 |
+| &ensp;price | `Object` | 價格 |
+| &ensp;&ensp;totalPrice | `Number` | 總價 |
+| &ensp;&ensp;parkingPrice | `Number` | 車位價格 |
+| &ensp;space | `Object` | 坪數 |
+| &ensp;&ensp;totalSpace | `Number` | 總坪數 |
+| &ensp;&ensp;parkingSpace | `Number` | 車位坪數 |
+| &ensp;floor | `Object` |  |
+| &ensp;&ensp;floor | `Number` | 樓層 |
+| &ensp;&ensp;maxFloor | `Number` | 房屋總樓層數 |
+| &ensp;age | `Number` | 屋齡 |
+| &ensp;hasParking | `Boolean` | 有無車位 |
 
 ### Error response
 
@@ -78,7 +94,13 @@ GET /getHouses
 
 | Name     | Type       | Description                           |
 |----------|------------|---------------------------------------|
-| houses | `Array` | array of House |
+| - | `Object[]` | array of Houses |
+| &ensp;id | `String` | id from 永慶房屋 |
+| &ensp;buildingType | `String` | 房屋型態  <li>公寓(無電梯)</li> <li>大樓(10樓以下有電梯)</li> <li>華夏(11樓以上有電梯)</li>  |
+| &ensp;coordinate | `Object` | 經緯度 |
+| &ensp;&ensp;lat | `Number` | 緯度 |
+| &ensp;&ensp;lng | `Number` | 經度 |
+| &ensp;unitPrice | `Number` | 單位坪數價錢 |
 
 ### Error response
 
@@ -124,6 +146,33 @@ POST /askPrice
 |----------|------------|---------------------------------------|
 | similar | `Array` | array of house that similar to the selected house |
 | avgPrice | `Number` | suggested price of the selected house |
+
+### Error response
+
+#### Error response - `Server error 500`
+
+| Name     | Type       | Description                           |
+|----------|------------|---------------------------------------|
+| statusCode | `Number` | 500 |
+| msg | `String` | 資料庫發生錯誤 |
+
+## get all uncheck Valuation
+[Back to top](#top)
+
+顯示所有待估價房屋
+
+```
+GET /showValu/auth
+```
+
+### Success response
+
+#### Success response - `Success 200`
+
+| Name     | Type       | Description                           |
+|----------|------------|---------------------------------------|
+| - | `Object[]` | array of valuate |
+| &ensp;coordinate | `String` | {lat,lng}經緯度 |
 
 ### Error response
 
