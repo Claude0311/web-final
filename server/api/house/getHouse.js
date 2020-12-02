@@ -19,9 +19,24 @@ const asyncHandler = require('express-async-handler')
  *   - 公寓(無電梯)
  *   - 大樓(10樓以下有電梯)
  *   - 華夏(11樓以上有電梯)
- * @apiSuccess {Object} coordinate {lat,lng} 緯度、精度
+ * @apiSuccess {Object} coordinate  經緯度
+ * @apiSuccess {Number} coordinate.lat 緯度
+ * @apiSuccess {Number} coordinate.lng 經度
  * @apiSuccess {Number} unitPrice 每坪房價
  * @apiSuccess {Object} detail house_detail
+ * @apiSuccess {Number} detail.soldTime 出售時間10911
+ * @apiSuccess {String} detail.addres 地址
+ * @apiSuccess {Object} detail.price 價格
+ * @apiSuccess {Number} detail.price.totalPrice 總價
+ * @apiSuccess {Number} detail.price.parkingPrice 車位價格
+ * @apiSuccess {Object} detail.space 坪數
+ * @apiSuccess {Number} detail.space.totalSpace 總坪數
+ * @apiSuccess {Number} detail.space.parkingSpace 車位坪數
+ * @apiSuccess {Object} detail.floor 
+ * @apiSuccess {Number} detail.floor.floor 樓層
+ * @apiSuccess {Number} detail.floor.maxFloor 房屋總樓層數
+ * @apiSuccess {Number} detail.age 屋齡
+ * @apiSuccess {Boolean} detail.hasParking 有無車位
  * 
  * @apiError (NotFound 404) {Number} statusCode 404
  * @apiError (NotFound 404) {String} msg 查無此房

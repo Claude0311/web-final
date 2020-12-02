@@ -4,7 +4,7 @@ const router = express.Router()
 const {handleError,ErrorHandler} = require('./error')
 
 router.use(require('./house/main'))
-router.use(require('./search/main'))
+router.use(require('./Valuate/main'))
 router.get('/error', ()=>{
     throw new ErrorHandler(404,'oh no!')
 })
