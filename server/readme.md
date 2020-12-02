@@ -3,12 +3,12 @@
 
 房屋估價系統api文件
 
- - [House](#markdown-header-house)
-   - [getHouse](#markdown-header-gethouse)
-   - [getHouses](#markdown-header-gethouses)
- - [Valuate](#markdown-header-valuate)
-   - [askPrice](#markdown-header-askprice)
-   - [get all uncheck Valuation](#markdown-header-get-all-uncheck-valuation)
+ - [House](#house)
+   - [getHouse](#gethouse)
+   - [getHouses](#gethouses)
+ - [Valuate](#valuate)
+   - [askPrice](#askprice)
+   - [get all uncheck Valuation](#get-all-uncheck-valuation)
 
 ___
 
