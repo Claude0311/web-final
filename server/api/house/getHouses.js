@@ -1,5 +1,5 @@
 const House = require('../../model/House')
-const { ErrorHandler } = require('../error')
+const { ErrorHandler,dbCatch } = require('../error')
 const asyncHandler = require('express-async-handler')
 
 /**
@@ -25,7 +25,7 @@ const asyncHandler = require('express-async-handler')
 const getHouses = async (req,res,next) => {
     const houses = await House
         .find({},{_id:0,id:1,buildingType:1,coordinate:1,unitPrice:1})
-        .catch(e=>{throw new ErrorHandler(500,'資料庫發生錯誤')})
+        .catch(dbCatch)
     console.log('第0個:',houses[0])
     res.status(200).send(houses)
 }

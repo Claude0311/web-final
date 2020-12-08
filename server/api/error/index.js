@@ -8,10 +8,12 @@ class ErrorHandler extends Error {
 
 const handleError = (err,req,res,next) => {
     const { statusCode, msg } = err
-    console.log(err.message)
-    if(!msg) return res.status(404).json({
-        msg:'unknow error'
-    })
+    if(!msg){
+        console.log(err.message)
+        return res.status(404).json({
+            msg:'unknow error'
+        })
+    }
     console.log('my Error',msg)
     res.status(statusCode).json({
         status: "error",
@@ -20,4 +22,13 @@ const handleError = (err,req,res,next) => {
     })
 }
 
-module.exports = {ErrorHandler,handleError}
+/**
+ * throw Error 500 '資料庫錯誤' to error router
+ * @param {Error} e
+ */
+const dbCatch = (e) => {
+    console.log(e.message)
+    throw new ErrorHandler(500,'資料庫錯誤')
+}
+
+module.exports = {ErrorHandler, handleError, dbCatch}

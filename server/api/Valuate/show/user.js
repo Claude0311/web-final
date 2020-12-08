@@ -1,17 +1,14 @@
 const Valuate = require("../../../model/Valuate")
 
-const { ErrorHandler } = require('../error')
 const asyncHandler = require('express-async-handler')
+const { dbCatch } = require("../../error")
 
 const show_auth = async (req,res,next) => {
     const {user} = req.body
     const valuates = await Valuate
         .find({user})
-        .catch(e=>{
-            console.log(e.messages)
-            throw new ErrorHandler(500,'資料庫錯誤')
-        })
-    res.status.send(valuates)
+        .catch(dbCatch)
+    res.status(200).send(valuates)
 }
 
-module.exports = show_auth
+module.exports = asyncHandler(show_auth)

@@ -1,7 +1,7 @@
 const House = require('../../../model/House')
 const House_detail = require('../../../model/House_detail')
 const asyncHandler = require('express-async-handler')
-const { ErrorHandler } = require('../../error')
+const { ErrorHandler, dbCatch } = require('../../error')
 const Valuate = require('../../../model/Valuate')
 
 const findNear = async (req,res,next) => {
@@ -18,10 +18,7 @@ const findNear = async (req,res,next) => {
             'coordinate.lat':{$gt:lat-0.0044916,$lt:lat+0.0044916},
             'coordinate.lng':{$gt:lng-0.0049559,$lt:lng+0.0049559}
         }).populate('detail')
-        .catch(e=>{
-            console.log(e.message)
-            throw new ErrorHandler(500,'資料庫發生錯誤')
-        })
+        .catch(dbCatch)
     // console.log(nears.length)
     if(nears.length<5){
         nears = await House
@@ -30,10 +27,7 @@ const findNear = async (req,res,next) => {
                 'coordinate.lat':{$gt:lat-0.0044916*2,$lt:lat+0.0044916*2},
                 'coordinate.lng':{$gt:lng-0.0049559*2,$lt:lng+0.0049559*2}
             }).populate('detail')
-            .catch(e=>{
-                console.log(e.message)
-                throw new ErrorHandler(500,'資料庫發生錯誤')
-            })
+            .catch(dbCatch)
         scoreInput = {...scoreInput,lat,lng}
     }
     req.nears = nears

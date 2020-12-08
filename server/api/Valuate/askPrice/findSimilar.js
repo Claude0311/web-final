@@ -1,7 +1,7 @@
-const House = require('../../../model/House')
-const House_detail = require('../../../model/House_detail')
+// const House = require('../../../model/House')
+// const House_detail = require('../../../model/House_detail')
 const asyncHandler = require('express-async-handler')
-const { ErrorHandler } = require('../../error')
+// const { ErrorHandler } = require('../../error')
 
 const findSimilar = async (req,res,next) => {
     const {nears,scoreInput} = req

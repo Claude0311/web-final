@@ -1,6 +1,6 @@
 const asyncHandler = require('express-async-handler')
 const Valuate = require('../../../model/Valuate')
-const { ErrorHandler } = require('../../error')
+const { dbCatch } = require('../../error')
 
 const findSimilar = async (req,res,next) => {
     const {similar,valuate} = req
@@ -9,11 +9,8 @@ const findSimilar = async (req,res,next) => {
     console.log('avg',avgPrice)
     valuate.similar = similar.map(({_id})=>_id)
     valuate.avgPrice = avgPrice
-    // valuate.save()
-    //     .catch(e=>{
-    //         console.log(e.message)
-    //         throw new ErrorHandler(500,'資料庫發生錯誤')
-    //     })
+    valuate.save()
+        .catch(dbCatch)
     res.send({similar,avgPrice})
 }
 
