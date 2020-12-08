@@ -14,7 +14,7 @@ const getPrice = require('./getPrice')
  * 
  * @apiparam {Number} lat 緯度
  * @apiparam {Number} lng 經度
- * @apiparam {Number} buildingType 
+ * @apiparam {String} buildingType 
  *  - 公寓
  *  - 電梯大樓
  *  - 華夏
