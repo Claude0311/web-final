@@ -1,0 +1,21 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "apidoc": "^0.25.0",
+    "apidoc-markdown": "^5.2.0",
+    "express-async-handler": "^1.1.4",
+    "jquery": "^3.5.1",
+    "jsdom": "^16.4.0",
+    "mongoose": "^5.10.16",
+    "node-cron": "^2.0.3",
+    "node-geocoder": "^3.27.0",
+    "nodemon": "^2.0.6"
+  },
+  "scripts":{
+    "server": "nodemon server.js",
+    "doc": "apidoc -i ./ -o apidoc-out && apidoc-markdown -p apidoc-out -o readme.md -t doctemplate/plate.md"
+  }
+}

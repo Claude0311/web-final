@@ -3,7 +3,7 @@
 
 ### init
 ```
-$ yarn install
+$ yarn install-all
 ```
 * then open two terminal to run client and server
 ### client
