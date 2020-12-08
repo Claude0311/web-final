@@ -9,7 +9,5 @@
     "start": "cd frontend && yarn start",
     "server": "cd backend && yarn server",
     "install-all": "cd frontend && yarn && cd ../backend && yarn"
-  },
-  "dependencies": {
   }
 }
