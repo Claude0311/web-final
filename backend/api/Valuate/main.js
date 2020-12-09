@@ -1,6 +1,9 @@
-const express = require("express")
+import express from "express"
 const router = express.Router()
 
-router.post('/askPrice',require('./askPrice/main'))
+import askPrice from './askPrice/main.js'
+router.post('/askPrice',askPrice)
+import auth from './show/auth.js'
+router.post('/showValu/auth',auth)
 
-module.exports = router
+export default router

@@ -1,10 +1,9 @@
-const axios = require('axios')
-// const fs = require('fs')
-const {JSDOM} = require('jsdom')
-// const jquery = require('jquery')
-const House = require('../model/House')
-const House_detail = require('../model/House_detail')
-module.exports = async (fromWeb=false)=>{
+import axios from 'axios'
+import {JSDOM} from 'jsdom'
+import House from '../model/House.js'
+import House_detail from '../model/House_detail.js'
+
+export default async (fromWeb=false)=>{
     let i = 1
     let maxPage = 10
     for(;i<=maxPage;i++){

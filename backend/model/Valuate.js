@@ -1,5 +1,5 @@
-const mongoose = require('mongoose'),
-  Schema = mongoose.Schema
+import mongoose from 'mongoose'
+const Schema = mongoose.Schema
 
 const Valuate = new Schema({
     //user related
@@ -16,4 +16,4 @@ const Valuate = new Schema({
     manualPrice: Number
 })
 
-module.exports = mongoose.model('Valuate', Valuate)
+export default mongoose.model('Valuate', Valuate)

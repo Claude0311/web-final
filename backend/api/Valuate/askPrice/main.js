@@ -1,6 +1,6 @@
-const findNear = require('./findNear')
-const findSimilar = require('./findSimilar')
-const getPrice = require('./getPrice')
+import findNear from './findNear.js'
+import findSimilar from './findSimilar.js'
+import getPrice from './getPrice.js'
 
 /**
  * @api {post} /askPrice askPrice
@@ -27,4 +27,4 @@ const getPrice = require('./getPrice')
  * @apiError (Server error 500) {Number} statusCode 500
  * @apiError (Server error 500) {String} msg 資料庫發生錯誤
  */
-module.exports = [findNear, findSimilar, getPrice]
+export default [findNear, findSimilar, getPrice]

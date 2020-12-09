@@ -1,11 +1,9 @@
-const NodeGeocoder = require('node-geocoder')
-require('../model/db')
-const Cor = require('../model/Coordinate')
+import NodeGeocoder from 'node-geocoder'
+import DB from '../model/db.js'
+import Cor from '../model/Coordinate.js'
+
 const options = {
   provider: 'google',
- 
-  // Optional depending on the providers
-//   fetch: customFetchImplementation,
   apiKey: 'AIzaSyBqlTXRpx8ARKVOHZXDopkEYtsPs0WUHQ0', // for Mapquest, OpenCage, Google Premier
   formatter: null // 'gpx', 'string', ...
 }
@@ -20,6 +18,11 @@ const middleAdd = (address)=>{
   return address.replace(reg,mid)
 }
 
+/**
+ * 
+ * @param {String} address 地址
+ * @return {Object} {lat,lng} 
+ */
 const getCor = async (address)=>{
     const doc = await Cor.findOne({address})
     // console.log(doc)
@@ -36,4 +39,4 @@ const getCor = async (address)=>{
 
 // getCor('永和區雙和街7巷1~30號')
 
-module.exports = getCor
+export default getCor

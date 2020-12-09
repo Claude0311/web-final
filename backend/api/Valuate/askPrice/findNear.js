@@ -1,8 +1,8 @@
-const House = require('../../../model/House')
-const House_detail = require('../../../model/House_detail')
-const asyncHandler = require('express-async-handler')
-const { ErrorHandler, dbCatch } = require('../../error')
-const Valuate = require('../../../model/Valuate')
+import House from '../../../model/House.js'
+import House_detail from '../../../model/House_detail.js'
+import asyncHandler from 'express-async-handler'
+import { dbCatch } from '../../error/index.js'
+import Valuate from '../../../model/Valuate.js'
 
 const findNear = async (req,res,next) => {
     let {lat,lng,buildingType,floor,age} = req.body
@@ -36,4 +36,4 @@ const findNear = async (req,res,next) => {
     next()
 }
 
-module.exports = asyncHandler(findNear)
+export default asyncHandler(findNear)

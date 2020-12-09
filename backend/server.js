@@ -1,16 +1,17 @@
-const express = require('express')
-const app = express()
-const path = require('path')
-const bodyParser = require('body-parser')
-const cron = require('node-cron')
+import express from 'express'
+import path from 'path'
+import bodyParser from 'body-parser'
+import cron from 'node-cron'
+// import DB from './model/db.js'
+import api from './api/api.js'
 
-const DB = require('./model/db')
-DB.once('open',()=>{
+const app = express()
+// DB.once('open',()=>{
 	console.log('mongoDB connected')
 	
 	cron.schedule('0 0 0 1 * *', () => {//每月的1號0時0分0秒執行
 		console.log('first')
-		require('./util/crawler')()
+		import('./util/crawler')()
 	})
 	//post, get時的解碼json type
 	app.use(bodyParser.urlencoded({ extended: true }))
@@ -22,8 +23,7 @@ DB.once('open',()=>{
 		res.header('Access-Control-Allow-Credentials', 'true')
 		next()
 	})
-	
-	app.use(require('./api/api'))
+	app.use(api)
 	
 	app.get('/', (_,res) => {
 		res.send('hello world')
@@ -34,4 +34,4 @@ DB.once('open',()=>{
 		console.log('server connect')
 		console.log(`port name: ${process.env.PORT || 4000}`)
 	})
-})
+// })

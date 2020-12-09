@@ -1,7 +1,7 @@
-const Valuate = require("../../../model/Valuate")
+import Valuate from "../../../model/Valuate.js"
 
-const asyncHandler = require('express-async-handler')
-const { dbCatch } = require("../../error")
+import asyncHandler from 'express-async-handler'
+import { dbCatch } from "../../error/index.js"
 
 /**
  * @api {get} /showValu/auth get all uncheck Valuation
@@ -23,4 +23,4 @@ const show_auth = async (req,res,next) => {
     res.status(200).send(valuates)
 }
 
-module.exports = asyncHandler(show_auth)
+export default asyncHandler(show_auth)
