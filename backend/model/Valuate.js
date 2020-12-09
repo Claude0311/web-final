@@ -3,7 +3,8 @@ const Schema = mongoose.Schema
 
 const Valuate = new Schema({
     //user related
-    user: { type: Schema.Types.ObjectId, ref: 'user' },
+    user: {type:String,default:'b07901029'},
+    //{ type: Schema.Types.ObjectId, ref: 'user' },
     processed: {type:Boolean, default:false},
     //house related
     coordinate: {lat:Number,lng:Number},
