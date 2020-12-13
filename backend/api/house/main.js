@@ -1,7 +1,6 @@
 import express from 'express'
-import { handleError,ErrorHandler } from "../error/index.js"
-import getHouses from './getHouses.js'
-import getHouse from './getHouse.js'
+import getHouses from './getHouses'
+import getHouse from './getHouse'
 
 const router = express.Router()
 router.get('/getHouses',getHouses)

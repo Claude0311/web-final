@@ -1,7 +1,7 @@
-import Valuate from "../../../model/Valuate.js"
+import Valuate from "../../../model/Valuate"
 
 import asyncHandler from 'express-async-handler'
-import { dbCatch } from "../../error/index.js"
+import { dbCatch } from "../../error"
 
 /**
  * @api {get} /valuate/user get valuations as user
@@ -12,7 +12,7 @@ import { dbCatch } from "../../error/index.js"
  * @apiSuccess {Object[]} - array of valuate
  * @apiSuccess {Object} -._id 待估房子的_id，put時回傳
  * @apiSuccess {Object} -.coordinate {lat,lng}經緯度
- * @apiSuccess {String} -.user default b07901029
+ * @apiSuccess {String} -.user (optional)暫時用不到
  * @apiSuccess {String} -.buildingType
  *   - 公寓(無電梯)
  *   - 大樓(10樓以下有電梯)
@@ -35,8 +35,8 @@ import { dbCatch } from "../../error/index.js"
  * @apiError (Server error 500) {String} msg 資料庫發生錯誤
  */
 const show_auth = async (req,res,next) => {
-    let {user} = req.body//req.session.user
-    if(user===undefined) user='b07901029'
+    let {user} = req.session||{user:'b07901029'}
+    // if(user===undefined) user='b07901029'
     const valuates = await Valuate
         .find({user})
         .populate('similar')

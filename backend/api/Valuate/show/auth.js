@@ -1,7 +1,7 @@
-import Valuate from "../../../model/Valuate.js"
+import Valuate from "../../../model/Valuate"
 
 import asyncHandler from 'express-async-handler'
-import { dbCatch } from "../../error/index.js"
+import { dbCatch } from "../../error"
 
 /**
  * @api {get} /valuate/auth get valuations as auth

@@ -1,6 +1,6 @@
-import House from '../../model/House.js'
-import House_detail from '../../model/House_detail.js'
-import { ErrorHandler, dbCatch } from '../error/index.js'
+import House from '../../model/House'
+import House_detail from '../../model/House_detail'
+import { ErrorHandler, dbCatch } from '../error'
 import asyncHandler from 'express-async-handler'
 
 /**

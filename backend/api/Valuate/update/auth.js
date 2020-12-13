@@ -1,7 +1,7 @@
-import Valuate from "../../../model/Valuate.js"
+import Valuate from "../../../model/Valuate"
 
 import asyncHandler from 'express-async-handler'
-import { dbCatch } from "../../error/index.js"
+import { dbCatch } from "../../error"
 
 /**
  * @api {put} /valuate/auth set manual price
@@ -18,9 +18,10 @@ import { dbCatch } from "../../error/index.js"
  * @apiError (Server error 500) {String} msg 資料庫發生錯誤
  */
 const update_auth = async (req,res,next) => {
-    const {id,manualPrice} = req.body
+    const {_id,manualPrice} = req.body
+    console.log(manualPrice)
     await Valuate
-      .updateOne({id},{manualPrice})
+      .updateOne({_id},{manualPrice,processed:true})
       .catch(dbCatch)
     res.status(204).end()
 }

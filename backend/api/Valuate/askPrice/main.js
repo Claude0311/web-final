@@ -1,6 +1,7 @@
-import findNear from './findNear.js'
-import findSimilar from './findSimilar.js'
-import getPrice from './getPrice.js'
+import findNear from '../common/findNear'
+import findSimilar from '../common/findSimilar'
+import getPrice from '../common/getPrice'
+import parse from './parse'
 
 /**
  * @api {post} /valuate 請求估價
@@ -27,4 +28,4 @@ import getPrice from './getPrice.js'
  * @apiError (Server error 500) {Number} statusCode 500
  * @apiError (Server error 500) {String} msg 資料庫發生錯誤
  */
-export default [findNear, findSimilar, getPrice]
+export default [parse,findNear, findSimilar, getPrice]

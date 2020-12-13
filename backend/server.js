@@ -2,11 +2,11 @@ import express from 'express'
 import path from 'path'
 import bodyParser from 'body-parser'
 import cron from 'node-cron'
-// import DB from './model/db.js'
-import api from './api/api.js'
+import DB from './model/db.js'
+import api from './api/api'
 
 const app = express()
-// DB.once('open',()=>{
+DB.once('open',()=>{
 	console.log('mongoDB connected')
 	
 	cron.schedule('0 0 0 1 * *', () => {//每月的1號0時0分0秒執行
@@ -34,4 +34,4 @@ const app = express()
 		console.log('server connect')
 		console.log(`port name: ${process.env.PORT || 4000}`)
 	})
-// })
+})
