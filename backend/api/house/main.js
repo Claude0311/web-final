@@ -3,7 +3,7 @@ import getHouses from './getHouses'
 import getHouse from './getHouse'
 
 const router = express.Router()
-router.get('/getHouses',getHouses)
-router.get('/getHouse',getHouse)
+router.get('/houses',getHouses)
+router.get('/houses/:id',getHouse)
 
 export default router
