@@ -22,7 +22,8 @@ import getPrice from '../common/getPrice'
  * @apiparam {Number} floor 樓層(optional)
  * @apiparam {Number} age 屋齡(optional) 
  *
- * @apiSuccess -
+ * @apiSuccess {Array} similar array of house that similar to the selected house
+ * @apiSuccess {Number} avgPrice suggested price of the selected house
  * 
  * @apiError (User error 404) {Number} statusCode 404
  * @apiError (User error 404) {String} msg 

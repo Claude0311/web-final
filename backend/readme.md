@@ -142,7 +142,8 @@ PUT /valuate/user
 
 | Name     | Type       | Description                           |
 |----------|------------|---------------------------------------|
-| - |  |  |
+| similar | `Array` | array of house that similar to the selected house |
+| avgPrice | `Number` | suggested price of the selected house |
 
 ### Error response
 
