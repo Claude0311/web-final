@@ -24,7 +24,7 @@ ___
 給定id獲得房子的詳細資訊
 
 ```
-GET /getHouse?id=
+GET /houses/:id
 ```
 
 ### Headers - `Header`
@@ -88,7 +88,7 @@ GET /getHouse?id=
 拿到所有房子的座標、房屋型態、價格(顯示在地圖上)
 
 ```
-GET /getHouses
+GET /houses
 ```
 
 ### Success response
