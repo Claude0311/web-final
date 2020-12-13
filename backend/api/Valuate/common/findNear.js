@@ -7,17 +7,17 @@ import Valuate from '../../../model/Valuate'
 
 const findNear = async (req,res,next) => {
     let {coordinate:{lat,lng},buildingType,floor,age} = req.valuate
-    let scoreInput = {floor,age}
-    console.log(scoreInput,lat,lng,buildingType)
-    let nears = await House
-        .find({
-            buildingType,
-            'coordinate.lat':{$gt:lat-0.0044916,$lt:lat+0.0044916},
-            'coordinate.lng':{$gt:lng-0.0049559,$lt:lng+0.0049559}
-        }).populate('detail')
-        .catch(dbCatch)
-    console.log(nears.length)
-    if(nears.length<5){
+    // let scoreInput = {age}
+    console.log(lat,lng,buildingType,age,floor)
+    // let nears = await House
+    //     .find({
+    //         buildingType,
+    //         'coordinate.lat':{$gt:lat-0.0044916,$lt:lat+0.0044916},
+    //         'coordinate.lng':{$gt:lng-0.0049559,$lt:lng+0.0049559}
+    //     }).populate('detail')
+    //     .catch(dbCatch)
+    // console.log(nears.length)
+    // if(nears.length<5){
         nears = await House
             .find({
                 buildingType,
@@ -26,7 +26,7 @@ const findNear = async (req,res,next) => {
             }).populate('detail')
             .catch(dbCatch)
         scoreInput = {...scoreInput,lat,lng}
-    }
+    // }
     req.nears = nears
     req.scoreInput = scoreInput
     next()
