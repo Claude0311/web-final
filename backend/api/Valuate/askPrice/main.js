@@ -3,7 +3,7 @@ import findSimilar from './findSimilar.js'
 import getPrice from './getPrice.js'
 
 /**
- * @api {post} /askPrice askPrice
+ * @api {post} /valuate 請求估價
  * @apiName AskPrice
  * @apiGroup Valuate
  * @apiDescription 給定座標和房屋資訊，提供附近相似房子以及預估價錢
