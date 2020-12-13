@@ -1,6 +1,5 @@
-const asyncHandler = require('express-async-handler')
-const Valuate = require('../../../model/Valuate')
-const { dbCatch } = require('../../error')
+import asyncHandler from 'express-async-handler'
+import { dbCatch } from '../../error'
 
 const findSimilar = async (req,res,next) => {
     const {similar,valuate} = req
@@ -9,9 +8,9 @@ const findSimilar = async (req,res,next) => {
     console.log('avg',avgPrice)
     valuate.similar = similar.map(({_id})=>_id)
     valuate.avgPrice = avgPrice
-    valuate.save()
+    await valuate.save()
         .catch(dbCatch)
     res.send({similar,avgPrice})
 }
 
-module.exports = asyncHandler(findSimilar)
+export default asyncHandler(findSimilar)

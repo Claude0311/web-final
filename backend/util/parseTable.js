@@ -1,4 +1,4 @@
-const getCor = require("./getCoordinate")
+import getCor from './getCoordinate.js'
 
 const getFloor = (floors) => {
     return {
@@ -36,7 +36,7 @@ const getSpaceDetail = (space) => {
     return {totalSpace,parkingSpace}
 }
 
-module.exports = async (tds) => {
+export default async (tds) => {
     const detail = {
         soldTime: parseInt(getText(tds,'.time span')),
         address: getAddress(getText(tds,'.add')),

@@ -1,17 +1,14 @@
-const House = require('../../../model/House')
-const House_detail = require('../../../model/House_detail')
-const asyncHandler = require('express-async-handler')
-const { ErrorHandler, dbCatch } = require('../../error')
-const Valuate = require('../../../model/Valuate')
+import asyncHandler from 'express-async-handler'
+import { dbCatch } from '../../error'
+
+import House from '../../../model/House'
+import House_detail from '../../../model/House_detail'
+import Valuate from '../../../model/Valuate'
 
 const findNear = async (req,res,next) => {
-    let {lat,lng,buildingType,floor,age} = req.body
-    lat = parseFloat(lat)
-    lng = parseFloat(lng)
-    floor = parseInt(floor)
-    age = parseFloat(age)
-    const valuate = new Valuate({floor,age,coordinate:{lat,lng}})
+    let {coordinate:{lat,lng},buildingType,floor,age} = req.valuate
     let scoreInput = {floor,age}
+    console.log(scoreInput,lat,lng,buildingType)
     let nears = await House
         .find({
             buildingType,
@@ -19,7 +16,7 @@ const findNear = async (req,res,next) => {
             'coordinate.lng':{$gt:lng-0.0049559,$lt:lng+0.0049559}
         }).populate('detail')
         .catch(dbCatch)
-    // console.log(nears.length)
+    console.log(nears.length)
     if(nears.length<5){
         nears = await House
             .find({
@@ -32,8 +29,7 @@ const findNear = async (req,res,next) => {
     }
     req.nears = nears
     req.scoreInput = scoreInput
-    req.valuate = valuate
     next()
 }
 
-module.exports = asyncHandler(findNear)
+export default asyncHandler(findNear)

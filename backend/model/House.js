@@ -1,5 +1,5 @@
-const mongoose = require('mongoose'),
-  Schema = mongoose.Schema
+import mongoose from 'mongoose'
+const Schema = mongoose.Schema
 
 const House = new Schema({
     id: {type:String,unique:true},
@@ -46,4 +46,4 @@ House.methods.score = function({lat,lng,age,floor}){
 }
 
 
-module.exports = mongoose.model('House', House)
+export default mongoose.model('House', House)

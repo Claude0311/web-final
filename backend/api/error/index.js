@@ -31,4 +31,4 @@ const dbCatch = (e) => {
     throw new ErrorHandler(500,'資料庫錯誤')
 }
 
-module.exports = {ErrorHandler, handleError, dbCatch}
+export {ErrorHandler, handleError, dbCatch}

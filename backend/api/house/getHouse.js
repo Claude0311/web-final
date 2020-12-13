@@ -1,7 +1,7 @@
-const House = require('../../model/House')
-const House_detail = require('../../model/House_detail')
-const { ErrorHandler, dbCatch } = require('../error')
-const asyncHandler = require('express-async-handler')
+import House from '../../model/House'
+import House_detail from '../../model/House_detail'
+import { ErrorHandler, dbCatch } from '../error'
+import asyncHandler from 'express-async-handler'
 
 /**
  * @api {get} /getHouse?id= getHouse
@@ -56,4 +56,4 @@ const getHouse = async (req,res,next) => {
     res.status(200).send(house)
 }
 
-module.exports = asyncHandler(getHouse)
+export default asyncHandler(getHouse)

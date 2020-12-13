@@ -1,13 +1,15 @@
-//api.js 控管後端所有頁面部屬 
-const express = require("express")
-const router = express.Router()
-const {handleError,ErrorHandler} = require('./error')
+import express from 'express'
+import {handleError,ErrorHandler} from './error'
 
-router.use(require('./house/main'))
-router.use(require('./Valuate/main'))
+const router = express.Router()
+
+import house from './house/main'
+router.use(house)
+import valuate from './valuate/main'
+router.use(valuate)
 router.get('/error', ()=>{
     throw new ErrorHandler(404,'oh no!')
 })
 router.use(handleError)
 
-module.exports = router
+export default router

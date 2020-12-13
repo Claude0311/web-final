@@ -7,8 +7,11 @@
    - [getHouse](#gethouse)
    - [getHouses](#gethouses)
  - [Valuate](#valuate)
-   - [askPrice](#askprice)
-   - [get all uncheck Valuation](#get-all-uncheck-valuation)
+   - [更新房屋內容](#更新房屋內容)
+   - [請求估價](#請求估價)
+   - [get valuations as auth](#get-valuations-as-auth)
+   - [get valuations as user](#get-valuations-as-user)
+   - [set manual price](#set-manual-price)
 
 ___
 
@@ -113,13 +116,57 @@ GET /getHouses
 
 # Valuate
 
-## askPrice
+## 更新房屋內容
+[Back to top](#top)
+
+更新房屋資訊，重新計算系統估價
+
+```
+PUT /valuate/user
+```
+
+### Parameters - `Parameter`
+
+| Name     | Type       | Description                           |
+|----------|------------|---------------------------------------|
+| _id | `String` | 待估房子的_id |
+| lat | `Number` | 緯度(optional) |
+| lng | `Number` | 經度(optional) |
+| buildingType | `String` | (optional)  <li>公寓</li> <li>電梯大樓</li> <li>華夏</li>  |
+| floor | `Number` | 樓層(optional) |
+| age | `Number` | 屋齡(optional) |
+
+### Success response
+
+#### Success response - `Success 200`
+
+| Name     | Type       | Description                           |
+|----------|------------|---------------------------------------|
+| - |  |  |
+
+### Error response
+
+#### Error response - `User error 404`
+
+| Name     | Type       | Description                           |
+|----------|------------|---------------------------------------|
+| statusCode | `Number` | 404 |
+| msg | `String` |  <li>查無此房</li>  |
+
+#### Error response - `Server error 500`
+
+| Name     | Type       | Description                           |
+|----------|------------|---------------------------------------|
+| statusCode | `Number` | 500 |
+| msg | `String` | 資料庫發生錯誤 |
+
+## 請求估價
 [Back to top](#top)
 
 給定座標和房屋資訊，提供附近相似房子以及預估價錢
 
 ```
-POST /askPrice
+POST /valuate
 ```
 
 ### Headers - `Header`
@@ -134,7 +181,7 @@ POST /askPrice
 |----------|------------|---------------------------------------|
 | lat | `Number` | 緯度 |
 | lng | `Number` | 經度 |
-| buildingType | `Number` |  <li>公寓</li> <li>電梯大樓</li> <li>華夏</li>  |
+| buildingType | `String` |  <li>公寓</li> <li>電梯大樓</li> <li>華夏</li>  |
 | floor | `Number` | 樓層(optional) |
 | age | `Number` | 屋齡(optional) |
 
@@ -156,13 +203,13 @@ POST /askPrice
 | statusCode | `Number` | 500 |
 | msg | `String` | 資料庫發生錯誤 |
 
-## get all uncheck Valuation
+## get valuations as auth
 [Back to top](#top)
 
 顯示所有待估價房屋
 
 ```
-GET /showValu/auth
+GET /valuate/auth
 ```
 
 ### Success response
@@ -172,7 +219,93 @@ GET /showValu/auth
 | Name     | Type       | Description                           |
 |----------|------------|---------------------------------------|
 | - | `Object[]` | array of valuate |
-| &ensp;coordinate | `String` | {lat,lng}經緯度 |
+| &ensp;_id | `Object` | 待估房子的_id，put時回傳 |
+| &ensp;coordinate | `Object` | {lat,lng}經緯度 |
+| &ensp;user | `String` | default b07901029 |
+| &ensp;buildingType | `String` |  <li>公寓(無電梯)</li> <li>大樓(10樓以下有電梯)</li> <li>華夏(11樓以上有電梯)</li>  |
+| &ensp;age | `Number` | 屋齡 |
+| &ensp;floor | `Number` | 樓層 |
+| &ensp;avgPrice | `Number` | 系統算出來的$ |
+| &ensp;similar | `Object[]` | 附近相似的房子 |
+| &ensp;&ensp;id | `String` | id from 永慶房屋 |
+| &ensp;&ensp;buildingType | `String` | 房屋型態  <li>公寓(無電梯)</li> <li>大樓(10樓以下有電梯)</li> <li>華夏(11樓以上有電梯)</li>  |
+| &ensp;&ensp;coordinate | `Object` | 經緯度 |
+| &ensp;&ensp;&ensp;lat | `Number` | 緯度 |
+| &ensp;&ensp;&ensp;lng | `Number` | 經度 |
+| &ensp;&ensp;unitPrice | `Number` | 單位坪數價錢 |
+
+### Error response
+
+#### Error response - `Server error 500`
+
+| Name     | Type       | Description                           |
+|----------|------------|---------------------------------------|
+| statusCode | `Number` | 500 |
+| msg | `String` | 資料庫發生錯誤 |
+
+## get valuations as user
+[Back to top](#top)
+
+顯示user的估價們
+
+```
+GET /valuate/user
+```
+
+### Success response
+
+#### Success response - `Success 200`
+
+| Name     | Type       | Description                           |
+|----------|------------|---------------------------------------|
+| - | `Object[]` | array of valuate |
+| &ensp;_id | `Object` | 待估房子的_id，put時回傳 |
+| &ensp;coordinate | `Object` | {lat,lng}經緯度 |
+| &ensp;user | `String` | (optional)暫時用不到 |
+| &ensp;buildingType | `String` |  <li>公寓(無電梯)</li> <li>大樓(10樓以下有電梯)</li> <li>華夏(11樓以上有電梯)</li>  |
+| &ensp;age | `Number` | 屋齡 |
+| &ensp;floor | `Number` | 樓層 |
+| &ensp;avgPrice | `Number` | 系統算出來的$ |
+| &ensp;similar | `Object[]` | 附近相似的房子 |
+| &ensp;&ensp;id | `String` | id from 永慶房屋 |
+| &ensp;&ensp;buildingType | `String` | 房屋型態  <li>公寓(無電梯)</li> <li>大樓(10樓以下有電梯)</li> <li>華夏(11樓以上有電梯)</li>  |
+| &ensp;&ensp;coordinate | `Object` | 經緯度 |
+| &ensp;&ensp;&ensp;lat | `Number` | 緯度 |
+| &ensp;&ensp;&ensp;lng | `Number` | 經度 |
+| &ensp;&ensp;unitPrice | `Number` | 單位坪數價錢 |
+
+### Error response
+
+#### Error response - `Server error 500`
+
+| Name     | Type       | Description                           |
+|----------|------------|---------------------------------------|
+| statusCode | `Number` | 500 |
+| msg | `String` | 資料庫發生錯誤 |
+
+## set manual price
+[Back to top](#top)
+
+設定人為估價
+
+```
+PUT /valuate/auth
+```
+
+### Parameters - `Parameter`
+
+| Name     | Type       | Description                           |
+|----------|------------|---------------------------------------|
+| _id | `String` | 待估房子的_id |
+| manualPrice | `Number` | 人為估價 |
+
+### Success response
+
+#### Success response - `Success 200`
+
+| Name     | Type       | Description                           |
+|----------|------------|---------------------------------------|
+| - |  |  |
 
 ### Error response
 
