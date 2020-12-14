@@ -4,6 +4,7 @@
 房屋估價系統與api文件
 
 
+ 
 - [功能介紹](#prepend)
  - [House](#house)
    - [getHouse](#gethouse)
@@ -17,8 +18,9 @@
 
 ___
 
+ 
 <a name="prepend"></a>
- ## 功能介紹
+## 功能介紹
 ### crawler
 * 用node-cron套件設定每月1日00:00重新抓資料
 * 從永慶房屋爬近一個月永和區的[資料](https://evertrust.yungching.com.tw/regionall/%e6%96%b0%e5%8c%97%e5%b8%82/%e6%b0%b8%e5%92%8c%e5%8d%80?t=1,2&d=1)
@@ -30,7 +32,32 @@ ___
     3. 2年內
     4. 500公尺內
     5. 半年內
-    6. 屋齡+-5年 
+    6. 屋齡+-5年
+
+### DB
+* House:
+```javascript
+{
+  id,//unique id from website
+  buildingType,//公寓(無電梯),大樓(有電梯10樓以下),華夏(有電梯11樓以上)
+  coordinate:{lat,lng},//緯度、經度
+  unitPrice,//每坪的價格
+  //detail, //house_detail's _id
+}
+```
+* House_detail:
+```javascript
+{
+  soldTime,//number like 10911 means 109年11月
+  address,//ex:'永和區竹林路1~30號'
+  price: {totalPrice, parkingPrice},
+  space: {totalSpace, parkingSpace},
+  floor: {floor, maxFloor},
+  age, //屋齡，年
+  parkingSpace//true/false
+}
+```
+
 ___
 
 
