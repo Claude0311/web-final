@@ -7,7 +7,7 @@ export default async (fromWeb=false)=>{
     let i = 1
     let maxPage = 10
     for(;i<=maxPage;i++){
-        let url = `https://evertrust.yungching.com.tw/regionall/%e6%96%b0%e5%8c%97%e5%b8%82/%e6%b0%b8%e5%92%8c%e5%8d%80/${i}?t=1,2&d=24`
+        let url = `https://evertrust.yungching.com.tw/regionall/%e6%96%b0%e5%8c%97%e5%b8%82/%e6%b0%b8%e5%92%8c%e5%8d%80/${i}?t=1,2&d=1`
         // if(fromWeb){
             const ans = await axios.get(url)
             if(ans.status !== 200) return 0
