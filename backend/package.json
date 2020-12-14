@@ -17,7 +17,7 @@
   },
   "scripts": {
     "server": "nodemon --experimental-specifier-resolution=node server.js",
-    "doc": "apidoc -i ./api -o apidoc-out && apidoc-markdown -p apidoc-out -o readme.md -t doctemplate/plate.md"
+    "doc": "apidoc -i ./api -o apidoc-out && apidoc-markdown -p apidoc-out --prepend docTemplate/prepend.md -o readme.md -t docTemplate/plate.md"
   },
   "type":"module"
 }
