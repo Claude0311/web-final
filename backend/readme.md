@@ -6,6 +6,13 @@
 
  
 - [功能介紹](#prepend)
+ - [Account](#account)
+   - [login](#login)
+   - [loginAuth](#loginauth)
+   - [logout](#logout)
+   - [logoutAuth](#logoutauth)
+ - [Error](#error)
+   - [Error testing](#error-testing)
  - [House](#house)
    - [getHouse](#gethouse)
    - [getHouses](#gethouses)
@@ -60,6 +67,134 @@ ___
 
 ___
 
+
+## Account
+
+### login
+[Back to top](#top)
+
+登入
+
+```
+POST /login
+```
+
+#### Parameters - `Parameter`
+
+| Name     | Type       | Description                           |
+|----------|------------|---------------------------------------|
+| user | `String` | 用戶名字 |
+
+#### Success response
+
+##### Success response - `200`
+
+| Name     | Type       | Description                           |
+|----------|------------|---------------------------------------|
+| - | `String` | login success |
+
+#### Error response
+
+##### Error response - `400`
+
+| Name     | Type       | Description                           |
+|----------|------------|---------------------------------------|
+| msg | `String` | no user given |
+
+### loginAuth
+[Back to top](#top)
+
+登入管理員
+
+```
+POST /loginAuth
+```
+
+#### Success response
+
+##### Success response - `204`
+
+| Name     | Type       | Description                           |
+|----------|------------|---------------------------------------|
+| - |  |  |
+
+#### Error response
+
+##### Error response - `404`
+
+| Name     | Type       | Description                           |
+|----------|------------|---------------------------------------|
+| - |  |  |
+
+### logout
+[Back to top](#top)
+
+登出
+
+```
+POST /logout
+```
+
+#### Success response
+
+##### Success response - `204`
+
+| Name     | Type       | Description                           |
+|----------|------------|---------------------------------------|
+| - |  |  |
+
+#### Error response
+
+##### Error response - `Server error 500`
+
+| Name     | Type       | Description                           |
+|----------|------------|---------------------------------------|
+| msg |  | session destroy error |
+
+### logoutAuth
+[Back to top](#top)
+
+登出管理員
+
+```
+POST /logoutAuth
+```
+
+#### Success response
+
+##### Success response - `204`
+
+| Name     | Type       | Description                           |
+|----------|------------|---------------------------------------|
+| - |  |  |
+
+#### Error response
+
+##### Error response - `404`
+
+| Name     | Type       | Description                           |
+|----------|------------|---------------------------------------|
+| - |  |  |
+
+## Error
+
+### Error testing
+[Back to top](#top)
+
+給前端測試error handling
+
+```
+GET /error
+```
+
+#### Error response
+
+##### Error response - `NotFound 404`
+
+| Name     | Type       | Description                           |
+|----------|------------|---------------------------------------|
+| statusCode | `Number` | 404 |
+| msg | `String` | oh no! |
 
 ## House
 

@@ -35,8 +35,8 @@ import { dbCatch } from "../../error"
  * @apiError (Server error 500) {String} msg 資料庫發生錯誤
  */
 const show_auth = async (req,res,next) => {
-    let {user} = req.session||{user:'b07901029'}
-    // if(user===undefined) user='b07901029'
+    let {user} = req.session
+    if(user===undefined) user='b07901029'
     const valuates = await Valuate
         .find({user})
         .populate('similar')

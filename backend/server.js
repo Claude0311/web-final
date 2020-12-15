@@ -4,11 +4,13 @@ import bodyParser from 'body-parser'
 import cron from 'node-cron'
 import DB from './model/db.js'
 import api from './api/api'
+import session from 'express-session'
+import connect from 'connect-mongo'
 
 const app = express()
 DB.once('open',()=>{
 	console.log('mongoDB connected')
-	
+
 	cron.schedule('0 0 0 1 * *', () => {//每月的1號0時0分0秒執行
 		console.log('first')
 		import('./util/crawler')()
@@ -23,11 +25,25 @@ DB.once('open',()=>{
 		res.header('Access-Control-Allow-Credentials', 'true')
 		next()
 	})
-	app.use(api)
+
+	//session
+	const MongoStore = connect(session)
+	app.use(
+		session({
+			name: 'houseValuate',
+			secret: 'jgevslv', // 用来對session id相關的cookie進行簽名，建議128byte亂碼
+			store: new MongoStore({mongooseConnection: DB}),
+			saveUninitialized: false, //prevent race conditions
+			resave: false,
+			cookie: {maxAge: 60 * 60 * 1000}
+		})
+	)
 	
 	app.get('/', (_,res) => {
 		res.send('hello world')
 	})
+	
+	app.use(api)
 	
 	app.listen(process.env.PORT || 4000,  () => {
 		// require('./util/crawler')(true)

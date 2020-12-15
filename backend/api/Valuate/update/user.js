@@ -36,6 +36,7 @@ const parse = async (req,res,next) => {
     let {_id,lat,lng,buildingType,floor,age} = req.body
     const valuate = await Valuate.findById(_id).catch(dbCatch)
     if(!valuate) throw new ErrorHandler(404,'查無此房')
+    if(valuate.user!==req.session.user && false) throw new ErrorHandler(404,'user not match')
     if(lat!==undefined) valuate.coordinate.lat = parseFloat(lat)
     if(lng!==undefined) valuate.coordinate.lng = parseFloat(lng)
     if(buildingType!==undefined) valuate.buildingType = buildingType
