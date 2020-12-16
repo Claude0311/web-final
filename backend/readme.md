@@ -268,8 +268,26 @@ GET /houses/:id
 拿到所有房子的座標、房屋型態、價格(顯示在地圖上)
 
 ```
-GET /houses
+GET /houses?buildType=
 ```
+
+#### Parameters - `Parameter`
+
+| Name     | Type       | Description                           |
+|----------|------------|---------------------------------------|
+| buildingType | `String` | (optional)  <li>公寓(無電梯)</li> <li>大樓(10樓以下有電梯)</li> <li>華夏(11樓以上有電梯)</li>  |
+| neighbor | `Object` | 搜索附近(optional) |
+| &ensp;center | `Object` | 中心 |
+| &ensp;&ensp;lat | `Object` | 中心緯度 |
+| &ensp;&ensp;lng | `Object` | 中心經度 |
+| &ensp;distance | `Object` | 距離(公尺) |
+| unitPrice | `Object` | 每坪價格(optional) |
+| &ensp;lb | `Number` | lower bound (optional) |
+| &ensp;ub | `Number` | upper bound (optional) |
+| totalPrice | `Object` | 總價(optional) |
+| &ensp;lb | `Number` | lower bound (optional) |
+| &ensp;ub | `Number` | upper bound (optional) |
+| hasParking | `Boolean` | 有無車位(optional) |
 
 #### Success response
 
@@ -286,6 +304,13 @@ GET /houses
 | &ensp;unitPrice | `Number` | 單位坪數價錢 |
 
 #### Error response
+
+##### Error response - `client error 404`
+
+| Name     | Type       | Description                           |
+|----------|------------|---------------------------------------|
+| statusCode | `Number` | 404 |
+| msg | `String` | 資料格式錯誤 |
 
 ##### Error response - `Server error 500`
 
