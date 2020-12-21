@@ -11,7 +11,7 @@ const instance = axios.create({
 
 const AnyReactComponent = ({ text }) => <div>{text}</div>;
 
-const Map = () => {
+const Map = (id) => {
     const [cen,setCen] = useState({lat: 25.017, lng: 121.537});
     const [zoom,setZoom] = useState(16.0);
     const [houses, setHouses] = useState([]);
