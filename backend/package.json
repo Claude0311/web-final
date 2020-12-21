@@ -13,7 +13,6 @@
     "jquery": "^3.5.1",
     "jsdom": "^16.4.0",
     "mongoose": "^5.10.16",
-    "mongoose-function": "^0.1.0",
     "node-cron": "^2.0.3",
     "node-geocoder": "^3.27.0",
     "nodemon": "^2.0.6"

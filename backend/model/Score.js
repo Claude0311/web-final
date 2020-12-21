@@ -1,25 +1,25 @@
 import mongoose from 'mongoose'
 const Schema = mongoose.Schema
-import monFunc from 'mongoose-function'
-monFunc(mongoose)
+import scoreTemplate from './scoreTemplate'
+
 
 const Score = new Schema({
     priority:{type:Number},
-    rule:Function,//function that return 2 input
-    des:Function,
+    className:{
+        type:String,
+        enum:Object.keys(scoreTemplate)
+    },
     param:Number
 })
 
 Score.virtual('scroe').get(function(){
-    return this.rule(this.param)
+    const myRule = scoreTemplate[this.className].rule
+    return myRule(this.param)
 })
 
-Score.virtual('description')
-    .get(function(){
-        return this.des(this.param)
-    })
-    .set(function(v){
-        this.des = v
-    })
+Score.virtual('description').get(function(){
+    const myDescription = scoreTemplate[this.className].description
+    return myDescription
+})
 
 export default mongoose.model('Score', Score)
