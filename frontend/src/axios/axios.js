@@ -1,6 +1,7 @@
 import axios from 'axios'
 import {useState} from 'react'
-const API_ROOT = 'http://localhost:4000'
+console.log('NODE_ENV',process.env.NODE_ENV)
+const API_ROOT = (process.env.NODE_ENV==='production')?'':'http://localhost:4000'
 const instance = axios.create({
   baseURL: API_ROOT
 })
