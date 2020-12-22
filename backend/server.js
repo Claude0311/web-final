@@ -6,6 +6,8 @@ import DB from './model/db.js'
 import api from './api/api'
 import session from 'express-session'
 import connect from 'connect-mongo'
+import env from 'dotenv'
+env.config({path:'../.env'})
 
 const app = express()
 DB.once('open',()=>{
