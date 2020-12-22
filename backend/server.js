@@ -39,9 +39,12 @@ DB.once('open',()=>{
 		})
 	)
 	
-	app.get('/', (_,res) => {
-		res.send('hello world')
-	})
+	// app.get('/', (_,res) => {
+	// 	res.send('hello world')
+	// })
+
+	const buildPath = path.join('.', '..', 'frontend','build')
+	app.use(express.static(buildPath))
 	
 	app.use(api)
 	
