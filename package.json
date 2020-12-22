@@ -8,7 +8,10 @@
   "scripts": {
     "start": "cd frontend && yarn start",
     "server": "cd backend && yarn server",
+    "start-heroku": "cd backend && yarn start",
+    "build": "cd frontend && yarn build",
     "install-all": "yarn && cd frontend && yarn && cd ../backend && yarn",
+    "heroku-prebuild": "cd frontend && yarn && cd ../backend && yarn",
     "dev": "npm-run-all --parallel start server"
   },
   "dependencies": {
