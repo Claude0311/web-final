@@ -1,4 +1,5 @@
 import mongoose from 'mongoose'
+import { meter2Lat, meter2Lng } from '../util/unitTrans'
 const Schema = mongoose.Schema
 
 const House = new Schema({
@@ -31,9 +32,9 @@ House.methods.score = function({lat,lng,age,floor}){
     //500m
     if(
       (
-        ((this.coordinate.lat-lat)/0.0044916)**2
+        ((this.coordinate.lat-lat)/(meter2Lat*500))**2
         +
-        ((this.coordinate.lng-lng)/0.0049559)**2
+        ((this.coordinate.lng-lng)/(meter2Lng*500))**2
       )<1
     ) score = score+=1
     score = score<<1

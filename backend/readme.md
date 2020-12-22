@@ -16,6 +16,9 @@
  - [House](#house)
    - [getHouse](#gethouse)
    - [getHouses](#gethouses)
+ - [ScoreRule](#scorerule)
+   - [getScore](#getscore)
+   - [updateScore](#updatescore)
  - [Valuate](#valuate)
    - [更新房屋內容](#更新房屋內容)
    - [請求估價](#請求估價)
@@ -268,8 +271,26 @@ GET /houses/:id
 拿到所有房子的座標、房屋型態、價格(顯示在地圖上)
 
 ```
-GET /houses
+GET /houses?buildType=
 ```
+
+#### Parameters - `Parameter`
+
+| Name     | Type       | Description                           |
+|----------|------------|---------------------------------------|
+| buildingType | `String` | (optional)  <li>公寓(無電梯)</li> <li>大樓(10樓以下有電梯)</li> <li>華夏(11樓以上有電梯)</li>  |
+| neighbor | `Object` | 搜索附近(optional) |
+| &ensp;center | `Object` | 中心 |
+| &ensp;&ensp;lat | `Object` | 中心緯度 |
+| &ensp;&ensp;lng | `Object` | 中心經度 |
+| &ensp;distance | `Object` | 距離(公尺) |
+| unitPrice | `Object` | 每坪價格(optional) |
+| &ensp;lb | `Number` | lower bound (optional) |
+| &ensp;ub | `Number` | upper bound (optional) |
+| totalPrice | `Object` | 總價(optional) |
+| &ensp;lb | `Number` | lower bound (optional) |
+| &ensp;ub | `Number` | upper bound (optional) |
+| hasParking | `Boolean` | 有無車位(optional) |
 
 #### Success response
 
@@ -284,6 +305,96 @@ GET /houses
 | &ensp;&ensp;lat | `Number` | 緯度 |
 | &ensp;&ensp;lng | `Number` | 經度 |
 | &ensp;unitPrice | `Number` | 單位坪數價錢 |
+
+#### Error response
+
+##### Error response - `client error 404`
+
+| Name     | Type       | Description                           |
+|----------|------------|---------------------------------------|
+| statusCode | `Number` | 404 |
+| msg | `String` | 資料格式錯誤 |
+
+##### Error response - `Server error 500`
+
+| Name     | Type       | Description                           |
+|----------|------------|---------------------------------------|
+| statusCode | `Number` | 500 |
+| msg | `String` | 資料庫發生錯誤 |
+
+## ScoreRule
+
+### getScore
+[Back to top](#top)
+
+獲取評分模板和當前規則，用eval('('+description+')')將str轉回function
+
+```
+GET /score
+```
+
+#### Success response
+
+##### Success response - `Success 200`
+
+| Name     | Type       | Description                           |
+|----------|------------|---------------------------------------|
+| templates | `Object[]` | 評分模板(目前有5種) |
+| &ensp;1 | `Object` | 成交日期 |
+| &ensp;&ensp;className | `String` | Time |
+| &ensp;&ensp;description | `Function.toString` | <code>近X個月內</code> |
+| &ensp;2 | `Object` | 距離 |
+| &ensp;&ensp;className | `String` | Distance |
+| &ensp;&ensp;description | `Function.toString` | <code>距離X公尺內</code> |
+| &ensp;3 | `Object` | 成交日期 |
+| &ensp;&ensp;className | `String` | Age |
+| &ensp;&ensp;description | `Function.toString` | <code>屋齡差距X年以內</code> |
+| &ensp;4 | `Object` | 成交日期 |
+| &ensp;&ensp;className | `String` | Floor |
+| &ensp;&ensp;description | `Function.toString` | <code>相差X層樓以內</code> |
+| &ensp;5 | `Object` | 成交日期 |
+| &ensp;&ensp;className | `String` | IsFirstFloor |
+| &ensp;&ensp;description | `Function.toString` | '一樓和一樓比較，二樓以上和二樓以上比較' |
+| myRules | `Object[]` | 自訂規則 |
+| &ensp;param | `Number` | description中的X |
+| &ensp;description | `Function.toString` | (param='X')=&gt;{return 'description depends on param'} |
+| &ensp;priority | `Number` | 優先度 |
+| &ensp;className | `String` | template名稱(update時回傳) |
+
+#### Error response
+
+##### Error response - `Server error 500`
+
+| Name     | Type       | Description                           |
+|----------|------------|---------------------------------------|
+| statusCode | `Number` | 500 |
+| msg | `String` | 資料庫發生錯誤 |
+
+### updateScore
+[Back to top](#top)
+
+設定評分規則
+
+```
+POST /score
+```
+
+#### Parameters - `Parameter`
+
+| Name     | Type       | Description                           |
+|----------|------------|---------------------------------------|
+| myRules | `Object[]` | 規則的陣列 |
+| &ensp;className | `String` | 從template拿到的className |
+| &ensp;param | `Number` | description中的X |
+| &ensp;priority | `Number` | 優先度 |
+
+#### Success response
+
+##### Success response - `204`
+
+| Name     | Type       | Description                           |
+|----------|------------|---------------------------------------|
+| - |  |  |
 
 #### Error response
 

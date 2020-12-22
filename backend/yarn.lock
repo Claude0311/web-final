@@ -1511,6 +1511,11 @@ mongodb@3.6.3, mongodb@^3.1.0:
   optionalDependencies:
     saslprep "^1.0.0"
 
+mongoose-function@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/mongoose-function/-/mongoose-function-0.1.0.tgz#c09b531ad5b58a96fda9e8286a6ee472f7fac4ea"
+  integrity sha1-wJtTGtW1ipb9qegoam7kcvf6xOo=
+
 mongoose-legacy-pluralize@1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/mongoose-legacy-pluralize/-/mongoose-legacy-pluralize-1.0.2.tgz#3ba9f91fa507b5186d399fb40854bff18fb563e4"
