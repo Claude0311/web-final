@@ -1,16 +1,20 @@
-# web programmin final project - House valuation
+# web programming final project - House valuation
 ## Tutorial
 
 ### init
 ```
 $ yarn install-all
 ```
-* then open two terminal to run client and server
+* yarn dev **OR** open two terminal and run client and server
+### both (by npm-run-all)
+```
+$ yarn dev
+```
+
 ### client
 ```
 $ yarn start
 ```
-
 ### server
 ```
 $ yarn server
