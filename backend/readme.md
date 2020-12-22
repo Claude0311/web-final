@@ -18,6 +18,7 @@
    - [getHouses](#gethouses)
  - [ScoreRule](#scorerule)
    - [getScore](#getscore)
+   - [resetScore](#resetscore)
    - [updateScore](#updatescore)
  - [Valuate](#valuate)
    - [更新房屋內容](#更新房屋內容)
@@ -327,7 +328,7 @@ GET /houses?buildType=
 ### getScore
 [Back to top](#top)
 
-獲取評分模板和當前規則，用eval('('+description+')')將str轉回function
+獲取評分模板和當前規則，description規則：{prefix,postfix}，用prefix+param+postfix呈現，param是update時要回傳給後端的東東
 
 ```
 GET /score
@@ -342,24 +343,55 @@ GET /score
 | templates | `Object[]` | 評分模板(目前有5種) |
 | &ensp;1 | `Object` | 成交日期 |
 | &ensp;&ensp;className | `String` | Time |
-| &ensp;&ensp;description | `Function.toString` | <code>近X個月內</code> |
+| &ensp;&ensp;description | `Object` | <code>近X個月內</code> |
 | &ensp;2 | `Object` | 距離 |
 | &ensp;&ensp;className | `String` | Distance |
-| &ensp;&ensp;description | `Function.toString` | <code>距離X公尺內</code> |
+| &ensp;&ensp;description | `Object` | <code>距離X公尺內</code> |
 | &ensp;3 | `Object` | 成交日期 |
 | &ensp;&ensp;className | `String` | Age |
-| &ensp;&ensp;description | `Function.toString` | <code>屋齡差距X年以內</code> |
+| &ensp;&ensp;description | `Object` | <code>屋齡差距X年以內</code> |
 | &ensp;4 | `Object` | 成交日期 |
 | &ensp;&ensp;className | `String` | Floor |
-| &ensp;&ensp;description | `Function.toString` | <code>相差X層樓以內</code> |
+| &ensp;&ensp;description | `Object` | <code>相差X層樓以內</code> |
 | &ensp;5 | `Object` | 成交日期 |
 | &ensp;&ensp;className | `String` | IsFirstFloor |
-| &ensp;&ensp;description | `Function.toString` | '一樓和一樓比較，二樓以上和二樓以上比較' |
+| &ensp;&ensp;description | `Object` | {prefix:'一樓和一樓比較，二樓以上和二樓以上比較'} |
 | myRules | `Object[]` | 自訂規則 |
 | &ensp;param | `Number` | description中的X |
-| &ensp;description | `Function.toString` | (param='X')=&gt;{return 'description depends on param'} |
+| &ensp;description | `Object` | {prefix,postfix} |
 | &ensp;priority | `Number` | 優先度 |
 | &ensp;className | `String` | template名稱(update時回傳) |
+
+#### Error response
+
+##### Error response - `Server error 500`
+
+| Name     | Type       | Description                           |
+|----------|------------|---------------------------------------|
+| statusCode | `Number` | 500 |
+| msg | `String` | 資料庫發生錯誤 |
+
+### resetScore
+[Back to top](#top)
+
+reset預設的score方法(之後看要不要在get時告知內容) <ol> <li>是否是一樓</li> <li>2年內</li> <li>500公尺內</li> <li>半年內</li> <li>屋齡+-5年</li> </ol>
+
+```
+POST /score
+```
+
+#### Success response
+
+##### Success response - `Success 200`
+
+| Name     | Type       | Description                           |
+|----------|------------|---------------------------------------|
+| myRules | `Object[]` | 預設規則 |
+| &ensp;1 | `Object` | {priority:1,className:'IsFirstFloor',description,param:undefined} |
+| &ensp;2 | `Object` | {priority:2,className:'Time',description,param:24} |
+| &ensp;3 | `Object` | {priority:3,className:'Distance',description,param:500} |
+| &ensp;4 | `Object` | {priority:4,className:'Time',description,param:6} |
+| &ensp;5 | `Object` | {priority:5,className:'Age',description,param:5} |
 
 #### Error response
 
@@ -376,7 +408,7 @@ GET /score
 設定評分規則
 
 ```
-POST /score
+PUT /score
 ```
 
 #### Parameters - `Parameter`

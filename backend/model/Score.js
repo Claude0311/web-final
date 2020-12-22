@@ -12,7 +12,7 @@ const Score = new Schema({
     param:Number
 })
 
-Score.virtual('scroe').get(function(){
+Score.virtual('score').get(function(){
     const myRule = scoreTemplate[this.className].rule
     return myRule(this.param)
 })

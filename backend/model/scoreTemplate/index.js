@@ -6,7 +6,7 @@
 
 const scoreTemplate = {
     Floor:{
-        description:(param='X')=>{return `相差${param}層樓以內`},
+        description:{prefix:'相差',postfix:'層樓以內'},
         rule:(param)=>{
             return (user,db)=>{
                 return Math.abs(user.floor-db.detail.floor.floor)<=param
@@ -14,15 +14,15 @@ const scoreTemplate = {
         }
     },
     IsFirstFloor:{
-        description:()=>'一樓和一樓比較，二樓以上和二樓以上比較',
+        description:{prefix:'一樓和一樓比較，二樓以上和二樓以上比較'},
         rule:(param)=>{
             return (user,db)=>{
-                return db.detail.floor.floor !== -1 && !((user.floor===1) ^ (db.detail.floor.floor===1))
+                return user.floor!==undefined && db.detail.floor.floor !== -1 && !((user.floor===1) ^ (db.detail.floor.floor===1))
             }
         }
     },
     Age:{
-        description:(param='X')=>{return `屋齡差距${param}年以內`},
+        description:{prefix:'屋齡差距',postfix:'年以內'},
         rule:(param=5)=>{
             return ({age},{detail})=>{
                 return Math.abs(age-detail.age)<=param
@@ -30,7 +30,7 @@ const scoreTemplate = {
         }
     },
     Distance:{
-        description:(param='X')=>{return `距離${param}公尺內`},
+        description:{prefix:'距離',postfix:'公尺內'},
         rule:(param)=>{
             return (user,db)=>{
                 const {coordinate:{lat,lng}} = user
@@ -46,7 +46,7 @@ const scoreTemplate = {
         }
     },
     Time:{
-        description:(param='X')=>{return `近X個月內`},
+        description:{prefix:'近',postfix:'個月內'},
         rule:(param=6)=>{
             return (_,{detail:{soldTime}})=>{
                 const nowTime = new Date()

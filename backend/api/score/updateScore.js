@@ -4,7 +4,7 @@ import Score from '../../model/Score'
 // import scoreTemplate from '../../model/scoreTemplate'
 
 /**
- * @api {post} /score updateScore
+ * @api {put} /score updateScore
  * @apiName UpdateScore
  * @apiGroup ScoreRule
  * @apiDescription 設定評分規則

@@ -5,7 +5,7 @@ import user from './user'
 
 const router = express.Router()
 
-router.put('/user',user)
-router.put('/auth',isAuth,auth)
+router.patch('/user',user)
+router.patch('/auth',isAuth,auth)
 
 export default router
