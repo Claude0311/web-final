@@ -38,16 +38,15 @@ DB.once('open',()=>{
 			cookie: {maxAge: 60 * 60 * 1000}
 		})
 	)
-	
-	// app.get('/', (_,res) => {
-	// 	res.send('hello world')
-	// })
 
-	const buildPath = path.join('.', '..', 'frontend','build')
-	
 	app.use(api)
 	
-	app.use(express.static(buildPath))
+	if(process.env.NODE_ENV==='production' || true){
+		console.log('backend env',process.env.NODE_ENV)
+		const buildPath = path.join('.', '..', 'frontend','build')
+		app.use(express.static(buildPath))
+	}
+
 	app.listen(process.env.PORT || 4000,  () => {
 		// require('./util/crawler')(true)
 		console.log('server connect')
