@@ -44,10 +44,10 @@ DB.once('open',()=>{
 	// })
 
 	const buildPath = path.join('.', '..', 'frontend','build')
-	app.use(express.static(buildPath))
 	
 	app.use(api)
 	
+	app.use(express.static(buildPath))
 	app.listen(process.env.PORT || 4000,  () => {
 		// require('./util/crawler')(true)
 		console.log('server connect')
