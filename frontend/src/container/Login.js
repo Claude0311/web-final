@@ -1,30 +1,33 @@
 import { useState, useEffect, useRef} from 'react'
-import axios from 'axios'
 import {Form,Input,Button} from 'antd'
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import './Login.css'
-const API_ROOT = 'http://localhost:4000'
-const instance = axios.create({
-  baseURL: API_ROOT
-})
+import { loginAsAuth, loginAsNormalUser } from '../axios/axios';
+
 
 const Login = ({setId}) => {
     const [form] = Form.useForm();
+
+    // ===== some hooks for validating username and password ==== 
+    // in Ant design, there are 3 status
+    // status: success, warning, error
     const [status, setStatus] = useState(null);
     const [userValid, setUsrVad] = useState(null);
     const [psdValid, setPsdVad] = useState(null);
     const [userMsg, setUsrMsg] = useState(null);
     const [psdMsg, setPsdMsg] = useState(null);
-    // status: success, warning, error
+    
+    // ==== some ref =======
     const userRef = useRef(null);
     const psdRef = useRef(null);
 
-
+    // login as a normal user
     const logInNormal = async ({Username,Password}) => {       
         if (checkUserName(Username) && checkPassWord(Password)) {
-            instance.post('/login',{params: {user: Username}})
+            loginAsNormalUser(Username)
                 .then( (res) => {
-                    setId(res)
+                    // console.log(res)
+                    setId(res.data)
                 })
                 .catch( (err)=> {
                     console.log(err.msg)
@@ -37,6 +40,7 @@ const Login = ({setId}) => {
                 })
         }
     }
+    // return true if username is not empty
     const checkUserName = (Username) => {
         if (!Username) {
             setStatus('user')
@@ -50,6 +54,7 @@ const Login = ({setId}) => {
         return true;
 
     }
+    // return true if password is not empty
     const checkPassWord = (Password) => {
         if (!Password) {
             if(status==='psd') {
@@ -57,6 +62,7 @@ const Login = ({setId}) => {
                 setPsdMsg('Password  should not be blank!!')
             } else {
                 setStatus('psd')
+                psdRef.current.focus();
             }
             return false;
         }
@@ -64,8 +70,9 @@ const Login = ({setId}) => {
         setPsdMsg(null)
         return true
     }
+    // login as an Administrator
     const logInAdmin = async () => {
-        instance.post('/loginAuth')
+        loginAsAuth()
             .then( (res) => {
                 setId('Admin')
             })
@@ -77,7 +84,8 @@ const Login = ({setId}) => {
     useEffect(()=>{
         userRef.current.focus();
     }, []);
-
+    
+    // render Container
     return(
         <div className="loginContainer">
             <div className="login-title">
@@ -100,7 +108,9 @@ const Login = ({setId}) => {
                             prefix={<UserOutlined className="site-form-item-icon" />} 
                             placeholder="Username"
                             ref={userRef}
-                            onPressEnter={()=>psdRef.current.focus()}
+                            onChange={(e)=>{
+                                checkUserName(e.target.value)
+                            }}
                         />
                     </Form.Item>
                     <Form.Item
@@ -112,6 +122,9 @@ const Login = ({setId}) => {
                             prefix={<LockOutlined className="site-form-item-icon"/>} 
                             placeholder="Password"
                             ref={psdRef} 
+                            onChange={(e)=>{
+                                checkPassWord(e.target.value)
+                            }}
                         />
                     </Form.Item>  
                     <Form.Item >

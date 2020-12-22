@@ -1,13 +1,8 @@
-import react,{Component, useState, useEffect} from 'react';
+import {useState, useEffect} from 'react';
 import GoogleMapReact from 'google-map-react';
-import axios from 'axios';
 import { House_Pin, Current_Pin } from '../component/House_Pin';
 import House_Detail from '../component/House_detail';
-
-const API_ROOT = 'http://localhost:4000'
-const instance = axios.create({
-  baseURL: API_ROOT
-})
+import { axiosGetHouses, axiosGetDetail } from '../axios/axios';
 
 const AnyReactComponent = ({ text }) => <div>{text}</div>;
 
@@ -20,7 +15,7 @@ const Map = (id) => {
 
     const getHouses = async () => {
       console.log("getting houses...")
-      const {data:req_houses} = await instance.get('/houses');
+      const req_houses = await axiosGetHouses();
       // console.log(req_houses);
       setHouses(req_houses);
     }
@@ -28,11 +23,12 @@ const Map = (id) => {
     const getHouseDetail = async (id) => {
       // console.log(id);
       console.log("getting detail...");
-      const {data:{detail}} = await instance.get(`/houses/${id}`,{params:{id:id}});
+      const detail = axiosGetDetail(id);
       // console.log(detail);
       setDetail(detail);
     }
-
+    //  UNUSED
+    /*
     const moveCen = (lat,lng) => {
       const frameTrans  = 60;
       const delLat = (lat - cen.lat)/frameTrans;
@@ -45,11 +41,7 @@ const Map = (id) => {
       window.setTimeout(()=> {
         window.clearInterval(timeID);
       }, 3000)
-      
-      // // window.clearInterval(timeID);
-      // setCen(coordinate);
-      // console.log("moving")
-    }
+    }*/
 
     const closeDetail = () => {
       setDetail(null);
