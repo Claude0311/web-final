@@ -2,7 +2,6 @@ import mongoose from 'mongoose'
 const Schema = mongoose.Schema
 import scoreTemplate from './scoreTemplate'
 
-
 const Score = new Schema({
     priority:{type:Number},
     className:{
