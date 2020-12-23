@@ -22,4 +22,30 @@ Score.virtual('description').get(function(){
     return myDescription
 })
 
+
+
+Score.static.rule = async function(){
+    let lastPri = 0
+    /**
+     * 
+     * @param {Array} accumulator 
+     * @param {Object} currentValue 
+     * @param {Number} currentIndex 
+     * @param {Array} array 
+     */
+    const reduce = (accumulator, {priority,score}, currentIndex, array)=>{
+        if(lastPri!==priority){
+            lastPri = priority
+            accumulator.append([score])
+            return accumulator
+        }else{
+            accumulator[accumulator.length-1].append(score)
+            return accumulator
+        }
+    }
+    const rules = (await this.find().sort({priority:1})).reduce(reduce,[])
+    console.log({rules})
+    return rules
+}
+
 export default mongoose.model('Score', Score)
