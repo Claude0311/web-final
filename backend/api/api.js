@@ -1,13 +1,27 @@
-//api.js 控管後端所有頁面部屬 
-const express = require("express")
-const router = express.Router()
-const {handleError,ErrorHandler} = require('./error')
+import express from 'express'
+import {handleError,ErrorHandler} from './error'
 
-router.use(require('./house/main'))
-router.use(require('./Valuate/main'))
+const router = express.Router()
+
+import house from './house/main'
+router.use(house)
+import valuate from './valuate/main'
+router.use(valuate)
+import auth from './auth'
+router.use(auth)
+
+/**
+ * @api {get} /error Error testing
+ * @apiName Error
+ * @apigroup Error
+ * @apiDescription 給前端測試error handling
+ * 
+ * @apiError (NotFound 404) {Number} statusCode 404
+ * @apiError (NotFound 404) {String} msg oh no!
+ */
 router.get('/error', ()=>{
     throw new ErrorHandler(404,'oh no!')
 })
 router.use(handleError)
 
-module.exports = router
+export default router

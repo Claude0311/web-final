@@ -1,7 +1,4 @@
-// const House = require('../../../model/House')
-// const House_detail = require('../../../model/House_detail')
-const asyncHandler = require('express-async-handler')
-// const { ErrorHandler } = require('../../error')
+import asyncHandler from 'express-async-handler'
 
 const findSimilar = async (req,res,next) => {
     const {nears,scoreInput} = req
@@ -23,4 +20,4 @@ const findSimilar = async (req,res,next) => {
     next()
 }
 
-module.exports = asyncHandler(findSimilar)
+export default asyncHandler(findSimilar)

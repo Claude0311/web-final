@@ -1,9 +1,9 @@
-const express = require("express")
-const { handleError,ErrorHandler } = require("../error")
+import express from 'express'
+import getHouses from './getHouses'
+import getHouse from './getHouse'
+
 const router = express.Router()
+router.get('/houses/:id',getHouse)
+router.get('/houses',getHouses)
 
-router.get('/getHouses',require('./getHouses'))
-router.get('/getHouse',require('./getHouse'))
-router.use(handleError)
-
-module.exports = router
+export default router

@@ -1,4 +1,4 @@
-const mongoose = require('mongoose')
+import mongoose from 'mongoose'
 
 const DB_URL1 = 'mongodb+srv://ChunFuBank:bankpassword@cluster0.nqvst.mongodb.net/Bank?retryWrites=true&w=majority'
 const DB_URL = process.env.MONGO_URI||DB_URL1
@@ -18,4 +18,4 @@ DB.on('error',function(err){
     console.log(err)
 })
 
-module.exports = DB
+export default DB

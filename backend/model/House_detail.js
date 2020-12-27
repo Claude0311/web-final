@@ -1,5 +1,5 @@
-const mongoose = require('mongoose'),
-  Schema = mongoose.Schema
+import mongoose from 'mongoose'
+const Schema = mongoose.Schema
 
 const House_detail = new Schema({
     soldTime: Number,
@@ -23,4 +23,4 @@ const House_detail = new Schema({
     }
 })
 
-module.exports = mongoose.model('House_detail', House_detail)
+export default mongoose.model('House_detail', House_detail)

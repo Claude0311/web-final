@@ -1,10 +1,10 @@
-const House = require('../../model/House')
-const House_detail = require('../../model/House_detail')
-const { ErrorHandler, dbCatch } = require('../error')
-const asyncHandler = require('express-async-handler')
+import House from '../../model/House'
+import House_detail from '../../model/House_detail'
+import { ErrorHandler, dbCatch } from '../error'
+import asyncHandler from 'express-async-handler'
 
 /**
- * @api {get} /getHouse?id= getHouse
+ * @api {get} /houses/:id getHouse
  * @apiName GetHouse
  * @apiGroup House
  * @apiDescription 給定id獲得房子的詳細資訊
@@ -45,7 +45,7 @@ const asyncHandler = require('express-async-handler')
  * @apiError (Server error 500) {String} msg 資料庫發生錯誤
  */
 const getHouse = async (req,res,next) => {
-    const {id} = req.query
+    const {id} = req.params
     console.log(id)
     const house = await House
         .findOne({id})
@@ -56,4 +56,4 @@ const getHouse = async (req,res,next) => {
     res.status(200).send(house)
 }
 
-module.exports = asyncHandler(getHouse)
+export default asyncHandler(getHouse)

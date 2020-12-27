@@ -1,5 +1,5 @@
-const mongoose = require('mongoose'),
-  Schema = mongoose.Schema
+import mongoose from 'mongoose'
+const Schema = mongoose.Schema
 
 const Cor = new Schema({
     address: String,
@@ -12,4 +12,4 @@ const Cor = new Schema({
     }
 })
 
-module.exports = mongoose.model('Coordinate', Cor)
+export default mongoose.model('Coordinate', Cor)

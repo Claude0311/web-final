@@ -1,9 +1,10 @@
-const findNear = require('./findNear')
-const findSimilar = require('./findSimilar')
-const getPrice = require('./getPrice')
+import findNear from '../common/findNear'
+import findSimilar from '../common/findSimilar'
+import getPrice from '../common/getPrice'
+import parse from './parse'
 
 /**
- * @api {post} /askPrice askPrice
+ * @api {post} /valuate 請求估價
  * @apiName AskPrice
  * @apiGroup Valuate
  * @apiDescription 給定座標和房屋資訊，提供附近相似房子以及預估價錢
@@ -27,4 +28,4 @@ const getPrice = require('./getPrice')
  * @apiError (Server error 500) {Number} statusCode 500
  * @apiError (Server error 500) {String} msg 資料庫發生錯誤
  */
-module.exports = [findNear, findSimilar, getPrice]
+export default [parse,findNear, findSimilar, getPrice]

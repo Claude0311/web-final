@@ -29,3 +29,4 @@ test.js
 /backend/apidoc-out
 debug.log
 /backend/docTemplate
+apidoc.json*

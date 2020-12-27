@@ -8,6 +8,10 @@
   "scripts": {
     "start": "cd frontend && yarn start",
     "server": "cd backend && yarn server",
-    "install-all": "cd frontend && yarn && cd ../backend && yarn"
+    "install-all": "yarn && cd frontend && yarn && cd ../backend && yarn",
+    "dev": "npm-run-all --parallel start server"
+  },
+  "dependencies": {
+    "npm-run-all": "^4.1.5"
   }
 }

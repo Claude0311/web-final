@@ -1,9 +1,9 @@
-const House = require('../../model/House')
-const { ErrorHandler,dbCatch } = require('../error')
-const asyncHandler = require('express-async-handler')
+import House from '../../model/House'
+import { ErrorHandler,dbCatch } from '../error'
+import asyncHandler from 'express-async-handler'
 
 /**
- * @api {get} /getHouses getHouses
+ * @api {get} /houses getHouses
  * @apiName GetHouses
  * @apiGroup House
  * @apiDescription 拿到所有房子的座標、房屋型態、價格(顯示在地圖上)
@@ -30,4 +30,4 @@ const getHouses = async (req,res,next) => {
     res.status(200).send(houses)
 }
 
-module.exports = asyncHandler(getHouses)
+export default asyncHandler(getHouses)
