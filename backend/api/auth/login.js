@@ -18,7 +18,7 @@ import Hash from "../../model/Hash"
  * 
  * @apiError (400) {String} msg no user given
  */
-const setUser = expressAsyncHandler(async (req,res,next) => {
+const login = expressAsyncHandler(async (req,res,next) => {
     let {user,password} = req.body
     if(!user) throw new ErrorHandler(400,'no user given')
     if(process.env.USE_AUTH){
@@ -32,4 +32,4 @@ const setUser = expressAsyncHandler(async (req,res,next) => {
     res.status(200).send({user,auth:req.session.auth})
 })
 
-export {setUser}
+export {login}

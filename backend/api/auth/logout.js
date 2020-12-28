@@ -11,11 +11,11 @@ import { ErrorHandler } from "../error"
  * 
  * @apiError (Server error 500) msg session destroy error
  */
-const unsetUser = (req,res,next)=>{
+const logout = (req,res,next)=>{
     req.session.destroy(err=>{
         if(err) throw new ErrorHandler(500,'session destroy error')
         res.status(204).end()
     })
 }
 
-export {unsetUser}
+export {logout}

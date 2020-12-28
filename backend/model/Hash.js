@@ -3,7 +3,7 @@ const Schema = mongoose.Schema
 
 const Hash = new Schema({
     id:{type:String,unique:true},
-    hash:{String}
+    hash:String
 })
 
 /**

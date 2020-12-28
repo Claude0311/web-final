@@ -1,17 +1,15 @@
 import express from "express"
 const router = express.Router()
 
-import {setUser} from './setUser'
-import {unsetUser} from './unsetUser'
+import {login} from './login'
+import {logout} from './logout'
 import {setAuth} from './setAuth'
-import {unsetAuth} from './unsetAuth'
 import addAuth from './addAuth'
 import {register} from './register'
 
-router.post('/login',setUser)
-router.post('/logout',unsetUser)
+router.post('/login',login)
+router.post('/logout',logout)
 router.post('/loginAuth',setAuth)
-router.post('/logoutAuth',unsetAuth)
 router.post('/register',register)
 router.post('/addAuth',addAuth)
 
