@@ -1,14 +1,11 @@
-// import {Floor} from './Floor'
-// import {IsFirstFloor} from './IsFirstFloor'
-// import {Age} from './Age'
-// import {Distance} from './Distance'
-// import {Time} from './Time'
+import { meter2Lat, meter2Lng } from "../../util/unitTrans"
 
 const scoreTemplate = {
     Floor:{
         description:{prefix:'相差',postfix:'層樓以內'},
         rule:(param)=>{
             return (user,db)=>{
+                if(user.floor===undefined || db.detail.floor.floor === -1) return false
                 return Math.abs(user.floor-db.detail.floor.floor)<=param
             }
         }
@@ -17,7 +14,8 @@ const scoreTemplate = {
         description:{prefix:'一樓和一樓比較，二樓以上和二樓以上比較'},
         rule:(param)=>{
             return (user,db)=>{
-                return user.floor!==undefined && db.detail.floor.floor !== -1 && !((user.floor===1) ^ (db.detail.floor.floor===1))
+                if(user.floor===undefined || db.detail.floor.floor === -1) return false
+                return !((user.floor===1) ^ (db.detail.floor.floor===1))
             }
         }
     },
@@ -25,6 +23,7 @@ const scoreTemplate = {
         description:{prefix:'屋齡差距',postfix:'年以內'},
         rule:(param=5)=>{
             return ({age},{detail})=>{
+                if(age===undefined) return false
                 return Math.abs(age-detail.age)<=param
             }
         }
@@ -34,7 +33,7 @@ const scoreTemplate = {
         rule:(param)=>{
             return (user,db)=>{
                 const {coordinate:{lat,lng}} = user
-                const {coordinate:{DBlat,DBlng}} = db
+                const {coordinate:{lat:DBlat,lng:DBlng}} = db
                 if(
                     ((lat-DBlat)/(meter2Lat*param))**2
                     +

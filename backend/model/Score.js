@@ -24,7 +24,7 @@ Score.virtual('description').get(function(){
 
 
 
-Score.static.rule = async function(){
+Score.statics.myRule = async function myRule(){
     let lastPri = 0
     /**
      * 
@@ -36,10 +36,10 @@ Score.static.rule = async function(){
     const reduce = (accumulator, {priority,score}, currentIndex, array)=>{
         if(lastPri!==priority){
             lastPri = priority
-            accumulator.append([score])
+            accumulator.push([score])
             return accumulator
         }else{
-            accumulator[accumulator.length-1].append(score)
+            accumulator[accumulator.length-1].push(score)
             return accumulator
         }
     }
