@@ -7,8 +7,8 @@ const instance = axios.create({
 })
 
 // =========== login post ============
-export const loginAsNormalUser = async (Username) => {
-    return instance.post('/login',{user: Username})
+export const loginAsNormalUser = async ({Username,Password}) => {
+    return instance.post('/login',{user: Username,password:Password})
 }
 
 export const loginAsAuth = async () => {
