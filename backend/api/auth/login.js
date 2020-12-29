@@ -22,13 +22,12 @@ import Hash from "../../model/Hash"
  */
 const login = expressAsyncHandler(async (req,res,next) => {
     let {user,password} = req.body
+    console.log({user,password})
     if(!user) throw new ErrorHandler(400,'no user given')
     if(process.env.USE_AUTH==="true"){
-        console.log(process.env.USE_AUTH)
+        if(!password) throw new ErrorHandler(400,'no password given')
         const myHash = await Hash.getHash()
-        console.log(myHash)
         password = await bcrypt.hash(password,myHash)
-        console.log({user,password})
         const loginUser = await User.findOne({user,password}).catch(dbCatch)
         if(!loginUser) throw new ErrorHandler(400,'未註冊或密碼錯誤')
         req.session.auth = loginUser.isAuth

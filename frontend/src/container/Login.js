@@ -24,7 +24,7 @@ const Login = ({setId}) => {
     // login as a normal user
     const logInNormal = async ({Username,Password}) => {       
         if (checkUserName(Username) && checkPassWord(Password)) {
-            loginAsNormalUser(Username)
+            loginAsNormalUser({Username,Password})
                 .then( (res) => {
                     // console.log(res)
                     setId(res.data)
