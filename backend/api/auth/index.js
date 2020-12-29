@@ -9,6 +9,7 @@ import {register} from './register'
 
 router.post('/login',login)
 router.post('/logout',logout)
+router.post('/logoutAuth',logout)
 router.post('/loginAuth',setAuth)
 router.post('/register',register)
 router.post('/addAuth',addAuth)
