@@ -31,4 +31,8 @@ test.js
 debug.log
 /backend/docTemplate
 apidoc.json*
+<<<<<<< HEAD
+=======
+
+>>>>>>> register
 hash_save.js

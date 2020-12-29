@@ -7,10 +7,12 @@
  
 - [功能介紹](#prepend)
  - [Account](#account)
+   - [新增/移除管理員](#新增/移除管理員)
    - [login](#login)
    - [loginAuth](#loginauth)
    - [logout](#logout)
    - [logoutAuth](#logoutauth)
+   - [register](#register)
  - [Error](#error)
    - [Error testing](#error-testing)
  - [House](#house)
@@ -74,10 +76,42 @@ ___
 
 ## Account
 
+### 新增/移除管理員
+[Back to top](#top)
+
+新增/移除管理員
+
+```
+POST /addAuth
+```
+
+#### Parameters - `Parameter`
+
+| Name     | Type       | Description                           |
+|----------|------------|---------------------------------------|
+| user | `String` | 用戶名 |
+| isAuth | `boolean` | true新增/false移除 |
+
+#### Success response
+
+##### Success response - `200`
+
+| Name     | Type       | Description                           |
+|----------|------------|---------------------------------------|
+| user | `String` | 用戶 |
+
+#### Error response
+
+##### Error response - `Server error 500`
+
+| Name     | Type       | Description                           |
+|----------|------------|---------------------------------------|
+| msg |  | session destroy error |
+
 ### login
 [Back to top](#top)
 
-登入
+登入，在backend/.env使用USE_AUTH=true以檢查資料庫中是否為管理員
 
 ```
 POST /login
@@ -88,6 +122,7 @@ POST /login
 | Name     | Type       | Description                           |
 |----------|------------|---------------------------------------|
 | user | `String` | 用戶名字 |
+| password | `String` | 密碼 |
 
 #### Success response
 
@@ -95,7 +130,8 @@ POST /login
 
 | Name     | Type       | Description                           |
 |----------|------------|---------------------------------------|
-| - | `String` | login success |
+| user | `String` | 用戶名 |
+| auth | `boolean` | 是否是管理員(現階段均回傳false) |
 
 #### Error response
 
@@ -108,7 +144,7 @@ POST /login
 ### loginAuth
 [Back to top](#top)
 
-登入管理員
+登入管理員，將來會與/login合併，在backend/.env使用USE_AUTH=true以解鎖此功能
 
 ```
 POST /loginAuth
@@ -158,7 +194,7 @@ POST /logout
 ### logoutAuth
 [Back to top](#top)
 
-登出管理員
+登出管理員，將在未來版本與logout合併，建議直接使用/logout
 
 ```
 POST /logoutAuth
@@ -174,11 +210,49 @@ POST /logoutAuth
 
 #### Error response
 
-##### Error response - `404`
+##### Error response - `Server error 500`
 
 | Name     | Type       | Description                           |
 |----------|------------|---------------------------------------|
-| - |  |  |
+| msg |  | session destroy error |
+
+### register
+[Back to top](#top)
+
+註冊
+
+```
+POST /register
+```
+
+#### Parameters - `Parameter`
+
+| Name     | Type       | Description                           |
+|----------|------------|---------------------------------------|
+| user | `String` | 用戶 |
+| password | `String` | 密碼 |
+
+#### Success response
+
+##### Success response - `Success 200`
+
+| Name     | Type       | Description                           |
+|----------|------------|---------------------------------------|
+| user | `String` | 用戶名 |
+
+#### Error response
+
+##### Error response - `Client error 404`
+
+| Name     | Type       | Description                           |
+|----------|------------|---------------------------------------|
+| msg |  | 請填寫帳密 |
+
+##### Error response - `Server error 500`
+
+| Name     | Type       | Description                           |
+|----------|------------|---------------------------------------|
+| msg |  | 資料庫錯誤 |
 
 ## Error
 
