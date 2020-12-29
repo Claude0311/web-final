@@ -9,8 +9,8 @@ const Hash = new Schema({
 /**
  * @returns hash
  */
-Hash.static.getHash = async function(){
-    const {hash} = await this.find({id:1})
+Hash.statics.getHash = async function(){
+    const {hash} = await this.findOne({id:1})
     return hash
 }
 

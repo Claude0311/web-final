@@ -2,7 +2,7 @@ import mongoose from 'mongoose'
 const Schema = mongoose.Schema
 
 const User = new Schema({
-    user:String,
+    user:{type:String,unique:[true,'已有此使用者']},
     password:String,
     isAuth:{type:Boolean,default:false}
 })
