@@ -3,15 +3,17 @@ import GoogleMapReact from 'google-map-react';
 import { House_Pin, Current_Pin } from '../component/House_Pin';
 import House_Detail from '../component/House_detail';
 import { axiosGetHouses, axiosGetDetail } from '../axios/axios';
+import Fill_in from './Fill_in';
 
 const AnyReactComponent = ({ text }) => <div>{text}</div>;
 
-const Map = (id) => {
+const Map = ({id, inquireHouse}) => {
     const [cen,setCen] = useState({lat: 25.017, lng: 121.537});
     const [zoom,setZoom] = useState(16.0);
     const [houses, setHouses] = useState([]);
     const [ptrCoordinate, setPtrCod] = useState(null);
     const [houseDetail, setDetail] = useState(null);
+    const [clickMap, setClickMap] = useState(false)
 
     const getHouses = async () => {
       console.log("getting houses...")
@@ -51,39 +53,40 @@ const Map = (id) => {
       if (!houses.length) getHouses();
     })
     return(
-        <div style={{ height: '100vh', width: '100%' }}>
-        <GoogleMapReact
-          bootstrapURLKeys={{ key: 'AIzaSyBqlTXRpx8ARKVOHZXDopkEYtsPs0WUHQ0' }}
-          center={cen}
-          defaultZoom={zoom}
-          onClick={(e)=>{
-            setPtrCod({lat:e.lat,lng:e.lng});
-          }}
-        >
-          {houses.map( h => (
-            <House_Pin
-              key={h.id}
-              lat={h.coordinate.lat}
-              lng={h.coordinate.lng}
-              {...h}
-              getDetail={async()=>{        
-                getHouseDetail(h.id);          
-              }}
-              move={()=>setCen(h.coordinate)}
-            />
-          ))}
-          {(ptrCoordinate)?(
-            <Current_Pin
-              {...ptrCoordinate}
-            />
-          ):<></>}
-        </GoogleMapReact>
-        {(houseDetail)?
-          <House_Detail detail={houseDetail} onClose={()=>closeDetail()} visible={true}/>
-          : <></>
-        }
-        
-      </div>
+        <div style={{ height: '100vh', width: '100%', flexDirection: 'row' }}>
+          {clickMap? <Fill_in lat={ptrCoordinate.lat} lng={ptrCoordinate.lng} />: <></>}
+          <GoogleMapReact
+            bootstrapURLKeys={{ key: 'AIzaSyBqlTXRpx8ARKVOHZXDopkEYtsPs0WUHQ0' }}
+            center={cen}
+            defaultZoom={zoom}
+            onClick={(e)=>{
+              setPtrCod({lat:e.lat, lng:e.lng})
+              setClickMap(true)
+            }}
+          >
+            {houses.map( h => (
+              <House_Pin
+                key={h.id}
+                lat={h.coordinate.lat}
+                lng={h.coordinate.lng}
+                {...h}
+                getDetail={async()=>{        
+                  getHouseDetail(h.id);          
+                }}
+                move={()=>setCen(h.coordinate)}
+              />
+            ))}
+            {(ptrCoordinate)?(
+              <Current_Pin
+                {...ptrCoordinate}
+              />
+            ):<></>}
+          </GoogleMapReact>
+          {(houseDetail)?
+            <House_Detail detail={houseDetail} onClose={()=>closeDetail()} visible={true}/>
+            : <></>
+          }  
+        </div>
     )
 }
 
