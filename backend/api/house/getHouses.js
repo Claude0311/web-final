@@ -130,10 +130,10 @@ const valid = [
     query('neighbor').optional()
         .customSanitizer(validErr('neighbor'))
         .custom(value=>{
-            const {center,distance} = value
-            if(!center || isNaN(distance)) return false
-            const {lat,lng} = center
-            if(isNaN(lat)||isNaN(lng)) return false
+            const lat = value?.center?.lat
+            const lng = value?.center?.lng
+            const distance = value?.distance
+            if(isNaN(distance) || isNaN(lat)||isNaN(lng)) return false
             return true
         }).withMessage('neighbor格式: {center:{lat:Number,lng:Number},distance:Number}'),
     checkSchema({
