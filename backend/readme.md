@@ -532,7 +532,7 @@ PUT /score
 更新房屋資訊，重新計算系統估價
 
 ```
-PUT /valuate/user
+PATCH /valuate/user
 ```
 
 #### Parameters - `Parameter`
@@ -700,7 +700,7 @@ GET /valuate/user
 設定人為估價
 
 ```
-PUT /valuate/auth
+PATCH /valuate/auth
 ```
 
 #### Parameters - `Parameter`
