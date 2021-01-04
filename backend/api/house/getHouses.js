@@ -1,5 +1,5 @@
 import House from '../../model/House'
-import { ErrorHandler,dbCatch } from '../error'
+import { ErrorHandler,dbCatch, validErr } from '../error'
 import asyncHandler from 'express-async-handler'
 import House_detail from '../../model/House_detail'
 import { meter2Lat, meter2Lng } from '../../util/unitTrans'
@@ -25,13 +25,16 @@ import { meter2Lat, meter2Lng } from '../../util/unitTrans'
  * @apiparam {Object} totalPrice 總價(optional)
  * @apiparam {Number} totalPrice.lb lower bound (optional)
  * @apiparam {Number} totalPrice.ub upper bound (optional)
+ * @apiparam {Object} space 坪數(optional)
+ * @apiparam {Number} space.lb lower bound (optional)
+ * @apiparam {Number} space.ub upper bound (optional)
  * @apiparam {Boolean} hasParking 有無車位(optional)
  *
  * @apiSuccess {Object[]} - array of Houses
  * @apiSuccess {String} -.id id from 永慶房屋
  * @apiSuccess {String} -.buildingType 房屋型態
  *   - 公寓(無電梯)
- *   - 大樓(10樓以下有電梯)
+ *   - 電梯大樓(10樓以下有電梯)
  *   - 華夏(11樓以上有電梯)
  * @apiSuccess {Object} -.coordinate 經緯度
  * @apiSuccess {Number} -.coordinate.lat 緯度
@@ -96,3 +99,42 @@ const getHouses = async (req,res,next) => {
 }
 
 export default asyncHandler(getHouses)
+
+import {query,checkSchema} from 'express-validator'
+const template = (myKey='') => ({
+    in: ['query'],
+    optional:true,
+    customSanitizer: {options:validErr(myKey)},
+    custom: {
+        options:(value)=>{
+            console.log(value)
+            const {lb,ub} = value
+            if(lb!==undefined && isNaN(lb)
+            || ub!==undefined && isNaN(ub)
+            ) return false
+            return true
+        },
+        errorMessage: `should be ${myKey}:{lb:Number(optional),ub:Number(optional)}`
+    }
+})
+const valid = [
+    query('buildingType')
+        .optional()
+        .isIn(['公寓','電梯大樓','華夏']).withMessage('building type 應是 [公寓,電梯大樓,華夏]'),
+    query('neighbor').optional()
+        .customSanitizer(validErr('neighbor'))
+        .custom(value=>{
+            const {center,distance} = value
+            if(!center || isNaN(distance)) return false
+            const {lat,lng} = center
+            if(isNaN(lat)||isNaN(lng)) return false
+            return true
+        }).withMessage('neighbor格式: {center:{lat:Number,lng:Number},distance:Number}'),
+    checkSchema({
+        'unitPrice':template('unitPrice'),
+        'totalPrice':template('totalPrice'),
+        'space':template('space')
+    }),
+    query('hasParking').optional().isBoolean().withMessage('hasParking should be boolean')
+]
+export {valid}

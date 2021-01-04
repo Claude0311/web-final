@@ -1,12 +1,12 @@
 import react,{Component, useState, useEffect} from 'react'
 import axios from 'axios'
-import { axiosGetHouses } from '../axios/axios'
+import { init } from '../axios/axios'
 const Post = () => {
     const [response,setResponse] = useState('connecting bakend')
     useEffect(()=>{
         const hello = async ()=>{
             try{
-                await axiosGetHouses()
+                await init()
                 setResponse('connect to backend')
             }catch{
                 setResponse('backend connect fail')
