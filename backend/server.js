@@ -23,7 +23,7 @@ DB.once('open',()=>{
 	app.use(function (req, res, next) {
 		res.header('Access-Control-Allow-Origin', 'http://localhost:3000')//讓其他port(ex.3000)可以發post
 		res.header('Access-Control-Allow-Headers','Origin, X-Requested-With, Content-Type, Accept')
-		res.header('Access-Control-Allow-Methods', 'POST, GET, PUT, DELETE, OPTIONS')
+		res.header('Access-Control-Allow-Methods', 'POST, GET, PUT, DELETE, OPTIONS,PATCH')
 		res.header('Access-Control-Allow-Credentials', 'true')
 		next()
 	})

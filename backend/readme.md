@@ -370,6 +370,16 @@ GET /houses?buildType=
 | &ensp;ub | `Number` | upper bound (optional) |
 | hasParking | `Boolean` | 有無車位(optional) |
 
+#### Parameters examples
+`js` - axios
+
+```js
+axios.get('/houses',{params:{
+   buildingType:'公寓',
+   neighbot:{center:{lat:27,lng:125},distance:500}
+}})
+```
+
 #### Success response
 
 ##### Success response - `Success 200`

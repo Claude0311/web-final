@@ -7,7 +7,7 @@ import findSimilar from '../common/findSimilar'
 import getPrice from '../common/getPrice'
 
 /**
- * @api {put} /valuate/user 更新房屋內容
+ * @api {patch} /valuate/user 更新房屋內容
  * @apiName SetManualPrice
  * @apiGroup Valuate
  * @apiDescription 更新房屋資訊，重新計算系統估價
@@ -47,4 +47,15 @@ const parse = async (req,res,next) => {
     next()
 }
 
-export default [asyncHandler(parse),findNear,findSimilar,getPrice]
+import validator from '../../middleware/validation'
+import {body} from 'express-validator'
+const valid = [
+    body('_id').exists().withMessage('_id is required'),
+    body('lat').optional().isNumeric().withMessage('lat should be Number'),
+    body('lng').optional().isNumeric().withMessage('lng should be NUmber'),
+    body('buildingType').isIn(['公寓','電梯大樓','大廈']).withMessage('buildingType should be one of [公寓,電梯大樓,大廈]'),
+    body('floor').optional().isNumeric().withMessage('floor should be Number(optional)'),
+    body('age').optional().isNumeric().withMessage('age should be Number(optinoal)')
+]
+
+export default [validator(valid),asyncHandler(parse),findNear,findSimilar,getPrice]

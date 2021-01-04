@@ -20,6 +20,16 @@ export const axiosGetHouses = async () => {
     const {data:req_houses} = await instance.get('/houses');
     return req_houses;
 }
+// export const axiosGetHousesWithFilter = async () => {
+//     const {data:response} = await instance.get('/houses',{params:{
+//         buildingType:'公寓',
+//         neighbor:{center:{lat:'27',lng:'121'},distance:30},
+//         unitPrice:{lb:500000,ub:600000},
+//         hasParking:true
+//     }})
+//     console.log(response)
+//     return response
+// }
 export const axiosGetDetail = async (id) => {
     const {data:{detail}} = await instance.get(`/houses/${id}`,{params:{id:id}});
     return detail;
@@ -27,12 +37,13 @@ export const axiosGetDetail = async (id) => {
 
 // ============ test =============
 export const init = async () => {
-    const {data:response} = await instance.get('/houses',{params:{
+    const {data:response} = await instance.get('/valuate',{
+        lat:27,
+        lng:120,
         buildingType:'公寓',
-        neighbor:{center:{lat:'27',lng:'121'},distance:30},
-        unitPrice:{lb:500000,ub:600000},
-        hasParking:true
-    }})
+        age:37.5,
+        floor:2
+    })
     console.log(response)
     return response
 }
