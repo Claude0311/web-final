@@ -365,6 +365,9 @@ GET /houses?buildType=
 | totalPrice | `Object` | 總價(optional) |
 | &ensp;lb | `Number` | lower bound (optional) |
 | &ensp;ub | `Number` | upper bound (optional) |
+| space | `Object` | 坪數(optional) |
+| &ensp;lb | `Number` | lower bound (optional) |
+| &ensp;ub | `Number` | upper bound (optional) |
 | hasParking | `Boolean` | 有無車位(optional) |
 
 #### Success response
@@ -375,7 +378,7 @@ GET /houses?buildType=
 |----------|------------|---------------------------------------|
 | - | `Object[]` | array of Houses |
 | &ensp;id | `String` | id from 永慶房屋 |
-| &ensp;buildingType | `String` | 房屋型態  <li>公寓(無電梯)</li> <li>大樓(10樓以下有電梯)</li> <li>華夏(11樓以上有電梯)</li>  |
+| &ensp;buildingType | `String` | 房屋型態  <li>公寓(無電梯)</li> <li>電梯大樓(10樓以下有電梯)</li> <li>華夏(11樓以上有電梯)</li>  |
 | &ensp;coordinate | `Object` | 經緯度 |
 | &ensp;&ensp;lat | `Number` | 緯度 |
 | &ensp;&ensp;lng | `Number` | 經度 |
