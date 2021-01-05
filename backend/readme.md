@@ -462,7 +462,7 @@ GET /score
        {className:'Floor',description:{prefix:'相差',postfix:'層樓以內'}},
        {className:'IsFirstFloor',description:{prefix:'一樓和一樓比較，二樓以上和二樓以上比較'}},
    ],
-   myRules:[
+   myRules:[//default
        {priority:1,className:'IsFirstFloor',param:undefined,description:{prefix:'一樓和一樓比較，二樓以上和二樓以上比較'}},
        {priority:2,className:'Time',param:24,description:{prefix:'近',postfix:'個月內'}},
        {priority:3,className:'Distance',param:500,description:{prefix:'距離',postfix:'公尺內'}},
