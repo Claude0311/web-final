@@ -8,21 +8,43 @@ const instance = axios.create({
 
 // =========== login post ============
 export const loginAsNormalUser = async ({Username,Password}) => {
-    return instance.post('/login',{user: Username,password:Password})
+    try {
+        return await instance.post('/login',{user: Username,password:Password});
+    } catch (e) {
+        console.log(e);
+    } finally {
+        console.log("login fail");
+    }
 }
 
 export const loginAsAuth = async () => {
-    return instance.post('/loginAuth')
+    try {
+        return await instance.post('/loginAuth');
+    } catch (e) {
+        console.log(e);
+    } finally {
+        console.log("login auth fail");
+    }
+    
 }
 
 // ============ houses =============
 export const axiosGetHouses = async () => {
-    const {data:req_houses} = await instance.get('/houses');
-    return req_houses;
+    try {
+        const {data:req_houses} = await instance.get('/houses');
+        return req_houses;
+    } catch (e) {
+        console.log("fail to get houses")
+    } return null;
+    
 }
 export const axiosGetDetail = async (id) => {
-    const {data:{detail}} = await instance.get(`/houses/${id}`,{params:{id:id}});
-    return detail;
+    try {
+        const {data:{detail}} = await instance.get(`/houses/${id}`,{params:{id:id}});
+        return detail;
+    } catch (e) {
+        console.log("fail to get detail");
+    } return null;
 }
 
 // ============ test =============
