@@ -1,15 +1,34 @@
 import {useState} from 'react'
+import { sendHouseInformation } from '../axios/axios';
 
 const Fill_in = ({lat, lng}) => {
-    const [types, setTypes] = useState([false, false, false])
+    const [isChosen, setIsChosen] = useState([false, false, false])
+    const [type, setType] = useState(null)
+    const [floor, setFloor] = useState(null)
+    const [houseAge, setHouseAge] = useState(null)
+
     const chooseType = (event) => {
-        let tempTypes = types
-        tempTypes[parseInt(event.target.id)] ^= true
-        setTypes(tempTypes)
+        const ID = parseInt(event.target.id)
+        let tempIsChosen = isChosen
+        tempIsChosen[ID] ^= true
+        setIsChosen(tempIsChosen)
+        setType(ID)
+    }
+
+    const inputFloor = (event) => {
+        if(event.keyCode === 13 && event.target.value !== " ") {
+            setFloor(event.target.value)
+        }
+    }
+
+    const inputHouseAge = (event) => {
+        if(event.keyCode === 13 && event.target.value !== " ") {
+            setHouseAge(event.target.value)
+        }
     }
     return (
         <div  className="form">
-            <header>Information About This House</header>
+            <header id="title">Information About This House</header>
 
             <div className="position">
                 <p>Latitude: {lat}</p>
@@ -17,37 +36,37 @@ const Fill_in = ({lat, lng}) => {
             </div>
 
             <div className="buildingType">
-                <p>Building Type</p>
+                <p className="question">Building Type</p>
                 <ul>
                     <li>
                         <input 
-                            type="radio"
+                            type="checkbox"
                             // name= {i}
                             id="0"
                             onClick={chooseType}
-                            checked={types[0]}
+                            checked={isChosen[0]}
                             onChange={()=>{}}
                         />
                         <label htmlFor="0">公寓</label> 
                     </li>
                     <li>
                         <input 
-                            type="radio"
+                            type="checkbox"
                             // name= {i}
                             id="1"
                             onClick={chooseType}
-                            checked={types[1]}
+                            checked={isChosen[1]}
                             onChange={()=>{}}
                         />
                         <label htmlFor="1">電梯大樓</label>
                     </li>
                     <li>
                         <input 
-                            type="radio"
+                            type="checkbox"
                             // name= {i}
                             id="2"
                             onClick={chooseType}
-                            checked={types[2]}
+                            checked={isChosen[2]}
                             onChange={()=>{}}
                         />
                         <label htmlFor="2">華夏</label>
@@ -56,22 +75,23 @@ const Fill_in = ({lat, lng}) => {
             </div>
 
             <div className="floor">
-                <p>floor</p>
+                <p className="question">floor</p>
                 <input
                     // className="todo-app__input" 
                     placeholder="Which floor?" 
-                    // onKeyUp={this.saveInputs}
+                    onKeyUp={inputFloor}
                 />
             </div>
 
             <div className="age">
-                <p>House Age</p>
+                <p className="question">House Age</p>
                 <input
                     // className="todo-app__input" 
                     placeholder="How old?" 
-                    // onKeyUp={this.saveInputs}
+                    onKeyUp={inputHouseAge}
                 />
             </div>
+            
         </div>
     )
 }

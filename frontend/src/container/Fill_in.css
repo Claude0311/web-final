@@ -2,3 +2,7 @@
     flex-direction: column;
     text-align: left;
 }
+
+.question {
+    font-size: larger;
+}

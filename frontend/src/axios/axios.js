@@ -15,6 +15,9 @@ export const loginAsAuth = async () => {
 }
 
 // ============ houses =============
+// export const sendHouseInformation = async () => {
+//     await 
+// }
 export const axiosGetHouses = async () => {
     const {data:req_houses} = await instance.get('/houses');
     return req_houses;
