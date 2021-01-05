@@ -4,12 +4,13 @@ import {useState} from 'react'
 import Map from './container/Map'
 import Login from './container/Login'
 function App() {
-  const [id, setId] = useState(null)
+  const [id, setId] = useState(null);
+  const [isAuth, setAuth] = useState(false);
 
   return (
     <div className="App">
       {(id)? 
-        <Map id={id}/>: <Login setId={setId}/> 
+        <Map id={id} isAuth={isAuth}/>: <Login setAuth={setAuth} setId={setId}/> 
       }
     </div>
   );

@@ -7,7 +7,7 @@ import Fill_in from './Fill_in';
 
 const AnyReactComponent = ({ text }) => <div>{text}</div>;
 
-const Map = ({id, inquireHouse}) => {
+const Map = ({id, isAuth}) => {
     const [cen,setCen] = useState({lat: 25.017, lng: 121.537});
     const [zoom,setZoom] = useState(16.0);
     const [houses, setHouses] = useState([]);
@@ -17,17 +17,26 @@ const Map = ({id, inquireHouse}) => {
 
     const getHouses = async () => {
       console.log("getting houses...")
-      const req_houses = await axiosGetHouses();
-      // console.log(req_houses);
-      setHouses(req_houses);
+      try {
+        const req_houses = await axiosGetHouses();
+        setHouses(req_houses);
+      } catch (e) {
+        console.log(e);
+      }
+      
     }
 
     const getHouseDetail = async (id) => {
       // console.log(id);
       console.log("getting detail...");
-      const detail = axiosGetDetail(id);
+      try {
+        const detail = await axiosGetDetail(id);
+        setDetail(detail);
+      } catch (e) {
+        console.log(e);
+      }
       // console.log(detail);
-      setDetail(detail);
+      
     }
     //  UNUSED
     /*

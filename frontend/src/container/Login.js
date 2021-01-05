@@ -1,11 +1,11 @@
 import { useState, useEffect, useRef} from 'react'
 import {Form,Input,Button} from 'antd'
-import { UserOutlined, LockOutlined } from '@ant-design/icons';
+import { UserOutlined, LockOutlined, EyeTwoTone, EyeInvisibleOutlined } from '@ant-design/icons';
 import './Login.css'
 import { loginAsAuth, loginAsNormalUser } from '../axios/axios';
 
 
-const Login = ({setId}) => {
+const Login = ({setId,setAuth}) => {
     const [form] = Form.useForm();
 
     // ===== some hooks for validating username and password ==== 
@@ -27,13 +27,14 @@ const Login = ({setId}) => {
             loginAsNormalUser({Username,Password})
                 .then( (res) => {
                     // console.log(res)
-                    setId(res.data)
+                    setId(res.data);
+                    setAuth(res.isAuth);
                 })
-                .catch( (err)=> {
-                    console.log(err.msg)
-                    setStatus('user')
-                    setUsrVad('error')
-                    setUsrMsg('Unknown User!!')
+                .catch( (e)=> {
+                    // console.log(e?.response?.data?.msg);
+                    setStatus('user');
+                    setUsrVad('error');
+                    setUsrMsg(e?.response?.data?.msg);
                     form.resetFields();
                     userRef.current.focus();
                     
@@ -118,9 +119,10 @@ const Login = ({setId}) => {
                         validateStatus={psdValid}
                         help={psdMsg}
                     >
-                        <Input 
+                        <Input.Password
                             prefix={<LockOutlined className="site-form-item-icon"/>} 
                             placeholder="Password"
+                            iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
                             ref={psdRef} 
                             onChange={(e)=>{
                                 checkPassWord(e.target.value)
