@@ -22,10 +22,7 @@ import Hash from "../../model/Hash"
  */
 const login = expressAsyncHandler(async (req,res,next) => {
     let {user,password} = req.body
-    console.log({user,password})
-    if(!user) throw new ErrorHandler(400,'no user given')
     if(process.env.USE_AUTH==="true"){
-        if(!password) throw new ErrorHandler(400,'no password given')
         const myHash = await Hash.getHash()
         password = await bcrypt.hash(password,myHash)
         const loginUser = await User.findOne({user,password}).catch(dbCatch)
@@ -38,4 +35,16 @@ const login = expressAsyncHandler(async (req,res,next) => {
     res.status(200).send({user,auth:req.session.auth})
 })
 
+import validator from '../middleware/validation'
+import {body} from 'express-validator'
+const valid = [
+    body('user').exists().withMessage('user not given'),
+    body('password')
+        .exists().withMessage('password not given')
+        .isLength({min:2}).withMessage("密碼過短")
+        .isLength({max:30}).withMessage('密碼過長')
+        .matches(/^\w{2,30}$/).withMessage("密碼誤包含特殊字符")
+]
+
+export default [validator(valid),login]
 export {login}

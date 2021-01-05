@@ -370,6 +370,16 @@ GET /houses?buildType=
 | &ensp;ub | `Number` | upper bound (optional) |
 | hasParking | `Boolean` | 有無車位(optional) |
 
+#### Parameters examples
+`js` - axios
+
+```js
+axios.get('/houses',{params:{
+   buildingType:'公寓',
+   neighbot:{center:{lat:27,lng:125},distance:500}
+}})
+```
+
 #### Success response
 
 ##### Success response - `Success 200`
@@ -522,7 +532,7 @@ PUT /score
 更新房屋資訊，重新計算系統估價
 
 ```
-PUT /valuate/user
+PATCH /valuate/user
 ```
 
 #### Parameters - `Parameter`
@@ -690,7 +700,7 @@ GET /valuate/user
 設定人為估價
 
 ```
-PUT /valuate/auth
+PATCH /valuate/auth
 ```
 
 #### Parameters - `Parameter`

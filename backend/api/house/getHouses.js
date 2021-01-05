@@ -10,6 +10,12 @@ import { meter2Lat, meter2Lng } from '../../util/unitTrans'
  * @apiGroup House
  * @apiDescription 拿到所有房子的座標、房屋型態、價格(顯示在地圖上)
  * 
+ * @apiParamExample {js} axios
+ *   axios.get('/houses',{params:{
+ *      buildingType:'公寓',
+ *      neighbot:{center:{lat:27,lng:125},distance:500}
+ *   }})
+ * 
  * @apiparam {String} buildingType (optional)
  *   - 公寓(無電梯)
  *   - 大樓(10樓以下有電梯)
@@ -124,10 +130,10 @@ const valid = [
     query('neighbor').optional()
         .customSanitizer(validErr('neighbor'))
         .custom(value=>{
-            const {center,distance} = value
-            if(!center || isNaN(distance)) return false
-            const {lat,lng} = center
-            if(isNaN(lat)||isNaN(lng)) return false
+            const lat = value?.center?.lat
+            const lng = value?.center?.lng
+            const distance = value?.distance
+            if(isNaN(distance) || isNaN(lat)||isNaN(lng)) return false
             return true
         }).withMessage('neighbor格式: {center:{lat:Number,lng:Number},distance:Number}'),
     checkSchema({
