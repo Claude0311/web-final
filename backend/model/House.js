@@ -31,4 +31,4 @@ House.methods.score = function(user,rules){
 }
 
 
-export default mongoose.model('House', House)
+export default mongoose.model('House_fake', House)

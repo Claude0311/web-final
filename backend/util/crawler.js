@@ -2,23 +2,25 @@ import axios from 'axios'
 import {JSDOM} from 'jsdom'
 import House from '../model/House.js'
 import House_detail from '../model/House_detail.js'
+import parseTable from './parseTable'
+import DB from '../model/db'
+
+DB.once('open',()=>{
+    console.log('mongoDB connected')
+})
 
 export default async (fromWeb=false)=>{
     let i = 1
     let maxPage = 10
     for(;i<=maxPage;i++){
-        let url = `https://evertrust.yungching.com.tw/regionall/%e6%96%b0%e5%8c%97%e5%b8%82/%e6%b0%b8%e5%92%8c%e5%8d%80/${i}?t=1,2&d=1`
-        // if(fromWeb){
-            const ans = await axios.get(url)
-            if(ans.status !== 200) return 0
-            const {window:{document}} = new JSDOM(ans.data)
-        // }else{
-        //     var {window:{document}} = await JSDOM.fromFile(
-        //         './server/新北市永和區實價登錄3.0 全台最新房價查詢 _ 永慶房屋 - 永慶房仲網實價登錄.html',
-        //         {contentType: 'text/html'})
-        // }
+        let url = `https://evertrust.yungching.com.tw/regionall/%e6%96%b0%e5%8c%97%e5%b8%82/%e6%b0%b8%e5%92%8c%e5%8d%80/${i}?t=1,2&d=3`
+        const ans = await axios.get(url)
+        if(ans.status !== 200) return 0
+        // console.log(ans.data)
+        const {window:{document}} = new JSDOM(ans.data)
         if(i===1){
             const ul = document.getElementsByClassName('pagination')[0]
+            // console.log(document.getElementsByClassName('pigination').innerHtml())
             const lis = ul.getElementsByTagName('li')
             if(lis.length===1){maxPage=1}
             else{
@@ -27,14 +29,14 @@ export default async (fromWeb=false)=>{
                 maxPage = max
             }
         }
-        const table = document.querySelectorAll('#dealtable tbody tr')
+        const table = document.querySelectorAll('.table-wrapper tbody tr')
         const data = []
-        console.log(table.length)
+        console.log('table length',table.length)
         for(let i = 0;i<table.length;i+=2){
             const tds = table[i]
-            if(tds.getElementsByClassName('noteBlock')[0]!==undefined) continue
+            if(tds.querySelectorAll('.notice div')[0]!==undefined) continue
             // console.log(tds.getElementsByClassName('noteBlock')[0])
-            const {overview,detail} = await require('./parseTable')(tds)
+            const {overview,detail} = await parseTable(tds)
             // data.push(overview)
             // data_detail.push(detail)
             data.push({overview,detail})
