@@ -32,3 +32,14 @@ const dbCatch = (e) => {
 }
 
 export {ErrorHandler, handleError, dbCatch}
+
+export const validErr = (fieldName='unput')=>{
+    return (val)=>{
+        try{
+            return JSON.parse(val)
+        }
+        catch{
+            throw new ErrorHandler(`${fieldName} should be Object like`)
+        }
+    }
+}

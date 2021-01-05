@@ -57,3 +57,10 @@ const getHouse = async (req,res,next) => {
 }
 
 export default asyncHandler(getHouse)
+
+// import {param} from 'express-validator'
+
+// const valid = [
+//     param('id').exists()
+// ]
+// export {valid}

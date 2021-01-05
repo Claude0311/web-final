@@ -22,9 +22,15 @@ import Score from '../../model/Score'
 const updateScore = async (req,res,next)=>{
     await Score.deleteMany().catch(dbCatch)
     const {myRules} = req.body//[{className,param,priority}]
-    console.log(myRules)
     await Score.insertMany(myRules).catch(dbCatch)
     res.end()
 }
 
 export default asyncHandler(updateScore)
+import {body,checkSchema} from 'express-validator'
+export const valid = [
+    body('myRules').custom(value=>{
+        if(!Array.isArray(value)) return false
+        return value.every(({className,priority})=>className!==undefined && priority!==undefined)
+    }).withMessage('input should be myRules:[{className,param(optional),priority}]')
+]
