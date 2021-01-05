@@ -37,10 +37,9 @@ export const axiosGetDetail = async (id) => {
 
 // ============ test =============
 export const init = async () => {
-    const {data:response} = await instance.post('/addAuth',{
-        user:'b07901029',
-        isAuth:true
-    }).catch(e=>{
+    const {data:response} = await instance.get('/houses',{params:{
+        buildingType:'公寓'
+    }}).catch(e=>{
         console.log(e?.response?.data?.msg)
     })
     console.log(response)

@@ -32,7 +32,7 @@ const register = asyncHandler(async (req,res,next)=>{
 import validator from '../middleware/validation'
 import {body} from 'express-validator'
 const valid = [
-    body('user').exists().withMessage('user not given'),
+    body('user').isLength({min:3}).withMessage('user not given'),
     body('password')
         .exists().withMessage('password not given')
         .isLength({min:2}).withMessage("密碼過短")

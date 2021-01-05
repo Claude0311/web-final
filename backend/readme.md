@@ -449,6 +449,29 @@ GET /score
 | &ensp;priority | `Number` | 優先度 |
 | &ensp;className | `String` | template名稱(update時回傳) |
 
+#### Success response example
+
+##### Success response example - `data`
+
+```json
+{
+   templates:[
+       {className:'Time',description:{prefix:'近',postfix:'個月內'}},
+       {className:'Distance',description:{prefix:'距離',postfix:'公尺內'}},
+       {className:'Age',description:{prefix:'屋齡差距',postfix:'年以內'}},
+       {className:'Floor',description:{prefix:'相差',postfix:'層樓以內'}},
+       {className:'IsFirstFloor',description:{prefix:'一樓和一樓比較，二樓以上和二樓以上比較'}},
+   ],
+   myRules:[//default
+       {priority:1,className:'IsFirstFloor',param:undefined,description:{prefix:'一樓和一樓比較，二樓以上和二樓以上比較'}},
+       {priority:2,className:'Time',param:24,description:{prefix:'近',postfix:'個月內'}},
+       {priority:3,className:'Distance',param:500,description:{prefix:'距離',postfix:'公尺內'}},
+       {priority:4,className:'Time',param:6,description:{prefix:'近',postfix:'個月內'}},
+       {priority:5,className:'Age',param:5,description:{prefix:'屋齡差距',postfix:'年以內'}},
+   ]
+}
+```
+
 #### Error response
 
 ##### Error response - `Server error 500`
