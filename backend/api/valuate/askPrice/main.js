@@ -33,7 +33,7 @@ import {body} from 'express-validator'
 const valid = [
     body('lat').isNumeric().withMessage('lat should be Number'),
     body('lng').isNumeric().withMessage('lng should be NUmber'),
-    body('buildingType').isIn(['公寓','電梯大樓','大廈']).withMessage('buildingType should be one of [公寓,電梯大樓,大廈]'),
+    // body('buildingType').isIn(['公寓','電梯大樓','大廈']).withMessage('buildingType should be one of [公寓,電梯大樓,大廈]'),
     body('floor').optional().isNumeric().withMessage('floor should be Number(optional)'),
     body('age').optional().isNumeric().withMessage('age should be Number(optinoal)')
 ]
