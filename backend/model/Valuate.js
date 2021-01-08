@@ -8,13 +8,13 @@ const Valuate = new Schema({
     processed: {type:Boolean, default:false},
     //house related
     coordinate: {lat:Number,lng:Number},
-    buildingType: String,
+    buildingType: Number,
     age:Number,
     floor: Number,
     //valuate related
-    similar: [{ type: Schema.Types.ObjectId, ref: 'House' }],
+    similar: [{ type: Schema.Types.ObjectId, ref: 'House_fake' }],
     avgPrice: Number,
     manualPrice: Number
 })
 
-export default mongoose.model('Valuate', Valuate)
+export default mongoose.model('Valuate_fake', Valuate)

@@ -22,10 +22,10 @@ import { dbCatch } from "../../error"
  * @apiSuccess {Number} -.avgPrice 系統算出來的$
  * @apiSuccess {Object[]} -.similar 附近相似的房子
  * @apiSuccess {String} -.similar.id id from 永慶房屋
- * @apiSuccess {String} -.similar.buildingType 房屋型態
- *   - 公寓(無電梯)
- *   - 大樓(10樓以下有電梯)
- *   - 華夏(11樓以上有電梯)
+ * @apiSuccess {String} -.similar.buildingType 房屋型態 0~2
+ *  - 0: 公寓(5樓含以下無電梯)
+ *  - 1: 華廈(10層含以下有電梯)
+ *  - 2: 住宅大樓(11層含以上有電梯)
  * @apiSuccess {Object} -.similar.coordinate 經緯度
  * @apiSuccess {Number} -.similar.coordinate.lat 緯度
  * @apiSuccess {Number} -.similar.coordinate.lng 經度

@@ -15,10 +15,10 @@ import parse from './parse'
  * 
  * @apiparam {Number} lat 緯度
  * @apiparam {Number} lng 經度
- * @apiparam {String} buildingType 
- *  - 公寓
- *  - 電梯大樓
- *  - 華夏
+ * @apiparam {Number} buildingType 0~2
+ *  - 0: 公寓(5樓含以下無電梯)
+ *  - 1: 華廈(10層含以下有電梯)
+ *  - 2: 住宅大樓(11層含以上有電梯)
  * @apiparam {Number} floor 樓層(optional) 
  * @apiparam {Number} age 屋齡(optional) 
  * 
@@ -33,7 +33,7 @@ import {body} from 'express-validator'
 const valid = [
     body('lat').isNumeric().withMessage('lat should be Number'),
     body('lng').isNumeric().withMessage('lng should be NUmber'),
-    // body('buildingType').isIn(['公寓','電梯大樓','大廈']).withMessage('buildingType should be one of [公寓,電梯大樓,大廈]'),
+    body('buildingType').isIn([0,1,2]).withMessage('buildingType should be one of 0~2，stands for 公寓(5樓含以下無電梯)、華廈(10層含以下有電梯)、住宅大樓(11層含以上有電梯)'),
     body('floor').optional().isNumeric().withMessage('floor should be Number(optional)'),
     body('age').optional().isNumeric().withMessage('age should be Number(optinoal)')
 ]

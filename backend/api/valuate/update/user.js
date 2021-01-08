@@ -15,10 +15,10 @@ import getPrice from '../common/getPrice'
  * @apiparam {String} _id 待估房子的_id
  * @apiparam {Number} lat 緯度(optional)
  * @apiparam {Number} lng 經度(optional)
- * @apiparam {String} buildingType(optional)
- *  - 公寓
- *  - 電梯大樓
- *  - 華夏
+ * @apiparam {String} buildingType(optional) 0~2
+ *  - 0: 公寓(5樓含以下無電梯)
+ *  - 1: 華廈(10層含以下有電梯)
+ *  - 2: 住宅大樓(11層含以上有電梯)
  * @apiparam {Number} floor 樓層(optional)
  * @apiparam {Number} age 屋齡(optional) 
  *
@@ -53,7 +53,7 @@ const valid = [
     body('_id').exists().withMessage('_id is required'),
     body('lat').optional().isNumeric().withMessage('lat should be Number'),
     body('lng').optional().isNumeric().withMessage('lng should be NUmber'),
-    body('buildingType').isIn(['公寓','電梯大樓','大廈']).withMessage('buildingType should be one of [公寓,電梯大樓,大廈]'),
+    body('buildingType').optional().isIn([0,1,2]).withMessage('buildingType should be one of 0~2，stands for 公寓(5樓含以下無電梯)、華廈(10層含以下有電梯)、住宅大樓(11層含以上有電梯)'),
     body('floor').optional().isNumeric().withMessage('floor should be Number(optional)'),
     body('age').optional().isNumeric().withMessage('age should be Number(optinoal)')
 ]
