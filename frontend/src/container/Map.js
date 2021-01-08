@@ -23,7 +23,7 @@ const Map = (id) => {
     const getHouseDetail = async (id) => {
       // console.log(id);
       console.log("getting detail...");
-      const detail = axiosGetDetail(id);
+      const detail = await axiosGetDetail(id);
       // console.log(detail);
       setDetail(detail);
     }

@@ -23,4 +23,4 @@ const House_detail = new Schema({
     }
 })
 
-export default mongoose.model('House_detail', House_detail)
+export default mongoose.model('House_detail_fake', House_detail)

@@ -1,4 +1,5 @@
 import axios from 'axios'
+import buildingType from './buildingType'
 // import {useState} from 'react'
 console.log('NODE_ENV',process.env.NODE_ENV)
 const API_ROOT = (process.env.NODE_ENV==='production')?'':'http://localhost:4000'
@@ -18,7 +19,7 @@ export const loginAsAuth = async () => {
 // ============ houses =============
 export const axiosGetHouses = async () => {
     const {data:req_houses} = await instance.get('/houses');
-    return req_houses;
+    return req_houses.map(element=>({...element,buildingType:buildingType[element.buildingType]}));
 }
 // export const axiosGetHousesWithFilter = async () => {
 //     const {data:response} = await instance.get('/houses',{params:{
@@ -37,11 +38,11 @@ export const axiosGetDetail = async (id) => {
 
 // ============ test =============
 export const init = async () => {
-    const {data:response} = await instance.get('/houses',{params:{
-        buildingType:'公寓'
-    }}).catch(e=>{
-        console.log(e?.response?.data?.msg)
-    })
-    console.log(response)
-    return response
+    // const {data:response} = await instance.get('/houses',{params:{
+    //     // buildingType:'公寓'
+    // }}).catch(e=>{
+    //     console.log(e?.response?.data?.msg)
+    // })
+    // console.log(response)
+    // return response
 }

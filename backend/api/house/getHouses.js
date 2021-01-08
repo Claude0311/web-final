@@ -79,10 +79,13 @@ const getHouses = async (req,res,next) => {
     ){
         houses = await House
             .find(query,{_id:0,id:1,buildingType:1,coordinate:1,unitPrice:1})
+            .sort({ _id: -1 }).limit(100)
             .catch(dbCatch)
     }else{
         houses = await House
             .find(query,{_id:0,id:1,buildingType:1,coordinate:1,unitPrice:1,detail:1})
+            .sort({ _id: -1 })
+            .limit(100)
             .populate('detail')
             .catch(dbCatch)
         houses = houses.filter(({detail:{price:{totalPrice:tp},space:{totalSpace:ts},hasParking:hp}})=>{
