@@ -21,19 +21,52 @@ export const loginAsAuth = async () => {
         return await instance.post('/loginAuth');
     } catch (e) {
         console.log("login auth fail");
-        throw new Error("login auth fail");
+        throw e;
     }
     
 }
 
-// ============ houses =============
-export const axiosGetHouses = async () => {
+export const addAuth = async (user,isAuth) => {
+    await instance.post('/addAuth', {params: {user,isAuth}})
+        .then((res) => {
+            console.log("successfully");
+        })
+        .catch((err) => {
+            throw err;
+        })
+}
+
+export const logoutUser = async () => {
+    await instance.post('/logout')
+        .catch((err) => {
+            throw err;
+        })
+}
+
+export const logoutAuth = async () => {
+    instance.post('/logoutAuth')
+        .catch((err) => {
+            throw err;
+        })
+}
+
+export const registerUser = async (user, password) => {
     try {
-        const {data:req_houses} = await instance.get('/houses');
+        const { data: user } = await instance.post('/register', {params: {user,password}})
+    } catch (e) {
+        console.log("fail to register");
+        throw e;
+    }
+}
+
+// ============ houses =============
+export const axiosGetHouses = async (params) => {
+    try {        
+        const {data:req_houses} = await instance.get('/houses',{params});
         return req_houses;
     } catch (e) {
         console.log("fail to get houses")
-        throw new Error("fail to get houses");
+        throw e;
     }
     
 }
@@ -57,4 +90,11 @@ export const init = async () => {
     }})
     console.log(response)
     return response
+}
+
+export const testErr = async () => {
+    instance.get('/error')
+        .catch((err) => {
+            throw err;
+        })
 }

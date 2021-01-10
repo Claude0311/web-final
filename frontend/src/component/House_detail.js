@@ -32,17 +32,20 @@ const DescriptionItem = ({ title, content }) => (
     </div>
   );
 
-function House_Detail({detail,onClose,visible}) {
+function House_Detail({detail, onClose}) { //,onClose,visible
+    // onClose={()=>closeDetail()} visible={true}
     return (
         <Drawer
           width={320}
           placement="right"
           closable={true}
-          onClose={onClose}
-          visible={visible}
+          onClose={()=>onClose()}
+          visible={true}
+          getContainer={false}
+          style={{ position: 'absolute' }}
         >
           <p className="site-description-item-profile-p" style={{ marginBottom: 24 }}>
-            User Profile
+            House Information
           </p>
           <p className="site-description-item-profile-p">Info</p>
           <Row>

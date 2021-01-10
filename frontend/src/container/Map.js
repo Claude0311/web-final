@@ -13,12 +13,14 @@ const Map = ({id, isAuth}) => {
     const [houses, setHouses] = useState([]);
     const [ptrCoordinate, setPtrCod] = useState(null);
     const [houseDetail, setDetail] = useState(null);
-    const [clickMap, setClickMap] = useState(false)
+    const [clickMap, setClickMap] = useState(false);
+    const [criteria, setCriteria] = useState(null);
 
+    // get houses
     const getHouses = async () => {
       console.log("getting houses...")
       try {
-        const req_houses = await axiosGetHouses();
+        const req_houses = await axiosGetHouses(criteria);
         setHouses(req_houses);
       } catch (e) {
         console.log(e);
@@ -34,10 +36,13 @@ const Map = ({id, isAuth}) => {
         setDetail(detail);
       } catch (e) {
         console.log(e);
-      }
-      // console.log(detail);
-      
+      } 
+    } 
+
+    const setSearchTarget = (newcriteria) => {
+      setCriteria(...criteria, newcriteria);
     }
+    
     //  UNUSED
     /*
     const moveCen = (lat,lng) => {
@@ -57,10 +62,22 @@ const Map = ({id, isAuth}) => {
     const closeDetail = () => {
       setDetail(null);
     }
+
+    const showForm = async () => {
+        //window.setTimeOut(()=>setClickMap(true),1000);
+        setCen(ptrCoordinate);
+        
+    }
     
+    // useEffect( () => {
+    //   if (!houses.length) getHouses();
+    // });
+
     useEffect( () => {
-      if (!houses.length) getHouses();
-    })
+      getHouses();
+    }, [criteria]);
+
+
     return(
         <div style={{ height: '100vh', width: '100%', flexDirection: 'row' }}>
           {clickMap? <Fill_in lat={ptrCoordinate.lat} lng={ptrCoordinate.lng} />: <></>}
@@ -70,7 +87,7 @@ const Map = ({id, isAuth}) => {
             defaultZoom={zoom}
             onClick={(e)=>{
               setPtrCod({lat:e.lat, lng:e.lng})
-              setClickMap(true)
+              setClickMap(false)
             }}
           >
             {houses.map( h => (
@@ -79,20 +96,21 @@ const Map = ({id, isAuth}) => {
                 lat={h.coordinate.lat}
                 lng={h.coordinate.lng}
                 {...h}
-                getDetail={async()=>{        
-                  getHouseDetail(h.id);          
-                }}
+                getDetail={       
+                  getHouseDetail          
+                }
                 move={()=>setCen(h.coordinate)}
               />
             ))}
             {(ptrCoordinate)?(
               <Current_Pin
                 {...ptrCoordinate}
+                showForm={showForm}
               />
             ):<></>}
           </GoogleMapReact>
           {(houseDetail)?
-            <House_Detail detail={houseDetail} onClose={()=>closeDetail()} visible={true}/>
+            <House_Detail detail={houseDetail} onClose={closeDetail}/>
             : <></>
           }  
         </div>

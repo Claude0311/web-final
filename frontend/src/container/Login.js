@@ -34,6 +34,7 @@ const Login = ({setId,setAuth}) => {
                     // console.log(e?.response?.data?.msg);
                     setStatus('user');
                     setUsrVad('error');
+                    setPsdVad('error');
                     setUsrMsg(e?.response?.data?.msg);
                     form.resetFields();
                     userRef.current.focus();
