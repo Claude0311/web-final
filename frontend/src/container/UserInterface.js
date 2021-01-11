@@ -87,13 +87,13 @@ const UserInterface = ({id,isAuth, logout, history})=> {
                     {myHouses.map((ele) => 
                         <Menu.Item key={ele}>MY house{ele}</Menu.Item>)}
                 </SubMenu>
-                <Menu.Item key="3" onClick={onLogout} icon={<LogoutOutlined />}>
+                <Menu.Item key="logout" onClick={onLogout} icon={<LogoutOutlined />}>
                 Log out
                 </Menu.Item>
-                <Menu.Item key="4" icon={<UploadOutlined />}>
+                <Menu.Item key="n1" icon={<UploadOutlined />}>
                 not done yet
                 </Menu.Item>
-                <Menu.Item key="5" icon={<UploadOutlined />}>
+                <Menu.Item key="n2" icon={<UploadOutlined />}>
                 not done yet
                 </Menu.Item>
             </Menu>

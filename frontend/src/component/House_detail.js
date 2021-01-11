@@ -32,13 +32,8 @@ const DescriptionItem = ({ title, content }) => (
     </div>
   );
 
-<<<<<<< HEAD
 function House_Detail({detail, onClose}) { //,onClose,visible
     // onClose={()=>closeDetail()} visible={true}
-=======
-function House_Detail({detail,onClose,visible}) {
-  console.log({detail})
->>>>>>> main
     return (
         <Drawer
           width={320}

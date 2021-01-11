@@ -30,7 +30,6 @@ const Map = ({criteria}) => {
     const getHouseDetail = async (id) => {
       // console.log(id);
       console.log("getting detail...");
-<<<<<<< HEAD
       try {
         const detail = await axiosGetDetail(id);
         setDetail(detail);
@@ -39,12 +38,6 @@ const Map = ({criteria}) => {
       } 
     } 
     
-=======
-      const detail = await axiosGetDetail(id);
-      // console.log(detail);
-      setDetail(detail);
-    }
->>>>>>> main
     //  UNUSED
     /*
     const moveCen = (lat,lng) => {

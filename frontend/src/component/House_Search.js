@@ -143,7 +143,7 @@ const SearchForm = ({name,setCriteria}) => {
         onFinish={onFinish}
         initialValues={{
           hasParking: undefined,
-          buildingType: ""
+          buildingType: undefined
         }}
       > 
         <Form.Item
@@ -152,7 +152,7 @@ const SearchForm = ({name,setCriteria}) => {
         //   rules={[{ required: true, message: 'Please select your favourite colors!', type: 'array' }]}
         >
           <Select placeholder="Please select building type">
-            <Option value="">不限</Option>
+            <Option value={undefined}>不限</Option>
             <Option value="公寓">公寓(無電梯)</Option>
             <Option value="電梯大樓">電梯大樓(10樓以下有電梯)</Option>
             <Option value="華夏">華夏(11樓以上有電梯)</Option>
