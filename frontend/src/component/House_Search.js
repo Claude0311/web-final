@@ -20,7 +20,7 @@
 6. hasParking	Boolean	有無車位(optional)
  */
 import { useState } from 'react';
-import { ControlOutlined } from '@ant-design/icons';
+import { BarsOutlined } from '@ant-design/icons';
 import {
     Form,
     Select,
@@ -40,7 +40,7 @@ const formItemLayout = {
 
 
 
-const SearchForm = () => {
+const SearchForm = ({name,setCriteria}) => {
   const [form] = Form.useForm();
   const [visible, setVisible] = useState(false);
   const [isLoading, setLoading] = useState(false);
@@ -52,9 +52,7 @@ const SearchForm = () => {
   const MaxSpace = 100;
 
   // get value of requirement 
-  const onFinish = (values) => {
-    /**
-     * { 
+  const onFinish = ({ 
     buildingType, 
     hasParking,
     space_lb,
@@ -63,48 +61,73 @@ const SearchForm = () => {
     totalPrice_ub,
     unitPrice_lb,
     unitPrice_ub
+    }) => {
+    // console.log('Received values of form: ', values);
+    // simple check
+    if (unitPrice_lb >= unitPrice_ub) {
+      form.setFieldsValue({
+        unitPrice_lb: undefined,
+        unitPrice_ub: undefined
+      })
+      unitPrice_lb = undefined;
+      unitPrice_ub = undefined;
     }
-     */
-    console.log('Received values of form: ', values);
-    /*
-    const params = {
+    if (totalPrice_lb >= totalPrice_ub) {
+      totalPrice_ub = undefined;
+      totalPrice_lb = undefined;
+    }
+    if (space_lb >= space_ub) {
+      space_lb = undefined;
+      space_ub = undefined;
+    }
+    const criteria = {
       buildingType,
       hasParking,
       space: { ub: space_ub, lb: space_lb},
       totalPrice: {
-        ub: totalPrice_ub,//.number*totalPrice_ub.domination, 
-        lb: totalPrice_lb//.number*totalPrice_lb.domination},
+        ub: totalPrice_ub,
+        lb: totalPrice_lb
       },
       unitPrice: {
-        ub: unitPrice_ub,//.number*unitPrice_ub.domination, 
-        lb: unitPrice_lb//.number*unitPrice_lb.domination
+        ub: unitPrice_ub,
+        lb: unitPrice_lb
       }
     }
-    console.log(params);*/
+    console.log(criteria);
+    setCriteria(criteria);
   };
   const showSearchForm = ()=> {
     setVisible(true);
   }
-  const beginLoad = async () => {
-    setLoading(true);
+  const resetForm = () => {
+    form.resetFields();
   }
-  const handleOK = () => {
-    console.log("ok");
-    // console.log(form);
-    form.submit();
+  const handleOK = async () => {
+    setLoading(true);
+    await form.submit();
+    setLoading(false);
+    setVisible(false);
   }
   const handleCancel = () => {
     setVisible(false);
   }
   return (
     <>
-      <ControlOutlined onClick={showSearchForm} />
+      <Button 
+        type="primary" 
+        icon={<BarsOutlined />}
+        onClick={showSearchForm}>
+        {name}
+      </Button>
       <Modal
         visible={visible}
         title="Search with Condition"
         onOk={handleOK}
         onCancel={handleCancel}
         footer={[
+          <Button key="reset" onClick={resetForm}>
+            Reset
+          </Button>,
           <Button key="back" onClick={handleCancel}>
             Return
           </Button>,
@@ -118,16 +141,20 @@ const SearchForm = () => {
         name="search_form"
         {...formItemLayout}
         onFinish={onFinish}
+        initialValues={{
+          hasParking: undefined,
+          buildingType: ""
+        }}
       > 
         <Form.Item
           name="buildingType"
           label="房屋類型"
         //   rules={[{ required: true, message: 'Please select your favourite colors!', type: 'array' }]}
         >
-          <Select defaultValue="" placeholder="Please select building type">
+          <Select placeholder="Please select building type">
             <Option value="">不限</Option>
             <Option value="公寓">公寓(無電梯)</Option>
-            <Option value="大樓">大樓(10樓以下有電梯)</Option>
+            <Option value="電梯大樓">電梯大樓(10樓以下有電梯)</Option>
             <Option value="華夏">華夏(11樓以上有電梯)</Option>
           </Select>
         </Form.Item>
@@ -135,14 +162,14 @@ const SearchForm = () => {
         <Form.Item name="unitPrice_ub" label="每坪房價">
 
           <SearchNumber 
-            unit="NTD 以下"
+            unit="以下"
             min={MinPrice}
             max={MaxPrice}
           />
         </Form.Item>
         <Form.Item name="unitPrice_lb" label="每坪房價">  
           <SearchNumber 
-            unit="NTD 以上"
+            unit="以上"
             min={MinPrice}
             max={MaxPrice}
           />
@@ -151,7 +178,7 @@ const SearchForm = () => {
         <Form.Item name="totalPrice_ub" label="總房價">
           <SearchNumber 
             // defaultValue={100}
-            unit="NTD 以下"
+            unit="以下"
             min={MinPrice}
             max={MaxPrice}
           /> 
@@ -159,7 +186,7 @@ const SearchForm = () => {
         <Form.Item name="totalPrice_lb" label="總房價">        
           <SearchNumber 
             // defaultValue={100}
-            unit="NTD 以上"
+            unit="以上"
             min={MinPrice}
             max={MaxPrice}
           />
@@ -190,10 +217,9 @@ const SearchForm = () => {
         <Form.Item 
           name="hasParking" 
           label="停車位"
-          defaultValue="none"
         >
           <Radio.Group>
-            <Radio value={"none"}>不限</Radio>
+            <Radio value={undefined}>不限</Radio>
             <Radio value={false}>無</Radio>
             <Radio value={true}>有</Radio>
           </Radio.Group>

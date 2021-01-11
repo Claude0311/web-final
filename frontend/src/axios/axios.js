@@ -7,9 +7,9 @@ const instance = axios.create({
 })
 
 // =========== login post ============
-export const loginAsNormalUser = async ({Username,Password}) => {
+export const loginAsNormalUser = async ({user,password}) => {
     try {
-        return await instance.post('/login',{user: Username,password:Password});
+        return await instance.post('/login',{user, password});
     } catch (e){
         throw e;
     }
@@ -50,9 +50,10 @@ export const logoutAuth = async () => {
         })
 }
 
-export const registerUser = async (user, password) => {
+export const registerUser = async ({user,password}) => {
     try {
-        const { data: user } = await instance.post('/register', {params: {user,password}})
+        const {data: {user: name}} = await instance.post('/register', {user,password});
+        return name;
     } catch (e) {
         console.log("fail to register");
         throw e;

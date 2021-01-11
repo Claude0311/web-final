@@ -7,14 +7,13 @@ import Fill_in from './Fill_in';
 
 const AnyReactComponent = ({ text }) => <div>{text}</div>;
 
-const Map = ({id, isAuth}) => {
+const Map = ({criteria}) => {
     const [cen,setCen] = useState({lat: 25.017, lng: 121.537});
     const [zoom,setZoom] = useState(16.0);
     const [houses, setHouses] = useState([]);
     const [ptrCoordinate, setPtrCod] = useState(null);
     const [houseDetail, setDetail] = useState(null);
     const [clickMap, setClickMap] = useState(false);
-    const [criteria, setCriteria] = useState(null);
 
     // get houses
     const getHouses = async () => {
@@ -38,10 +37,6 @@ const Map = ({id, isAuth}) => {
         console.log(e);
       } 
     } 
-
-    const setSearchTarget = (newcriteria) => {
-      setCriteria(...criteria, newcriteria);
-    }
     
     //  UNUSED
     /*

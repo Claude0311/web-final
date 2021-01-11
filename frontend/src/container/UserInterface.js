@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Input, Layout, Menu, Avatar } from 'antd';
+import { Input, Layout, Menu, Avatar, Tooltip, Button } from 'antd';
 import {
     MenuUnfoldOutlined,
     MenuFoldOutlined,
@@ -8,7 +8,8 @@ import {
     UploadOutlined,
     UserOutlined,
     SearchOutlined,
-    HomeOutlined
+    HomeOutlined,
+    HomeFilled
   } from '@ant-design/icons';
 import './UserInterface.css';  
 import Map from './Map';
@@ -17,14 +18,35 @@ import SearchForm from '../component/House_Search';
 
 const { Header, Sider, Content } = Layout;
 
-const UserInterface = ({id,isAuth})=> {
+const UserInterface = ({id,isAuth, logout, history})=> {
     
     const [collapsed, setCollapsed] = useState(false);
-
+    const [criteria, setCriteria] = useState(null);
+    // const [userHouses, setUserHouses] = useState([]);
+    const myHouses = [
+        "1","2","3"
+    ]
     const toggle = () => {
         setCollapsed(!collapsed);
     };
 
+    const handleCriteria = (c) => {
+        setCriteria(c);
+    }
+
+    const onHome = () => {
+        history.push('/');
+    }
+    
+    const onLogout = async() => {
+        const result = await logout();
+        if (result === 'success') {
+            console.log("log out...");
+            history.push('/login');
+        } else {
+            console.log(result);
+        }
+    }
     return (
     <Layout>
         <Sider 
@@ -35,14 +57,20 @@ const UserInterface = ({id,isAuth})=> {
 
             >
             <div className="logo" >
-                Web final Logo
+                <HomeFilled style={{
+                    fontSize: "20px"
+                }} />
+                <div className="text">
+                    <span>House</span>
+                    <span>Evaluation</span>
+                </div>
             </div>
 
             <Menu theme="light" mode="inline" defaultSelectedKeys={['home']}>
                 <Menu.Item key="home" icon={<HomeOutlined />}>
                     Home
                 </Menu.Item>
-                <Menu.Item key="10" icon={<SearchOutlined />}>
+                <Menu.Item key="search" icon={<SearchOutlined />}>
                     {(collapsed)?
                         "Search":
                         <Input
@@ -52,22 +80,21 @@ const UserInterface = ({id,isAuth})=> {
                         ></Input>
                     }
                 </Menu.Item>
-                <Menu.Item key="1" icon={<UserOutlined />}>
+                <Menu.Item key="profile" icon={<UserOutlined />}>
                 Your profile
                 </Menu.Item>
-                <SubMenu key="2" icon={<ShopOutlined />} title="Your Houses">
-                    <Menu.Item key="3">House1</Menu.Item>
-                    <Menu.Item key="4">House2</Menu.Item>
-                    <Menu.Item key="5">House3</Menu.Item>
+                <SubMenu key="houses" icon={<ShopOutlined />} title="Your Houses">
+                    {myHouses.map((ele) => 
+                        <Menu.Item key={ele}>MY house{ele}</Menu.Item>)}
                 </SubMenu>
-                <Menu.Item key="3" icon={<LogoutOutlined />}>
+                <Menu.Item key="3" onClick={onLogout} icon={<LogoutOutlined />}>
                 Log out
                 </Menu.Item>
                 <Menu.Item key="4" icon={<UploadOutlined />}>
-                nav 3
+                not done yet
                 </Menu.Item>
                 <Menu.Item key="5" icon={<UploadOutlined />}>
-                Log Out
+                not done yet
                 </Menu.Item>
             </Menu>
         </Sider>
@@ -91,15 +118,26 @@ const UserInterface = ({id,isAuth})=> {
                     className='trigger'
                     onClick={toggle} />
             }
-            <Input.Search
-                placeholder="Search"
-                style={{ width: 500, margin: '0 20px' }}
-            />
-            <Avatar
-                size="default"
-                style={{ margin: '0 10px' }}
-                icon={<UserOutlined />}
+            <span
+                style={{
+                    display: "flex",
+                    alignItems: "center"}}>
+                <SearchForm
+                    name="Search Options"
+                    setCriteria={handleCriteria}
                 />
+                <Input.Search
+                    placeholder="Search"
+                    style={{ width: 500, margin: '0 20px' }}
+                />
+            </span>
+            <Tooltip title={id} placement="bottomRight">
+                <Avatar 
+                    size="default"
+                    style={{ backgroundColor: '#87d068' }} 
+                    icon={<UserOutlined />} 
+                />
+            </Tooltip>
         </Header>
                 <Content
                     className="site-layout-background"
@@ -110,8 +148,11 @@ const UserInterface = ({id,isAuth})=> {
                     overflow: 'hidden'
                     }}
                 >
-                    {/* <Map id={id} isAuth={isAuth}></Map> */}
-                    <SearchForm />
+                    <Map 
+                        // id={id} 
+                        // isAuth={isAuth}
+                        criteria={criteria}
+                    />
                 </Content>       
         </Layout>
     </Layout>

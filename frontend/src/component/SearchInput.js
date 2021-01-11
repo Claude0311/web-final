@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { InputNumber, Select } from 'antd';
 const { Option } = Select;
 const SearchNumber = ({value={}, onChange, unit, min, max, useDomination=true}) => {
@@ -6,15 +6,10 @@ const SearchNumber = ({value={}, onChange, unit, min, max, useDomination=true}) 
     const [domination, setDomination] = useState(10000);
     const triggerChange = (changedValue) => {
       if (onChange) {
-        if (useDomination) {
-          const newnum = changedValue.number || number;
-          const newDomin = changedValue.domination || domination;
-          onChange(newnum*newDomin);
-        }
-        else {
-          onChange(changedValue.number);
-        }
-        
+        const newnum = changedValue.number || number;
+        const newDomin = changedValue.domination || domination;
+        const mul = newnum*newDomin;
+        onChange((mul>0)? mul: undefined);
       }
     };
   
@@ -34,14 +29,18 @@ const SearchNumber = ({value={}, onChange, unit, min, max, useDomination=true}) 
         domination: newDomin,
       });
     };
-  
+    useEffect(()=>{
+      if (!useDomination) {
+        setDomination(1);
+      }
+    })
     return (
       <span>
         <InputNumber 
           min={min}
           max={max}
           value={number}
-          formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+          formatter={value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
           parser={value => value.replace(/\$\s?|(,*)/g, '')}
           style={{width: "100px"}}
           onChange={onNumberChange}
@@ -51,13 +50,13 @@ const SearchNumber = ({value={}, onChange, unit, min, max, useDomination=true}) 
           value={domination}
           defaultValue={10000}
           style={{
-            width: 80,
+            width: 90,
             margin: '0 8px',
           }}
           onChange={onDominationChange}
           >
-          <Option value={10000}>萬</Option>
-          <Option value={1000000}>百萬</Option>  
+          <Option value={10000}>萬元</Option>
+          <Option value={1000000}>百萬元</Option>  
         </Select>
         :
         <></>}

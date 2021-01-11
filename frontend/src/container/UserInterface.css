@@ -11,9 +11,23 @@
   }
   
  .logo {
-    height: 32px;
+    height: 3em;
     background: rgba(255, 255, 255, 0.3);
-    margin: 16px;
+    margin: 10px;
+    display: flex;
+    color: #08c;
+    flex-direction: row;
+    align-items: center;
+    overflow: hidden;
+    /* justify-content: center; */
+  }
+
+  .logo .text {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    margin: 0.2em 0.5em;
+    font-size: 10px;
   }
   
   .site-layout .site-layout-background {
