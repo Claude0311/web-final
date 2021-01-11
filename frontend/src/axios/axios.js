@@ -1,4 +1,5 @@
 import axios from 'axios'
+import buildingType from './buildingType'
 // import {useState} from 'react'
 console.log('NODE_ENV',process.env.NODE_ENV)
 const API_ROOT = (process.env.NODE_ENV==='production')?'':'http://localhost:4000'
@@ -61,6 +62,7 @@ export const registerUser = async ({user,password}) => {
 }
 
 // ============ houses =============
+<<<<<<< HEAD
 export const axiosGetHouses = async (params) => {
     try {        
         const {data:req_houses} = await instance.get('/houses',{params});
@@ -70,7 +72,22 @@ export const axiosGetHouses = async (params) => {
         throw e;
     }
     
+=======
+export const axiosGetHouses = async () => {
+    const {data:req_houses} = await instance.get('/houses');
+    return req_houses.map(element=>({...element,buildingType:buildingType[element.buildingType]}));
+>>>>>>> main
 }
+// export const axiosGetHousesWithFilter = async () => {
+//     const {data:response} = await instance.get('/houses',{params:{
+//         buildingType:'公寓',
+//         neighbor:{center:{lat:'27',lng:'121'},distance:30},
+//         unitPrice:{lb:500000,ub:600000},
+//         hasParking:true
+//     }})
+//     console.log(response)
+//     return response
+// }
 export const axiosGetDetail = async (id) => {
     try {
         const {data:{detail}} = await instance.get(`/houses/${id}`,{params:{id:id}});
@@ -83,6 +100,7 @@ export const axiosGetDetail = async (id) => {
 
 // ============ test =============
 export const init = async () => {
+<<<<<<< HEAD
     const {data:response} = await instance.get('/houses',{params:{
         buildingType:'公寓',
         neighbor:{center:{lat:'27',lng:'121'},distance:30},
@@ -98,4 +116,13 @@ export const testErr = async () => {
         .catch((err) => {
             throw err;
         })
+=======
+    // const {data:response} = await instance.get('/houses',{params:{
+    //     // buildingType:'公寓'
+    // }}).catch(e=>{
+    //     console.log(e?.response?.data?.msg)
+    // })
+    // console.log(response)
+    // return response
+>>>>>>> main
 }

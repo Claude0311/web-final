@@ -3,10 +3,11 @@ const Schema = mongoose.Schema
 import scoreTemplate from './scoreTemplate'
 
 const Score = new Schema({
-    priority:{type:Number},
+    priority:{type:Number,required:true},
     className:{
         type:String,
-        enum:Object.keys(scoreTemplate)
+        enum:Object.keys(scoreTemplate),
+        required:true
     },
     param:Number
 })

@@ -23,4 +23,11 @@ const addAuth = asyncHandler(async (req,res,next)=>{
     res.status(200).send({user})
 })
 
-export default [isAuth,addAuth]
+import validator from '../middleware/validation'
+import {body} from 'express-validator'
+const valid = [
+    body('user').exists().withMessage('user not given'),
+    body('isAuth').isBoolean().withMessage('isAuth should be boolean')
+]
+
+export default [isAuth,validator(valid),addAuth]

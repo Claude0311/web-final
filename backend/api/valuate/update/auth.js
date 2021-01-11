@@ -4,7 +4,7 @@ import asyncHandler from 'express-async-handler'
 import { dbCatch } from "../../error"
 
 /**
- * @api {put} /valuate/auth set manual price
+ * @api {patch} /valuate/auth set manual price
  * @apiName SetManualPrice
  * @apiGroup Valuate
  * @apiDescription 設定人為估價
@@ -19,11 +19,17 @@ import { dbCatch } from "../../error"
  */
 const update_auth = async (req,res,next) => {
     const {_id,manualPrice} = req.body
-    console.log(manualPrice)
     await Valuate
       .updateOne({_id},{manualPrice,processed:true})
       .catch(dbCatch)
     res.status(204).end()
 }
 
-export default asyncHandler(update_auth)
+import validator from '../../middleware/validation'
+import {body} from 'express-validator'
+const valid = [
+    body('_id').exists().withMessage('_id not given'),
+    body('manualPrice').exists().withMessage('manualPrice not given')
+]
+
+export default [validator(valid),asyncHandler(update_auth)]

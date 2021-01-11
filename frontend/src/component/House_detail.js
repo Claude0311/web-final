@@ -32,8 +32,13 @@ const DescriptionItem = ({ title, content }) => (
     </div>
   );
 
+<<<<<<< HEAD
 function House_Detail({detail, onClose}) { //,onClose,visible
     // onClose={()=>closeDetail()} visible={true}
+=======
+function House_Detail({detail,onClose,visible}) {
+  console.log({detail})
+>>>>>>> main
     return (
         <Drawer
           width={320}
@@ -86,7 +91,7 @@ function House_Detail({detail, onClose}) { //,onClose,visible
             <Col span={24}>
               <DescriptionItem
                 title="total price"
-                content={detail.price.totalPrice}
+                content={detail.price?.totalPrice}
               />
             </Col>
           </Row>
@@ -94,7 +99,7 @@ function House_Detail({detail, onClose}) { //,onClose,visible
             <Col span={24}>
               <DescriptionItem
                 title="parking price"
-                content={detail.price.parkingPrice}
+                content={detail.price?.parkingPrice}
               />
             </Col>
           </Row>
@@ -104,7 +109,7 @@ function House_Detail({detail, onClose}) { //,onClose,visible
             <Col span={24}>
               <DescriptionItem
                 title="total space"
-                content={detail.space.totalSpace}
+                content={detail.space?.totalSpace}
               />
             </Col>
           </Row>
@@ -112,7 +117,7 @@ function House_Detail({detail, onClose}) { //,onClose,visible
             <Col span={24}>
               <DescriptionItem
                 title="parking space"
-                content={detail.space.parkingSpace}
+                content={detail.space?.parkingSpace}
               />
             </Col>
           </Row>
@@ -122,7 +127,7 @@ function House_Detail({detail, onClose}) { //,onClose,visible
             <Col span={24}>
               <DescriptionItem
                 title="floor"
-                content={detail.floor.floor}
+                content={detail.floor?.floor}
               />
             </Col>
           </Row>
@@ -130,7 +135,7 @@ function House_Detail({detail, onClose}) { //,onClose,visible
             <Col span={24}>
               <DescriptionItem
                 title="max floor"
-                content={detail.floor.maxFloor}
+                content={detail.floor?.maxFloor}
               />
             </Col>
           </Row>
