@@ -1,9 +1,10 @@
 import {Popover,Button} from 'antd';
 import {EnvironmentFilled} from '@ant-design/icons';
 import {useState} from 'react'
+import './House_Pin.css';
 
-const House_Pin = ({id,buildingType,unitPrice,getDetail,move}) => {
-    const [visible, setvisible] = useState(false);
+const House_Pin = ({id,buildingType,click,unitPrice,hover,getDetail}) => {
+    const [visible, setvisible] = useState(false); // control Popover
     const title = (
         <span>house id:{id}</span>
     );
@@ -13,46 +14,47 @@ const House_Pin = ({id,buildingType,unitPrice,getDetail,move}) => {
         <p>Unit Price: NT${unitPrice}</p>
         <a onClick={async()=>{
             await setvisible(false);
+            console.log("in func",id);
             getDetail(id);
         }}>more details</a>
         </>
     );
     const iconStyle = {
+        position: 'absolute',
+        bottom: '0',
+        left: '-8pt',
         fontSize: '16pt',
-        color: '#08c',
-        $nested: {
-            "&:hover": {
-                fontSize: '20pt',
-                color: '#80c'
-            }
-        }
-
+        color: '#08c'
+    };
+    const iconStyleHover = {
+        ...iconStyle,
+        left: '-10pt',
+        fontSize: '20pt',
+        color: '#0ac'
     };
     const handleVisible = (v) => {
-        // setTimeout(()=> setvisible(v),100);
         setvisible(v);
     }
+
+    let style = (hover)? iconStyleHover: iconStyle;
+
     return (
+        <div className="house-pin">
         <Popover 
             placement='right' 
             title={title} 
             content={content}
             trigger="click" 
-            visible={visible}
+            visible={click && visible}
             onVisibleChange={handleVisible}
-            // onClick={()=>{                
-            //     // window.setTimeOut(()=>this.setvisible(true),500);
-            //     setvisible(false)
-            //     move();
-            // }}
         >    
-            <EnvironmentFilled style={iconStyle}/>
+            <EnvironmentFilled style={style}/>
         </Popover>
+        </div>
     );
 }
 const Current_Pin = ({showForm})=>{
     const myStyle = {
-        //align: 'center'
         fontSize: '18pt',
         color: '#0c8'
     };
@@ -61,6 +63,7 @@ const Current_Pin = ({showForm})=>{
         setvisible(v);
     }
     return(
+        <div className="house-pin">
         <Popover 
             placement='right'
             title="your house"
@@ -78,6 +81,7 @@ const Current_Pin = ({showForm})=>{
         >
             <EnvironmentFilled style={myStyle}/>
         </Popover>
+        </div>
     );
 }
 export {House_Pin,Current_Pin};

@@ -142,7 +142,7 @@ const UserInterface = ({id,isAuth, logout, history})=> {
                 <Content
                     className="site-layout-background"
                     style={{
-                    margin: '30px 24px',
+                    margin: '20px 24px',
                     padding: 0,
                     minHeight: 280,
                     overflow: 'hidden'

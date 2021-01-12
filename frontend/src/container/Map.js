@@ -14,6 +14,8 @@ const Map = ({criteria}) => {
     const [ptrCoordinate, setPtrCod] = useState(null);
     const [houseDetail, setDetail] = useState(null);
     const [clickMap, setClickMap] = useState(false);
+    const [hoverKey, setHoverKey] = useState(null);
+    const [clickKey, setClickKey] = useState(null);
 
     // get houses
     const getHouses = async () => {
@@ -27,9 +29,39 @@ const Map = ({criteria}) => {
       
     }
 
+    const onMarkHover = (key) => {
+      setHoverKey(key);
+      // console.log(key);
+    }
+
+
+    const onMarkLeave = (key) => {
+      // console.log("leave");
+      setHoverKey(null);
+    }
+    const onMarkClick = (key, childprops) => {
+      console.log(clickKey);
+      const {lat, lng} = childprops;
+      // if (Math.hypot(lat-cen.lat, lng-cen.lng) >= 0.6) {
+      //   handleMove(key,{lat,lng});
+      // } else {
+      //   setClickKey(key);
+      // }
+      setClickKey(key);
+        
+    }
+
+    const handleMove = async (key,{lat,lng}) => {
+      await setClickKey(null);
+      window.setTimeout(()=>{
+        setClickKey(key);
+      }, 800);     
+      setCen({lat,lng});          
+    }
+
     const getHouseDetail = async (id) => {
       // console.log(id);
-      console.log("getting detail...");
+      console.log("getting detail...",id);
       try {
         const detail = await axiosGetDetail(id);
         setDetail(detail);
@@ -39,20 +71,7 @@ const Map = ({criteria}) => {
     } 
     
     //  UNUSED
-    /*
-    const moveCen = (lat,lng) => {
-      const frameTrans  = 60;
-      const delLat = (lat - cen.lat)/frameTrans;
-      const delLng = (lng - cen.lng)/frameTrans;
-      // let count = 0;
-      let timeID = window.setInterval(() => {
-        setCen({lat:cen.lat+delLat, lng:cen.lng+delLng});
-        console.log("moving cen...")
-      }, 50);
-      window.setTimeout(()=> {
-        window.clearInterval(timeID);
-      }, 3000)
-    }*/
+
 
     const closeDetail = () => {
       setDetail(null);
@@ -73,30 +92,40 @@ const Map = ({criteria}) => {
     }, [criteria]);
 
 
+    const houseMarkers = houses.map( h => {
+      const {id, coordinate, ...props} = h;
+        return (
+        <House_Pin
+          key={id}
+          lat={coordinate.lat}
+          lng={coordinate.lng}
+          {...props}
+          id = {id}
+          hover={hoverKey === id}
+          click={clickKey === id}
+          getDetail={getHouseDetail}
+        />
+      );
+      })
+
     return(
-        <div style={{ height: '100vh', width: '100%', flexDirection: 'row' }}>
+        <div 
+          style={{ height: '84vh', maxWidth: '100%', flexDirection: 'row' }}
+        >
           {clickMap? <Fill_in lat={ptrCoordinate.lat} lng={ptrCoordinate.lng} />: <></>}
           <GoogleMapReact
             bootstrapURLKeys={{ key: 'AIzaSyBqlTXRpx8ARKVOHZXDopkEYtsPs0WUHQ0' }}
             center={cen}
             defaultZoom={zoom}
-            onClick={(e)=>{
-              setPtrCod({lat:e.lat, lng:e.lng})
-              setClickMap(false)
-            }}
+            // onClick={(e)=>{
+            //   setPtrCod({lat:e.lat, lng:e.lng})
+            //   setClickMap(false)
+            // }}
+            onChildMouseEnter={onMarkHover}
+            onChildMouseLeave={onMarkLeave}
+            onChildClick={onMarkClick}
           >
-            {houses.map( h => (
-              <House_Pin
-                key={h.id}
-                lat={h.coordinate.lat}
-                lng={h.coordinate.lng}
-                {...h}
-                getDetail={       
-                  getHouseDetail          
-                }
-                move={()=>setCen(h.coordinate)}
-              />
-            ))}
+            { houseMarkers }
             {(ptrCoordinate)?(
               <Current_Pin
                 {...ptrCoordinate}
