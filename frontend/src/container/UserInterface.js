@@ -134,7 +134,7 @@ const UserInterface = ({id,isAuth, logout, history})=> {
             <Tooltip title={id} placement="bottomRight">
                 <Avatar 
                     size="default"
-                    style={{ backgroundColor: '#87d068' }} 
+                    style={{ backgroundColor: '#87d068', margin: "0 16px" }} 
                     icon={<UserOutlined />} 
                 />
             </Tooltip>
@@ -142,7 +142,7 @@ const UserInterface = ({id,isAuth, logout, history})=> {
                 <Content
                     className="site-layout-background"
                     style={{
-                    margin: '30px 24px',
+                    margin: '20px 24px',
                     padding: 0,
                     minHeight: 280,
                     overflow: 'hidden'
