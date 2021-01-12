@@ -134,7 +134,7 @@ const UserInterface = ({id,isAuth, logout, history})=> {
             <Tooltip title={id} placement="bottomRight">
                 <Avatar 
                     size="default"
-                    style={{ backgroundColor: '#87d068' }} 
+                    style={{ backgroundColor: '#87d068', margin: "0 16px" }} 
                     icon={<UserOutlined />} 
                 />
             </Tooltip>

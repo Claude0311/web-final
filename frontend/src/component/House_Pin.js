@@ -1,16 +1,17 @@
-import {Popover,Button} from 'antd';
+import { Tooltip, Avatar, Popover,Button } from 'antd';
 import {EnvironmentFilled} from '@ant-design/icons';
-import {useState} from 'react'
+import BuildingType from '../axios/buildingType';
+import {useEffect, useState} from 'react'
 import './House_Pin.css';
 
 const House_Pin = ({id,buildingType,click,unitPrice,hover,getDetail}) => {
     const [visible, setvisible] = useState(false); // control Popover
     const title = (
-        <span>house id:{id}</span>
+        <span>House Info</span>
     );
     const content = (
         <>
-        <p>Type: {buildingType}</p>
+        <p>Type: {BuildingType[buildingType]}</p>
         <p>Unit Price: NT${unitPrice}</p>
         <a onClick={async()=>{
             await setvisible(false);
@@ -36,7 +37,7 @@ const House_Pin = ({id,buildingType,click,unitPrice,hover,getDetail}) => {
         setvisible(v);
     }
 
-    let style = (hover)? iconStyleHover: iconStyle;
+    let style = (hover || visible)? iconStyleHover: iconStyle;
 
     return (
         <div className="house-pin">
@@ -53,35 +54,74 @@ const House_Pin = ({id,buildingType,click,unitPrice,hover,getDetail}) => {
         </div>
     );
 }
-const Current_Pin = ({showForm})=>{
-    const myStyle = {
-        fontSize: '18pt',
-        color: '#0c8'
-    };
-    const [visible, setvisible] = useState(false);
-    const handleVisible = (v) => {
-        setvisible(v);
+
+const House_Cluster = ({id, size, pointSize, hover }) => {
+    const overflowCount = (size) => (size <= 99)? String(size): "99+";
+    const zoomIn = () => {
+        console.log("zoom in")
+        return;
     }
+
+    let ratio = (hover)? 8:0;
+    let markSize = Math.floor(18+ratio+100*size/pointSize);
+    return (
+        <Avatar 
+            style={{ 
+                backgroundColor: '#0b9',
+                cursor: 'pointer',
+                fontSize: `${(hover? "16":"14")}px`,
+                position: 'absolute',
+                bottom: `-${markSize/2}px`,
+                left: `-${markSize/2}px`
+            }}
+            // style={style}
+            onClick={zoomIn}
+            size={markSize}
+        >{overflowCount(size)}</Avatar>
+    )
+}
+
+const Current_Pin = ({hover, showForm, click})=>{
+    const myStyle = {
+        position: 'absolute',
+        bottom: '0',
+        left: '-9pt',
+        fontSize: '18pt',
+        color: '#f80'
+    };
+    const myStyleHover = {
+        ...myStyle,
+        left: '-10pt',
+        fontSize: '20pt'
+    }
+    let style = (hover)?  myStyleHover: myStyle;
+    // const [visible, setvisible] = useState(false);
+    // const handleVisible = (v) => {
+    //     setvisible(v);
+    // }
+    // const onShowForm = async() => {
+    //     // await handleVisible(false);
+    //     showForm();
+    // }
+    const content = (
+        <div>
+            <p>address</p>
+            <a onClick={showForm}>fill in</a>
+        </div>
+    );
     return(
         <div className="house-pin">
         <Popover 
             placement='right'
-            title="your house"
-            visible={visible}
-            onVisibleChange={handleVisible}
-            content={
-                <div>
-                    <a onClick={async() =>{
-                        await handleVisible(false);
-                        showForm();
-                    }}>fill in</a>
-                </div>
-            }
+            title="New Mark"
+            visible={click}
+            // onVisibleChange={handleVisible}
+            content={content}
             trigger="click"
         >
-            <EnvironmentFilled style={myStyle}/>
+            <EnvironmentFilled style={style}/>
         </Popover>
         </div>
     );
 }
-export {House_Pin,Current_Pin};
+export {House_Pin, House_Cluster, Current_Pin};

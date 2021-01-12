@@ -85,11 +85,14 @@ export const axiosGetHouses = async (params) => {
 export const axiosGetDetail = async (id) => {
     try {
         console.log("axios get", id);
-        const {data:{detail}} = await instance.get(`/houses/${id}`,{params:{id}});
-        return detail;
+        const { data: {
+            buildingType,
+            unitPrice,
+            detail } } = await instance.get(`/houses/${id}`,{params:{id}});
+        return { buildingType, unitPrice, ...detail};
     } catch (e) {
         console.log("fail to get detail");
-        throw new Error("fail to get detail");
+        throw e;
     }
 }
 

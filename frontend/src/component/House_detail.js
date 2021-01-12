@@ -1,4 +1,5 @@
 import { Button, Drawer, Divider, Col, Row } from 'antd';
+import BuildingType from '../axios/buildingType';
 import "./House_detail.css"
 /**
  * when click on the house, more info will show on the right side of the map
@@ -76,6 +77,14 @@ function House_Detail({detail, onClose}) {
             </Col>
           </Row>
           <Row>
+            <Col span={24}>
+              <DescriptionItem
+                title="Building type"
+                content={BuildingType[detail.buildingType]}
+              />
+            </Col>
+          </Row>
+          <Row>
             <Col span={12}>
               <DescriptionItem
                 title="soldtime"
@@ -110,7 +119,14 @@ function House_Detail({detail, onClose}) {
           <Divider />
           <p className="site-description-item-profile-p">Price and Space</p>
           <Row>
-            <Col span={24}>
+            <Col span={12}>
+              <DescriptionItem
+                title="unitPrice"
+                content={dateConvert(detail.unitPrice)}
+                before="NT$"
+              />
+            </Col>
+            <Col span={12}>
               <DescriptionItem
                 title="total price"
                 content={priceConvert( detail.price?.totalPrice)}
