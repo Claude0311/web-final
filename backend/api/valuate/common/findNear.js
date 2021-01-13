@@ -11,10 +11,10 @@ const findNear = async (req,res,next) => {
     console.log(lat,lng,buildingType,age,floor)
     const nears = await House
         .find({
-            buildingType,
-            'coordinate.lat':{$gt:lat-meter2Lat*1000,$lt:lat+meter2Lat*1000},
-            'coordinate.lng':{$gt:lng-meter2Lng*1000,$lt:lng+meter2Lng*1000}
-        }).sort({ _id: -1 }).limit(100).populate('detail')
+            // buildingType,
+            // 'coordinate.lat':{$gt:lat-meter2Lat*1000,$lt:lat+meter2Lat*1000},
+            // 'coordinate.lng':{$gt:lng-meter2Lng*1000,$lt:lng+meter2Lng*1000}
+        }).sort({ _id: -1 }).populate('detail') //.limit(100)
         .catch(dbCatch)
     const scoreInput = {age,coordinate:{lat,lng},floor}
     req.nears = nears

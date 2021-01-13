@@ -27,11 +27,13 @@ import Score from '../../model/Score'
 const resetScore = async (req,res,next)=>{
     await Score.deleteMany().catch(dbCatch)
     const rules = [
+        {priority:1,className:'buildType'},
+        {priority:1,className:'Distance',param:1000},
         {priority:1,className:'IsFirstFloor',param:undefined},
         {priority:2,className:'Time',param:24},
         {priority:3,className:'Distance',param:500},
         {priority:4,className:'Time',param:6},
-        {priority:5,className:'Age',param:5},
+        {priority:5,className:'Age',param:5}
     ]
     const myRules = (await Score.insertMany(rules).catch(dbCatch)).map(({param,description,priority,className})=>{
         return {param,description,priority,className}
