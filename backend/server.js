@@ -6,6 +6,8 @@ import DB from './model/db.js'
 import api from './api/api'
 import session from 'express-session'
 import connect from 'connect-mongo'
+import env from 'dotenv'
+env.config({path:'../.env'})
 
 const app = express()
 DB.once('open',()=>{
@@ -21,7 +23,7 @@ DB.once('open',()=>{
 	app.use(function (req, res, next) {
 		res.header('Access-Control-Allow-Origin', 'http://localhost:3000')//讓其他port(ex.3000)可以發post
 		res.header('Access-Control-Allow-Headers','Origin, X-Requested-With, Content-Type, Accept')
-		res.header('Access-Control-Allow-Methods', 'POST, GET, PUT, DELETE, OPTIONS')
+		res.header('Access-Control-Allow-Methods', 'POST, GET, PUT, DELETE, OPTIONS,PATCH')
 		res.header('Access-Control-Allow-Credentials', 'true')
 		next()
 	})
@@ -38,13 +40,15 @@ DB.once('open',()=>{
 			cookie: {maxAge: 60 * 60 * 1000}
 		})
 	)
-	
-	app.get('/', (_,res) => {
-		res.send('hello world')
-	})
-	
+
 	app.use(api)
 	
+	if(process.env.NODE_ENV==='production'){
+		console.log('backend env',process.env.NODE_ENV)
+		const buildPath = path.join('.', '..', 'frontend','build')
+		app.use(express.static(buildPath))
+	}
+
 	app.listen(process.env.PORT || 4000,  () => {
 		// require('./util/crawler')(true)
 		console.log('server connect')

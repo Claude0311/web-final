@@ -1,16 +1,18 @@
 import react,{Component, useState, useEffect} from 'react'
 import axios from 'axios'
+import { init } from '../axios/axios'
 const Post = () => {
     const [response,setResponse] = useState('connecting bakend')
     useEffect(()=>{
-        axios.get('http://localhost:4000/')
-            .then(({data})=>{
-                console.log(`get data：\n${data}`)
+        const hello = async ()=>{
+            try{
+                await init()
                 setResponse('connect to backend')
-            }).catch((e)=>{
-                console.error(e)
-                setResponse('backend connect fail')}
-            )
+            }catch{
+                setResponse('backend connect fail')
+            }
+        }
+        hello()
     },[])
     return(
         <div>

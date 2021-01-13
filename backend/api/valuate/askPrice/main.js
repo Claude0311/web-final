@@ -28,4 +28,14 @@ import parse from './parse'
  * @apiError (Server error 500) {Number} statusCode 500
  * @apiError (Server error 500) {String} msg 資料庫發生錯誤
  */
-export default [parse,findNear, findSimilar, getPrice]
+import validator from '../../middleware/validation'
+import {body} from 'express-validator'
+const valid = [
+    body('lat').isNumeric().withMessage('lat should be Number'),
+    body('lng').isNumeric().withMessage('lng should be NUmber'),
+    body('buildingType').isIn(['公寓','電梯大樓','大廈']).withMessage('buildingType should be one of [公寓,電梯大樓,大廈]'),
+    body('floor').optional().isNumeric().withMessage('floor should be Number(optional)'),
+    body('age').optional().isNumeric().withMessage('age should be Number(optinoal)')
+]
+
+export default [validator(valid),parse,findNear, findSimilar, getPrice]

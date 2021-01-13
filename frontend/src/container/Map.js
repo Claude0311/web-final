@@ -2,7 +2,7 @@ import {useState, useEffect} from 'react';
 import GoogleMapReact from 'google-map-react';
 import { House_Pin, Current_Pin } from '../component/House_Pin';
 import House_Detail from '../component/House_detail';
-import { axiosGetHouses, axiosGetDetail } from '../axios/axios';
+import { sendHouseInformation, axiosGetHouses, axiosGetDetail } from '../axios/axios';
 import Fill_in from './Fill_in';
 
 const AnyReactComponent = ({ text }) => <div>{text}</div>;
@@ -29,6 +29,10 @@ const Map = ({id, inquireHouse}) => {
       // console.log(detail);
       setDetail(detail);
     }
+
+    const handleClickSubmit = () => {
+      setClickMap(false)
+    }
     //  UNUSED
     /*
     const moveCen = (lat,lng) => {
@@ -54,7 +58,12 @@ const Map = ({id, inquireHouse}) => {
     })
     return(
         <div style={{ height: '100vh', width: '100%', flexDirection: 'row' }}>
-          {clickMap? <Fill_in lat={ptrCoordinate.lat} lng={ptrCoordinate.lng} />: <></>}
+          {clickMap? 
+            <Fill_in 
+              lat={ptrCoordinate.lat} 
+              lng={ptrCoordinate.lng}
+              handleClickSubmit={handleClickSubmit}
+            />: <></>}
           <GoogleMapReact
             bootstrapURLKeys={{ key: 'AIzaSyBqlTXRpx8ARKVOHZXDopkEYtsPs0WUHQ0' }}
             center={cen}

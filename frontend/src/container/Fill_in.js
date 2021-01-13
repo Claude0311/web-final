@@ -1,7 +1,8 @@
 import {useState} from 'react'
+import {Button} from 'antd'
 import { sendHouseInformation } from '../axios/axios';
 
-const Fill_in = ({lat, lng}) => {
+const Fill_in = ({lat, lng, handleClickSubmit}) => {
     const [isChosen, setIsChosen] = useState([false, false, false])
     const [type, setType] = useState(null)
     const [floor, setFloor] = useState(null)
@@ -25,6 +26,16 @@ const Fill_in = ({lat, lng}) => {
         if(event.keyCode === 13 && event.target.value !== " ") {
             setHouseAge(event.target.value)
         }
+    }
+    const clickSubmit = async() => {
+        setIsChosen([false, false, false])
+        await sendHouseInformation({ 
+            position: {lat, lng},
+            type,
+            floor,
+            houseAge
+        })
+        handleClickSubmit()
     }
     return (
         <div  className="form">
@@ -92,6 +103,9 @@ const Fill_in = ({lat, lng}) => {
                 />
             </div>
             
+            <Button type="primary" danger onClick={clickSubmit}>
+                Submit
+            </Button> 
         </div>
     )
 }

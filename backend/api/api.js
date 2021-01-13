@@ -3,12 +3,19 @@ import {handleError,ErrorHandler} from './error'
 
 const router = express.Router()
 
+
 import house from './house/main'
 router.use(house)
 import valuate from './valuate/main'
 router.use(valuate)
 import auth from './auth'
 router.use(auth)
+import score from './score/main'
+router.use(score)
+
+router.post('/func',(req,res,_)=>{
+    res.send({hey:(()=>{console.log('hello wotld')}).toString(),heo:'jei'})
+})
 
 /**
  * @api {get} /error Error testing

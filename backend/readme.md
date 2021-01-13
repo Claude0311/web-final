@@ -7,15 +7,21 @@
  
 - [功能介紹](#prepend)
  - [Account](#account)
+   - [新增/移除管理員](#新增/移除管理員)
    - [login](#login)
    - [loginAuth](#loginauth)
    - [logout](#logout)
    - [logoutAuth](#logoutauth)
+   - [register](#register)
  - [Error](#error)
    - [Error testing](#error-testing)
  - [House](#house)
    - [getHouse](#gethouse)
    - [getHouses](#gethouses)
+ - [ScoreRule](#scorerule)
+   - [getScore](#getscore)
+   - [resetScore](#resetscore)
+   - [updateScore](#updatescore)
  - [Valuate](#valuate)
    - [更新房屋內容](#更新房屋內容)
    - [請求估價](#請求估價)
@@ -70,10 +76,42 @@ ___
 
 ## Account
 
+### 新增/移除管理員
+[Back to top](#top)
+
+新增/移除管理員
+
+```
+POST /addAuth
+```
+
+#### Parameters - `Parameter`
+
+| Name     | Type       | Description                           |
+|----------|------------|---------------------------------------|
+| user | `String` | 用戶名 |
+| isAuth | `boolean` | true新增/false移除 |
+
+#### Success response
+
+##### Success response - `200`
+
+| Name     | Type       | Description                           |
+|----------|------------|---------------------------------------|
+| user | `String` | 用戶 |
+
+#### Error response
+
+##### Error response - `Server error 500`
+
+| Name     | Type       | Description                           |
+|----------|------------|---------------------------------------|
+| msg |  | session destroy error |
+
 ### login
 [Back to top](#top)
 
-登入
+登入，在backend/.env使用USE_AUTH=true以檢查資料庫中是否為管理員
 
 ```
 POST /login
@@ -84,6 +122,7 @@ POST /login
 | Name     | Type       | Description                           |
 |----------|------------|---------------------------------------|
 | user | `String` | 用戶名字 |
+| password | `String` | 密碼 |
 
 #### Success response
 
@@ -91,7 +130,8 @@ POST /login
 
 | Name     | Type       | Description                           |
 |----------|------------|---------------------------------------|
-| - | `String` | login success |
+| user | `String` | 用戶名 |
+| auth | `boolean` | 是否是管理員(現階段均回傳false) |
 
 #### Error response
 
@@ -104,7 +144,7 @@ POST /login
 ### loginAuth
 [Back to top](#top)
 
-登入管理員
+登入管理員，將來會與/login合併，在backend/.env使用USE_AUTH=true以解鎖此功能
 
 ```
 POST /loginAuth
@@ -154,7 +194,7 @@ POST /logout
 ### logoutAuth
 [Back to top](#top)
 
-登出管理員
+登出管理員，將在未來版本與logout合併，建議直接使用/logout
 
 ```
 POST /logoutAuth
@@ -170,11 +210,49 @@ POST /logoutAuth
 
 #### Error response
 
-##### Error response - `404`
+##### Error response - `Server error 500`
 
 | Name     | Type       | Description                           |
 |----------|------------|---------------------------------------|
-| - |  |  |
+| msg |  | session destroy error |
+
+### register
+[Back to top](#top)
+
+註冊
+
+```
+POST /register
+```
+
+#### Parameters - `Parameter`
+
+| Name     | Type       | Description                           |
+|----------|------------|---------------------------------------|
+| user | `String` | 用戶 |
+| password | `String` | 密碼 |
+
+#### Success response
+
+##### Success response - `Success 200`
+
+| Name     | Type       | Description                           |
+|----------|------------|---------------------------------------|
+| user | `String` | 用戶名 |
+
+#### Error response
+
+##### Error response - `Client error 404`
+
+| Name     | Type       | Description                           |
+|----------|------------|---------------------------------------|
+| msg |  | 請填寫帳密 |
+
+##### Error response - `Server error 500`
+
+| Name     | Type       | Description                           |
+|----------|------------|---------------------------------------|
+| msg |  | 資料庫錯誤 |
 
 ## Error
 
@@ -268,7 +346,38 @@ GET /houses/:id
 拿到所有房子的座標、房屋型態、價格(顯示在地圖上)
 
 ```
-GET /houses
+GET /houses?buildType=
+```
+
+#### Parameters - `Parameter`
+
+| Name     | Type       | Description                           |
+|----------|------------|---------------------------------------|
+| buildingType | `String` | (optional)  <li>公寓(無電梯)</li> <li>大樓(10樓以下有電梯)</li> <li>華夏(11樓以上有電梯)</li>  |
+| neighbor | `Object` | 搜索附近(optional) |
+| &ensp;center | `Object` | 中心 |
+| &ensp;&ensp;lat | `Object` | 中心緯度 |
+| &ensp;&ensp;lng | `Object` | 中心經度 |
+| &ensp;distance | `Object` | 距離(公尺) |
+| unitPrice | `Object` | 每坪價格(optional) |
+| &ensp;lb | `Number` | lower bound (optional) |
+| &ensp;ub | `Number` | upper bound (optional) |
+| totalPrice | `Object` | 總價(optional) |
+| &ensp;lb | `Number` | lower bound (optional) |
+| &ensp;ub | `Number` | upper bound (optional) |
+| space | `Object` | 坪數(optional) |
+| &ensp;lb | `Number` | lower bound (optional) |
+| &ensp;ub | `Number` | upper bound (optional) |
+| hasParking | `Boolean` | 有無車位(optional) |
+
+#### Parameters examples
+`js` - axios
+
+```js
+axios.get('/houses',{params:{
+   buildingType:'公寓',
+   neighbot:{center:{lat:27,lng:125},distance:500}
+}})
 ```
 
 #### Success response
@@ -279,11 +388,132 @@ GET /houses
 |----------|------------|---------------------------------------|
 | - | `Object[]` | array of Houses |
 | &ensp;id | `String` | id from 永慶房屋 |
-| &ensp;buildingType | `String` | 房屋型態  <li>公寓(無電梯)</li> <li>大樓(10樓以下有電梯)</li> <li>華夏(11樓以上有電梯)</li>  |
+| &ensp;buildingType | `String` | 房屋型態  <li>公寓(無電梯)</li> <li>電梯大樓(10樓以下有電梯)</li> <li>華夏(11樓以上有電梯)</li>  |
 | &ensp;coordinate | `Object` | 經緯度 |
 | &ensp;&ensp;lat | `Number` | 緯度 |
 | &ensp;&ensp;lng | `Number` | 經度 |
 | &ensp;unitPrice | `Number` | 單位坪數價錢 |
+
+#### Error response
+
+##### Error response - `client error 404`
+
+| Name     | Type       | Description                           |
+|----------|------------|---------------------------------------|
+| statusCode | `Number` | 404 |
+| msg | `String` | 資料格式錯誤 |
+
+##### Error response - `Server error 500`
+
+| Name     | Type       | Description                           |
+|----------|------------|---------------------------------------|
+| statusCode | `Number` | 500 |
+| msg | `String` | 資料庫發生錯誤 |
+
+## ScoreRule
+
+### getScore
+[Back to top](#top)
+
+獲取評分模板和當前規則，description規則：{prefix,postfix}，用prefix+param+postfix呈現，param是update時要回傳給後端的東東
+
+```
+GET /score
+```
+
+#### Success response
+
+##### Success response - `Success 200`
+
+| Name     | Type       | Description                           |
+|----------|------------|---------------------------------------|
+| templates | `Object[]` | 評分模板(目前有5種) |
+| &ensp;1 | `Object` | 成交日期 |
+| &ensp;&ensp;className | `String` | Time |
+| &ensp;&ensp;description | `Object` | <code>近X個月內</code> |
+| &ensp;2 | `Object` | 距離 |
+| &ensp;&ensp;className | `String` | Distance |
+| &ensp;&ensp;description | `Object` | <code>距離X公尺內</code> |
+| &ensp;3 | `Object` | 成交日期 |
+| &ensp;&ensp;className | `String` | Age |
+| &ensp;&ensp;description | `Object` | <code>屋齡差距X年以內</code> |
+| &ensp;4 | `Object` | 成交日期 |
+| &ensp;&ensp;className | `String` | Floor |
+| &ensp;&ensp;description | `Object` | <code>相差X層樓以內</code> |
+| &ensp;5 | `Object` | 成交日期 |
+| &ensp;&ensp;className | `String` | IsFirstFloor |
+| &ensp;&ensp;description | `Object` | {prefix:'一樓和一樓比較，二樓以上和二樓以上比較'} |
+| myRules | `Object[]` | 自訂規則 |
+| &ensp;param | `Number` | description中的X |
+| &ensp;description | `Object` | {prefix,postfix} |
+| &ensp;priority | `Number` | 優先度 |
+| &ensp;className | `String` | template名稱(update時回傳) |
+
+#### Error response
+
+##### Error response - `Server error 500`
+
+| Name     | Type       | Description                           |
+|----------|------------|---------------------------------------|
+| statusCode | `Number` | 500 |
+| msg | `String` | 資料庫發生錯誤 |
+
+### resetScore
+[Back to top](#top)
+
+reset預設的score方法(之後看要不要在get時告知內容) <ol> <li>是否是一樓</li> <li>2年內</li> <li>500公尺內</li> <li>半年內</li> <li>屋齡+-5年</li> </ol>
+
+```
+POST /score
+```
+
+#### Success response
+
+##### Success response - `Success 200`
+
+| Name     | Type       | Description                           |
+|----------|------------|---------------------------------------|
+| myRules | `Object[]` | 預設規則 |
+| &ensp;1 | `Object` | {priority:1,className:'IsFirstFloor',description,param:undefined} |
+| &ensp;2 | `Object` | {priority:2,className:'Time',description,param:24} |
+| &ensp;3 | `Object` | {priority:3,className:'Distance',description,param:500} |
+| &ensp;4 | `Object` | {priority:4,className:'Time',description,param:6} |
+| &ensp;5 | `Object` | {priority:5,className:'Age',description,param:5} |
+
+#### Error response
+
+##### Error response - `Server error 500`
+
+| Name     | Type       | Description                           |
+|----------|------------|---------------------------------------|
+| statusCode | `Number` | 500 |
+| msg | `String` | 資料庫發生錯誤 |
+
+### updateScore
+[Back to top](#top)
+
+設定評分規則
+
+```
+PUT /score
+```
+
+#### Parameters - `Parameter`
+
+| Name     | Type       | Description                           |
+|----------|------------|---------------------------------------|
+| myRules | `Object[]` | 規則的陣列 |
+| &ensp;className | `String` | 從template拿到的className |
+| &ensp;param | `Number` | description中的X |
+| &ensp;priority | `Number` | 優先度 |
+
+#### Success response
+
+##### Success response - `204`
+
+| Name     | Type       | Description                           |
+|----------|------------|---------------------------------------|
+| - |  |  |
 
 #### Error response
 
@@ -302,7 +532,7 @@ GET /houses
 更新房屋資訊，重新計算系統估價
 
 ```
-PUT /valuate/user
+PATCH /valuate/user
 ```
 
 #### Parameters - `Parameter`
@@ -470,7 +700,7 @@ GET /valuate/user
 設定人為估價
 
 ```
-PUT /valuate/auth
+PATCH /valuate/auth
 ```
 
 #### Parameters - `Parameter`

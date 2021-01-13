@@ -9,7 +9,7 @@ class ErrorHandler extends Error {
 const handleError = (err,req,res,next) => {
     const { statusCode, msg } = err
     if(!msg){
-        console.log(err.message)
+        console.log(err)
         return res.status(404).json({
             msg:'unknow error'
         })
@@ -27,8 +27,19 @@ const handleError = (err,req,res,next) => {
  * @param {Error} e
  */
 const dbCatch = (e) => {
-    console.log(e.message)
+    console.error(e)
     throw new ErrorHandler(500,'資料庫錯誤')
 }
 
 export {ErrorHandler, handleError, dbCatch}
+
+export const validErr = (fieldName='unput')=>{
+    return (val)=>{
+        try{
+            return JSON.parse(val)
+        }
+        catch{
+            throw new ErrorHandler(`${fieldName} should be Object like`)
+        }
+    }
+}

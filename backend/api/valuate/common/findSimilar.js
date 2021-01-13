@@ -1,4 +1,6 @@
 import asyncHandler from 'express-async-handler'
+import Score from '../../../model/Score'
+import { dbCatch } from '../../error'
 
 const findSimilar = async (req,res,next) => {
     const {nears,scoreInput} = req
@@ -6,10 +8,9 @@ const findSimilar = async (req,res,next) => {
         req.similar = nears
     }else{
         const similar = []
-        //計算所有score, {score,index}
-        const scores = nears.map((near,index)=>({score:near.score(scoreInput),index}))
+        const rules = await Score.myRule().catch(dbCatch)
+        const scores = nears.map((near,index)=>({score:near.score(scoreInput,rules),index}))
         scores.sort((a,b)=>b.score-a.score)
-        // console.log(scores)
         scores.forEach(({score,index},ind)=>{
             if(score<scores[5].score) return
             similar.push(nears[index])
