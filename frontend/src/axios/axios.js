@@ -7,21 +7,78 @@ const instance = axios.create({
 })
 
 // =========== login post ============
-export const loginAsNormalUser = async ({Username,Password}) => {
-    return instance.post('/login',{user: Username,password:Password})
+export const loginAsNormalUser = async ({user,password}) => {
+    try {
+        return await instance.post('/login',{user, password});
+    } catch (e){
+        throw e;
+    }
+    
 }
 
 export const loginAsAuth = async () => {
-    return instance.post('/loginAuth')
+    try {
+        return await instance.post('/loginAuth');
+    } catch (e) {
+        console.log("login auth fail");
+        throw e;
+    }
+    
+}
+
+export const addAuth = async (user,isAuth) => {
+    await instance.post('/addAuth', {params: {user,isAuth}})
+        .then((res) => {
+            console.log("successfully");
+        })
+        .catch((err) => {
+            throw err;
+        })
+}
+
+export const logoutUser = async () => {
+    await instance.post('/logout')
+        .catch((err) => {
+            throw err;
+        })
+}
+
+export const logoutAuth = async () => {
+    instance.post('/logoutAuth')
+        .catch((err) => {
+            throw err;
+        })
+}
+
+export const registerUser = async ({user,password}) => {
+    try {
+        const {data: {user: name}} = await instance.post('/register', {user,password});
+        return name;
+    } catch (e) {
+        console.log("fail to register");
+        throw e;
+    }
 }
 
 // ============ houses =============
-export const sendHouseInformation = ({}) => {
-     return instance.post('/sendImformation')
+export const sendHouseInformation = async(lat, lng, buildingType, floor, age) => {
+    try {
+        const {data: {similar, avgPrice}} = await instance.post('/valuate', {lat, lng, buildingType, floor, age})
+        return {similar, avgPrice}
+    } catch(err)  {
+        console.log("fail to send houseImformation")
+        return null;
+    }
 }
-export const axiosGetHouses = async () => {
-    const {data:req_houses} = await instance.get('/houses');
-    return req_houses;
+export const axiosGetHouses = async (params) => {
+    try {        
+        const {data:req_houses} = await instance.get('/houses',{params});
+        return req_houses;
+    } catch (e) {
+        console.log("fail to get houses")
+        throw e;
+    }
+    
 }
 // export const axiosGetHousesWithFilter = async () => {
 //     const {data:response} = await instance.get('/houses',{params:{
@@ -34,18 +91,34 @@ export const axiosGetHouses = async () => {
 //     return response
 // }
 export const axiosGetDetail = async (id) => {
-    const {data:{detail}} = await instance.get(`/houses/${id}`,{params:{id:id}});
-    return detail;
+    try {
+        console.log("axios get", id);
+        const { data: {
+            buildingType,
+            unitPrice,
+            detail } } = await instance.get(`/houses/${id}`,{params:{id}});
+        return { buildingType, unitPrice, ...detail};
+    } catch (e) {
+        console.log("fail to get detail");
+        throw e;
+    }
 }
 
 // ============ test =============
 export const init = async () => {
-    const {data:response} = await instance.post('/addAuth',{
-        user:'b07901029',
-        isAuth:true
-    }).catch(e=>{
-        console.log(e?.response?.data?.msg)
-    })
+    const {data:response} = await instance.get('/houses',{params:{
+        buildingType:'公寓',
+        neighbor:{center:{lat:'27',lng:'121'},distance:30},
+        unitPrice:{lb:500000,ub:600000},
+        hasParking:true
+    }})
     console.log(response)
     return response
+}
+
+export const testErr = async () => {
+    instance.get('/error')
+        .catch((err) => {
+            throw err;
+        })
 }

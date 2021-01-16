@@ -51,8 +51,9 @@ const getHouse = async (req,res,next) => {
         .findOne({id})
         .populate('detail')
         .catch(dbCatch)
-    // console.log(house)
+    console.log(house)
     if(!house) throw new ErrorHandler(404,'查無此房')
+
     res.status(200).send(house)
 }
 

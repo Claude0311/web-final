@@ -1,12 +1,10 @@
 import { useState, useEffect, useRef } from 'react'
 import {Form,Input,Button} from 'antd'
-import { UserOutlined, LockOutlined, EyeTwoTone, EyeInvisibleOutlined } from '@ant-design/icons';
-import './Login.css'
-import { loginAsAuth, loginAsNormalUser } from '../axios/axios';
-import { Redirect, NavLink } from 'react-router-dom';
-// import { getLocalAccount, setAccount } from '../Auth/AuthService';
+import { UserOutlined, LockOutlined, CheckCircleOutlined } from '@ant-design/icons';
+import './SignUp.css'
+import { registerUser } from '../axios/axios';
 
-const Login = ({id, login, history}) => {
+const SignUp = ({logout, history}) => {
     const [form] = Form.useForm();
 
     // ===== some hooks for validating username and password ==== 
@@ -16,31 +14,35 @@ const Login = ({id, login, history}) => {
     const [status, setStatus] = useState(null);
     const [userValid, setUsrVad] = useState(null);
     const [psdValid, setPsdVad] = useState(null);
+    const [conValid, setConVad] = useState(null);
     const [userMsg, setUsrMsg] = useState(null);
     const [psdMsg, setPsdMsg] = useState(null);
+    const [conMsg, setConMsg] = useState(null);
     
     // ==== some ref =======
     const userRef = useRef(null);
     const psdRef = useRef(null);
+    const confirmRef = useRef(null);
 
     // login as a normal user
-    const logInNormal = async ({user,password}) => { 
-        // console.log(user, password);      
-        if (checkUserName(user) && checkPassWord(password)) {
-            const result = await login({user,password});
-            if (result === 'success') {
-                console.log("log in successfully, redirect to /");
-                history.push("/");
-            } else {
-                setStatus('user');
-                setUsrVad('error');
-                setPsdVad('error');
-                setUsrMsg(result);
-                form.resetFields();
-                userRef.current.focus();
-            }
+    const RegisterNormal = async ({user,password,confirm}) => { 
+        console.log(user, password, confirm);      
+        if (checkUserName(user) && checkPassWord(password) && checkConfirm(confirm,password)) {
+            registerUser({user,password})
+                .then((newuser) => {
+                    console.log("create a new user of", newuser);
+                    onLogin();
+                }).catch(e => {
+                    setStatus('user');
+                    setUsrVad('error');
+                    setPsdVad('error');
+                    setUsrMsg(e?.response?.data?.msg);
+                    form.resetFields();
+                    userRef.current.focus();
+                })
         }
     }
+
     // return true if username is not empty
     const checkUserName = (user) => {
         if (!user) {
@@ -56,9 +58,11 @@ const Login = ({id, login, history}) => {
 
     }
 
-    const onSignUp = () => {
-        history.push("/register");
+    const onLogin = async() => {
+        await logout();
+        history.push("/login");
     }
+
     // return true if password is not empty
     const checkPassWord = (password) => {
         if (!password) {
@@ -66,41 +70,50 @@ const Login = ({id, login, history}) => {
                 setPsdVad('error')
                 setPsdMsg('Password  should not be blank!!')
             } else {
-                setStatus('psd')
-                psdRef.current.focus();
+                setStatus('psd')               
             }
+            psdRef.current.focus();
             return false;
         }
         setPsdVad(null)
         setPsdMsg(null)
         return true
     }
+
     // login as an Administrator
+    const checkConfirm = (confirm, password) => {
+        if (!confirm || confirm !== password) {
+            if (status === 'confirm') {
+                setConVad('error')
+                setConMsg('Confirmed password is different!!')
+                form.setFieldsValue({confirm: null});                
+            } else {
+                setStatus('confirm');
+            }
+            confirmRef.current.focus()
+            return false;
+        } 
+        setConVad(null);
+        setConMsg(null);
+        return true;
+    }  
 
     useEffect(()=>{
-        if (userRef) {
-            userRef.current.focus();
-        }
+        userRef.current.focus();
     }, []);
     
-    // render Container
-    if (id) {
-        console.log("come to login.js, redirect to /")
-        return <Redirect to="/" />;
-    }
     return(
-        <div className="loginContainer">
-            <div className="login-title">
-                {/* <img src=""/> */}
-                <h1>House Price</h1>
-                <p> A system that helps you know house price </p>
-            </div>
-            <div className="login-main">
+        <div className="registerContainer">
+            <div className="register-main">
+                <div className="register-title">
+                    <h1>Create a new Account</h1>
+                    <p> You have to fill up the form</p>
+                </div>
                 <Form 
                     form={form} 
-                    name="normallogin" 
-                    className="login-form"
-                    onFinish={logInNormal} 
+                    name="normalregister" 
+                    className="register-form"
+                    onFinish={RegisterNormal} 
                     style={{marginTop: "10px"}}
                 >
                     <Form.Item
@@ -125,22 +138,35 @@ const Login = ({id, login, history}) => {
                         <Input.Password
                             prefix={<LockOutlined className="site-form-item-icon"/>} 
                             placeholder="Password"
-                            iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
+                            visibilityToggle={false}
                             ref={psdRef} 
                             onChange={(e)=>{
                                 checkPassWord(e.target.value)
                             }}
                         />
                     </Form.Item>  
+                    <Form.Item
+                        name="confirm"
+                        validateStatus={conValid}
+                        help={conMsg}
+                    >
+                        <Input.Password
+                            prefix={<CheckCircleOutlined className="site-form-item-icon"/>} 
+                            placeholder="Confirm"
+                            visibilityToggle={false}
+                            
+                            ref={confirmRef} 
+                        />
+                    </Form.Item>
                     <Form.Item >
                         <span className="register"><a 
-                            onClick={onSignUp}
-                        >Sign up here</a></span>
+                            onClick={onLogin}
+                        >Back to Login</a></span>
                         <Button
                             type="primary"
                             htmlType="submit"
-                            className="login-submit"
-                        > Log in
+                            className="register-submit"
+                        > Submit
                         </Button>
                     </Form.Item>
                 </Form>
@@ -150,4 +176,5 @@ const Login = ({id, login, history}) => {
     )
 }
 
-export default Login;
+
+export default SignUp;

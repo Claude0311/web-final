@@ -8,7 +8,24 @@ import Score from '../../model/Score'
  * @apiName GetScore
  * @apiGroup ScoreRule
  * @apiDescription 獲取評分模板和當前規則，description規則：{prefix,postfix}，用prefix+param+postfix呈現，param是update時要回傳給後端的東東
- *
+ * 
+ * @apiSuccessExample {json} data
+ *   {
+ *      templates:[
+ *          {className:'Time',description:{prefix:'近',postfix:'個月內'}},
+ *          {className:'Distance',description:{prefix:'距離',postfix:'公尺內'}},
+ *          {className:'Age',description:{prefix:'屋齡差距',postfix:'年以內'}},
+ *          {className:'Floor',description:{prefix:'相差',postfix:'層樓以內'}},
+ *          {className:'IsFirstFloor',description:{prefix:'一樓和一樓比較，二樓以上和二樓以上比較'}},
+ *      ],
+ *      myRules:[//default
+ *          {priority:1,className:'IsFirstFloor',param:undefined,description:{prefix:'一樓和一樓比較，二樓以上和二樓以上比較'}},
+ *          {priority:2,className:'Time',param:24,description:{prefix:'近',postfix:'個月內'}},
+ *          {priority:3,className:'Distance',param:500,description:{prefix:'距離',postfix:'公尺內'}},
+ *          {priority:4,className:'Time',param:6,description:{prefix:'近',postfix:'個月內'}},
+ *          {priority:5,className:'Age',param:5,description:{prefix:'屋齡差距',postfix:'年以內'}},
+ *      ]
+ *   }
  * 
  * @apiSuccess {Object[]} templates 評分模板(目前有5種)
  * @apiSuccess {Object} templates.1 成交日期

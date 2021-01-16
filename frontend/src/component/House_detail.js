@@ -1,5 +1,5 @@
-import { Drawer, Divider, Col, Row } from 'antd';
-import {useState} from 'react';
+import { Button, Drawer, Divider, Col, Row } from 'antd';
+import BuildingType from '../axios/buildingType';
 import "./House_detail.css"
 /**
  * when click on the house, more info will show on the right side of the map
@@ -25,50 +25,49 @@ import "./House_detail.css"
         default:false
     }
  */
-const DescriptionItem = ({ title, content }) => (
+
+const DescriptionItem = ({ title, content, before, after }) => (
     <div className="site-description-item-profile-wrapper">
       <p className="site-description-item-profile-p-label">{title}:</p>
-      {content}
+      {before}{content} {after}
     </div>
   );
 
-function House_Detail({detail,onClose,visible}) {
+function House_Detail({detail, onClose}) { 
+
+    const priceConvert = value => (
+      `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+    )
+    const dateConvert = date => (
+      `${date}`.replace(/\B(?=(\d{2})(?!\d))/g, '/')
+    )
     return (
         <Drawer
-          width={320}
+          width={480}
           placement="right"
           closable={true}
           onClose={onClose}
-          visible={visible}
+          visible={true}
+          getContainer={true}
+          style={{ position: 'absolute', height: '100%' }}
+          footer={
+            <div
+              style={{
+                textAlign: 'right',
+                marginBottom: "30px"
+              }}
+            >
+              <Button onClick={onClose} style={{ marginRight: 8 }}>
+                Cancel
+              </Button>
+              <Button onClick={onClose} type="primary">
+                Like
+              </Button>
+            </div>
+          }
         >
-          <p className="site-description-item-profile-p" style={{ marginBottom: 24 }}>
-            User Profile
-          </p>
-          <p className="site-description-item-profile-p">Info</p>
-          <Row>
-            <Col span={24}>
-              <DescriptionItem
-                title="soldtime"
-                content={detail.soldTime}
-              />
-            </Col>
-          </Row>
-          <Row>
-            <Col span={24}>
-              <DescriptionItem
-                title="age"
-                content={detail.age}
-              />
-            </Col>
-          </Row>
-          <Row>
-            <Col span={24}>
-              <DescriptionItem
-                title="has parking"
-                content={(detail.hasParking)? "yes":"no"}
-              />
-            </Col>
-          </Row>
+          <p className="site-description-item-profile-p">House Information</p>
+          <Divider />
           <Row>
             <Col span={24}>
               <DescriptionItem
@@ -77,60 +76,100 @@ function House_Detail({detail,onClose,visible}) {
               />
             </Col>
           </Row>
-          <Divider />
-          <p className="site-description-item-profile-p">Price</p>
           <Row>
             <Col span={24}>
+              <DescriptionItem
+                title="Building type"
+                content={BuildingType[detail.buildingType]}
+              />
+            </Col>
+          </Row>
+          <Row>
+            <Col span={12}>
+              <DescriptionItem
+                title="soldtime"
+                content={dateConvert(detail.soldTime)}
+              />
+            </Col>
+            <Col span={12}>
+              <DescriptionItem
+                title="age"
+                content={detail.age}
+                after="years"
+              />
+            </Col>
+          </Row>
+          <Row>
+            <Col span={12}>
+              <DescriptionItem
+                title="樓層"
+                content={detail.floor?.floor}
+                after="樓"
+              />
+            </Col>
+            <Col span={12}>
+              <DescriptionItem
+                title="總樓層"
+                content={detail.floor?.maxFloor}
+                after="樓"
+              />
+            </Col>
+          </Row>
+          
+          <Divider />
+          <p className="site-description-item-profile-p">Price and Space</p>
+          <Row>
+            <Col span={12}>
+              <DescriptionItem
+                title="unitPrice"
+                content={dateConvert(detail.unitPrice)}
+                before="NT$"
+              />
+            </Col>
+            <Col span={12}>
               <DescriptionItem
                 title="total price"
-                content={detail.price.totalPrice}
+                content={priceConvert( detail.price?.totalPrice)}
+                before="NT$"
               />
             </Col>
           </Row>
-          <Row>
-            <Col span={24}>
-              <DescriptionItem
-                title="parking price"
-                content={detail.price.parkingPrice}
-              />
-            </Col>
-          </Row>
-          <Divider />
-          <p className="site-description-item-profile-p">Space</p>
           <Row>
             <Col span={24}>
               <DescriptionItem
                 title="total space"
-                content={detail.space.totalSpace}
-              />
-            </Col>
-          </Row>
-          <Row>
-            <Col span={24}>
-              <DescriptionItem
-                title="parking space"
-                content={detail.space.parkingSpace}
+                content={detail.space?.totalSpace}
+                after="坪"
               />
             </Col>
           </Row>
           <Divider />
-          <p className="site-description-item-profile-p">floor</p>
+          <p className="site-description-item-profile-p">Parking</p>
           <Row>
-            <Col span={24}>
+            <Col span={12}>
               <DescriptionItem
-                title="floor"
-                content={detail.floor.floor}
+                title="是否有停車位"
+                content={(detail.hasParking)? "有":"無"}
               />
             </Col>
           </Row>
+          {(detail.hasParking)?
           <Row>
-            <Col span={24}>
+            <Col span={12}>
               <DescriptionItem
-                title="max floor"
-                content={detail.floor.maxFloor}
+                title="parking price"
+                content={priceConvert(detail.price?.parkingPrice)}
+                before="NT$"
+              />
+            </Col>                       
+            <Col span={12}>
+              <DescriptionItem
+                title="parking space"
+                content={detail.space?.parkingSpace}
+                after="平方公尺"
               />
             </Col>
-          </Row>
+          </Row>: <></>}
         </Drawer>
     );
 }

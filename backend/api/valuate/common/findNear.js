@@ -14,7 +14,7 @@ const findNear = async (req,res,next) => {
             buildingType,
             'coordinate.lat':{$gt:lat-meter2Lat*1000,$lt:lat+meter2Lat*1000},
             'coordinate.lng':{$gt:lng-meter2Lng*1000,$lt:lng+meter2Lng*1000}
-        }).populate('detail')
+        }).sort({ _id: -1 }).limit(100).populate('detail')
         .catch(dbCatch)
     const scoreInput = {age,coordinate:{lat,lng},floor}
     req.nears = nears

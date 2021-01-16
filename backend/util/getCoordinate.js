@@ -28,7 +28,7 @@ const getCor = async (address)=>{
     // console.log(doc)
     if(doc) return doc.coordinate
     const [{latitude:lat,longitude:lng},..._] = await geocoder.geocode(middleAdd(address))
-    new Cor({
+    await new Cor({
       address,
       coordinate:{lat,lng}
     }).save()
