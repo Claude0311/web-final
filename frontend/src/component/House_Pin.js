@@ -108,7 +108,6 @@ const House_Cluster = ({sum, size, pointSize, hover, click, ...props }) => {
                     bottom: `-${markSize/2}px`,
                     left: `-${markSize/2}px`
                 }}
-                // style={style}
                 onClick={handleClick}
                 size={markSize}
             >{overflowCount(size)}</Avatar>
@@ -150,10 +149,9 @@ const Current_Pin = ({hover, showForm, click})=>{
         <Popover 
             placement='right'
             title="New Mark"
-            visible={click}
-            // onVisibleChange={handleVisible}
-            content={content}
             trigger="click"
+            visible={click}
+            content={content}
         >
             <EnvironmentFilled style={style}/>
         </Popover>
@@ -161,56 +159,14 @@ const Current_Pin = ({hover, showForm, click})=>{
     );
 }
 
-// const MyHouse_Pin = ({hover, click, detail})=>{
-//     const myStyle = {
-//         position: 'absolute',
-//         bottom: '0',
-//         left: '-9pt',
-//         fontSize: '18pt',
-//         color: '#8f0'
-//     };
-//     const myStyleHover = {
-//         ...myStyle,
-//         left: '-10pt',
-//         fontSize: '20pt'
-//     }
-//     let style = (hover)?  myStyleHover: myStyle;
-//     // const [visible, setvisible] = useState(false);
-//     // const handleVisible = (v) => {
-//     //     setvisible(v);
-//     // }
-//     const compareNeighbor = async() => {
-//         // await handleVisible(false);
-//     }
-//     const content = (
-//         <div>
-//             <p>address</p>
-//             <a onClick={}>fill in</a>
-//         </div>
-//     );
-//     return(
-//         <div className="house-pin">
-//         <Popover 
-//             placement='right'
-//             title="New Mark"
-//             visible={click}
-//             // onVisibleChange={handleVisible}
-//             content={content}
-//             trigger="click"
-//         >
-//             <HomeFilled style={style}/>
-//         </Popover>
-//         </div>
-//     );
-// }
-
+// ====== the pin for user when it complete the query
 const House_Eval_Pin = (props) => {
     const myStyle = {
         position: 'absolute',
         bottom: '0',
         left: '-9pt',
         fontSize: '18pt',
-        color: (props.processed)? '#934':'#329'
+        color: (props.processed)? '#934':'#de5'
     };
     const myStyleHover = {
         ...myStyle,

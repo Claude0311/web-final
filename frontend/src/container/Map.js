@@ -242,8 +242,8 @@ const Map = ({points, houses, criteria}) => { //
             onChildClick={onMarkClick}
             onChange={onBoundChange}
           >
-            { houseMarkers }
             {clusterMarkers}
+            {houseMarkers}
             {(ptrCoordinate)?(
               <Current_Pin
                 key="myPin"
