@@ -1,31 +1,28 @@
-import { useState, useEffect } from 'react';
-import { Input, Layout, Menu, Avatar, Tooltip, Button } from 'antd';
+import { useState, useEffect, useRef } from 'react';
+import { Layout, Menu, Avatar, Tooltip } from 'antd';
 import {
     MenuUnfoldOutlined,
     MenuFoldOutlined,
-    LogoutOutlined,
-    ShopOutlined,
-    UploadOutlined,
     UserOutlined,
-    SearchOutlined,
-    HomeOutlined,
     HomeFilled
   } from '@ant-design/icons';
 import './UserInterface.css';  
 import Map from './Map';
-import SubMenu from 'antd/lib/menu/SubMenu';
+import House_Menu from '../component/House_Menu';
 import SearchForm from '../component/House_Search';
-
+import { axiosGetHouses, axiosAdminGetValuate, axiosUserGetValuate } from '../axios/axios';
+import { clusterConvert } from '../util/util';
 const { Header, Sider, Content } = Layout;
 
 const UserInterface = ({id,isAuth, logout, history})=> {
     
     const [collapsed, setCollapsed] = useState(false);
     const [criteria, setCriteria] = useState(null);
-    // const [userHouses, setUserHouses] = useState([]);
-    const myHouses = [
-        "1","2","3"
-    ]
+    const [points, setPoints] = useState([]); // others
+    const [houses, setHouses] = useState(null); // eval
+    
+    const mapRef = useRef(null);
+
     const toggle = () => {
         setCollapsed(!collapsed);
     };
@@ -37,6 +34,65 @@ const UserInterface = ({id,isAuth, logout, history})=> {
     const onHome = () => {
         history.push('/');
     }
+
+    const getEvalHouses = async () => {
+        const evalHouses = await axiosAdminGetValuate();
+        if (evalHouses !== null) {
+          const evalPoints = evalHouses.map(clusterConvert)
+          setHouses(evalPoints);
+        }
+        // setPoints([]);
+        
+    }
+
+    const getMyHouses = async ()  => {
+        const myHouses = await axiosUserGetValuate();
+        console.log("myhouses",myHouses);
+        if (myHouses !== null){
+          //const evalPoints = myHouses.map(clusterConvert);
+          // console.log("eval",evalPoints);
+          // setHouses(evalPoints);
+          setHouses(myHouses);
+        }
+        // setPoints([]);
+        
+    }
+    // const checkSimilar = (id) => {
+    //   console.log("checksim")
+    //   let similarHouses = [];
+    //   // console.log(houses);
+    //   if (houses !== null) {
+    //     houses.forEach(ele => {
+    //       similarHouses = [ ...similarHouses, ...ele.properties.similar];
+    //     })
+    //     // const similarPoints = similarHouses.map(clusterConvert);
+    //     // console.log("sim",similarPoints);
+    //     // setPoints(clusterConvert);
+    //   }
+    //   // setHouses(houses)
+    // }
+
+    // const setCriteria = (c) => {
+    //     mapRef.current.setCriteria(c);
+    // }
+    // ============ getHouses =============
+    const getHouses = async () => {
+        console.log("getting houses...")
+        const req_houses = await axiosGetHouses(criteria);
+        if (req_houses !== null){
+          const houses_cluster = req_houses.map(clusterConvert);
+          // console.log(houses_cluster);
+          setPoints(houses_cluster)
+        }
+      }
+
+    const searchNeighbor = () => {
+        mapRef.current.searchNeighbor();
+    }
+
+    const searchhouses = (name) => {
+        const houses = houses.filter(ele=>ele.name === name);
+    }
     
     const onLogout = async() => {
         const result = await logout();
@@ -47,6 +103,23 @@ const UserInterface = ({id,isAuth, logout, history})=> {
             console.log(result);
         }
     }
+
+    
+
+    useEffect( () => {
+        getHouses();
+    }, [criteria]);
+
+    useEffect( () => {
+      if (!houses) {
+        if (isAuth) {
+          getEvalHouses();
+        } else {
+          getMyHouses();
+        }
+      }
+    }, [])
+
     return (
     <Layout>
         <Sider 
@@ -65,38 +138,14 @@ const UserInterface = ({id,isAuth, logout, history})=> {
                     <span>Evaluation</span>
                 </div>
             </div>
-
-            <Menu theme="light" mode="inline" defaultSelectedKeys={['home']}>
-                <Menu.Item key="home" icon={<HomeOutlined />}>
-                    Home
-                </Menu.Item>
-                <Menu.Item key="search" icon={<SearchOutlined />}>
-                    {(collapsed)?
-                        "Search":
-                        <Input
-                            name="Search"
-                            placeholder="Search address"
-                            style={{ maxWidth: '80%'}}
-                        ></Input>
-                    }
-                </Menu.Item>
-                <Menu.Item key="profile" icon={<UserOutlined />}>
-                Your profile
-                </Menu.Item>
-                <SubMenu key="houses" icon={<ShopOutlined />} title="Your Houses">
-                    {myHouses.map((ele) => 
-                        <Menu.Item key={ele}>MY house{ele}</Menu.Item>)}
-                </SubMenu>
-                <Menu.Item key="logout" onClick={onLogout} icon={<LogoutOutlined />}>
-                Log out
-                </Menu.Item>
-                <Menu.Item key="n1" icon={<UploadOutlined />}>
-                not done yet
-                </Menu.Item>
-                <Menu.Item key="n2" icon={<UploadOutlined />}>
-                not done yet
-                </Menu.Item>
-            </Menu>
+            
+            <House_Menu 
+                isAuth={isAuth} 
+                onLogout={onLogout}
+                houses={houses}
+                // onMyHouseMode={onMyHouseMode}
+                collapsed={collapsed}
+            />
         </Sider>
         <Layout className="site-layout">
             <Header 
@@ -114,17 +163,50 @@ const UserInterface = ({id,isAuth, logout, history})=> {
                         className='trigger'
                         onClick={toggle} />
                     : 
-                    <MenuFoldOutlined
-                        className='trigger'
-                        onClick={toggle} />
-                }
-                <span
+                <MenuFoldOutlined
+                    className='trigger'
+                    onClick={toggle} />
+            }
+            <span
+                style={{
+                    display: "flex",
+                    alignItems: "center",
+                    // justifySelf: "center"
+                }}>
+                <SearchForm
+                    name="Search Options"
+                    setCriteria={handleCriteria}
+                />
+            </span>
+            <span>
+                <Tooltip 
+                    title={`User: ${id}`}
+                    placement="bottomRight">
+                    <Avatar 
+                        size="default"
+                        style={{ backgroundColor: '#87d068', margin: "0 16px" }} 
+                        icon={<UserOutlined />} 
+                    />
+                </Tooltip>
+            </span>
+        </Header>
+                <Content
+                    className="site-layout-background"
                     style={{
-                        display: "flex",
-                        alignItems: "center"}}>
-                    <SearchForm
-                        name="Search Options"
-                        setCriteria={handleCriteria}
+                    margin: '20px 24px',
+                    padding: 0,
+                    minHeight: 280,
+                    overflow: 'hidden'
+                    }}
+                >
+                    <Map 
+                        // id={id} 
+                        // isAuth={isAuth}
+                        ref = {mapRef}
+                        criteria={criteria}
+                        points={points}
+                        houses={houses}
+                        // setHouses={houses}
                     />
                     <Input.Search
                         placeholder="Search"

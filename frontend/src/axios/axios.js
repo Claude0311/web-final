@@ -27,13 +27,12 @@ export const loginAsAuth = async () => {
 }
 
 export const addAuth = async (user,isAuth) => {
-    await instance.post('/addAuth', {params: {user,isAuth}})
-        .then((res) => {
-            console.log("successfully");
-        })
-        .catch((err) => {
-            throw err;
-        })
+    try {
+        const {data} = await instance.post('/addAuth', {params: {user,isAuth}});
+        return {user:data.user, isAuth: isAuth};
+    } catch (err) {
+        return null;
+    }
 }
 
 export const logoutUser = async () => {
@@ -76,7 +75,7 @@ export const axiosGetHouses = async (params) => {
         return req_houses;
     } catch (e) {
         console.log("fail to get houses")
-        throw e;
+        return null;
     }
     
 }
@@ -92,7 +91,7 @@ export const axiosGetHouses = async (params) => {
 // }
 export const axiosGetDetail = async (id) => {
     try {
-        console.log("axios get", id);
+        // console.log("axios get", id);
         const { data: {
             buildingType,
             unitPrice,
@@ -101,6 +100,30 @@ export const axiosGetDetail = async (id) => {
     } catch (e) {
         console.log("fail to get detail");
         throw e;
+    }
+}
+
+export const axiosUserGetValuate = async () => {
+    try {
+        // console.log("axios get valuate");
+        const { data : valuate } = await instance.get('/valuate/user');
+        // console.log(valuate);
+        return valuate;
+    } catch (e) {
+        console.log("fail");
+        return null;
+    }
+}
+
+export const axiosAdminGetValuate = async () => {
+    try {
+        console.log("axios get valuate");
+        const { data : valuate } = await instance.get('/valuate/auth');
+        // console.log(valuate);
+        return valuate;
+    } catch (e) {
+        console.log("fail");
+        return null;
     }
 }
 

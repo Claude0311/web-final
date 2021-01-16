@@ -78,7 +78,7 @@ const Login = ({id, login, history}) => {
     // login as an Administrator
 
     useEffect(()=>{
-        if (userRef) {
+        if (userRef !== null & !id) {
             userRef.current.focus();
         }
     }, []);

@@ -20,13 +20,15 @@
 6. hasParking	Boolean	有無車位(optional)
  */
 import { useState } from 'react';
-import { BarsOutlined } from '@ant-design/icons';
+import { CaretDownOutlined} from '@ant-design/icons';
 import {
+    Input,
     Form,
     Select,
     Radio,
     Button,
-    Modal
+    Modal,
+    Tooltip
   } from 'antd';
 import SearchNumber from './SearchInput';
 // import { UploadOutlined, InboxOutlined } from '@ant-design/icons';
@@ -113,12 +115,21 @@ const SearchForm = ({name,setCriteria}) => {
   }
   return (
     <>
-      <Button 
-        type="primary" 
-        icon={<BarsOutlined />}
-        onClick={showSearchForm}>
-        {name}
-      </Button>
+      <Input.Search
+                    placeholder="Search"
+                    style={{ width: 500, margin: '0 20px' }}
+                    addonBefore={
+                      <Tooltip title="Search Option" placement="bottom">
+                        <Button 
+                        type="text" 
+                        size="small"
+                        shape="circle"
+                        icon={<CaretDownOutlined style={{ color: 'rgba(0,0,0,.45)' }}/>}
+                        onClick={showSearchForm}>
+                        
+                      </Button>
+                    </Tooltip>}
+                />
       <Modal
         visible={visible}
         title="Search with Condition"
@@ -226,6 +237,7 @@ const SearchForm = ({name,setCriteria}) => {
         </Form.Item>
       </Form>
       </Modal>
+      
     </>
     );
   };
