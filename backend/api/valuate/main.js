@@ -1,14 +1,17 @@
 import express from 'express'
 import askPrice from './askPrice/main'
-import show from './show/main'
-import update from './update/main'
-const router = express.Router()
+import show,{show_auth} from './show/main'
+import update,{update_auth} from './update/main'
 
-//get /valuate/user,/valuate/auth
-router.use('/valuate',show)
-//post /valuate
-router.post('/valuate',askPrice)
-//put
-router.use('/valuate',update)
+const router_in = express.Router()
+const router_auth = express.Router()
 
-export default router
+router_in.use('/valuate',show)
+router_in.post('/valuate',askPrice)
+router_in.use('/valuate',update)
+
+router_auth.use('/valuate',show_auth)
+router_auth.use('/valuate',update_auth)
+
+export default router_in
+export {router_auth as valuate_auth}

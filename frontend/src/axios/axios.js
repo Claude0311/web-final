@@ -4,7 +4,8 @@ import buildingType from './buildingType'
 console.log('NODE_ENV',process.env.NODE_ENV)
 const API_ROOT = (process.env.NODE_ENV==='production')?'':'http://localhost:4000'
 const instance = axios.create({
-  baseURL: API_ROOT
+  baseURL: API_ROOT,
+  withCredentials: true
 })
 
 // =========== login post ============
@@ -98,14 +99,20 @@ export const axiosGetDetail = async (id) => {
 
 // ============ test =============
 export const init = async () => {
-    const {data:response} = await instance.get('/houses',{params:{
-        buildingType:'公寓',
-        neighbor:{center:{lat:'27',lng:'121'},distance:30},
-        unitPrice:{lb:500000,ub:600000},
-        hasParking:true
-    }})
-    console.log(response)
-    return response
+    const dbCatch = e=>{console.log(e?.response?.data?.msg)}
+    // await instance.post('/login',{user:'b07901029',password:'123'}).catch(dbCatch)
+    // await instance.get('/houses',{params:{
+    //     // buildingType:'公寓'
+    // }}).catch(dbCatch)
+    // await instance.get('/valuate/user').catch(dbCatch)
+    // const {data:response} = await instance.get('/houses',{params:{
+    //     buildingType:'公寓',
+    //     neighbor:{center:{lat:'27',lng:'121'},distance:30},
+    //     unitPrice:{lb:500000,ub:600000},
+    //     hasParking:true
+    // }})
+    // console.log(response)
+    // return response
 }
 
 export const testErr = async () => {
