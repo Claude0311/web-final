@@ -5,14 +5,16 @@ import House_Detail from '../component/House_detail';
 import { axiosGetHouses, axiosGetDetail } from '../axios/axios';
 import useSupercluster from 'use-supercluster';
 import Fill_in from './Fill_in';
+import buildingType from '../axios/buildingType';
 
 const AnyReactComponent = ({ text }) => <div>{text}</div>;
 
-const Map = ({criteria}) => {
+const Map = ({criteria}) => { //
     const [cen,setCen] = useState({lat: 25.017, lng: 121.537});
     const [zoom,setZoom] = useState(16.0);
     const [bounds, setBounds] = useState(null);
     // const [houses, setHouses] = useState([]);
+    // const [criteria, setCriteria] = useState(null);
     const [points, setPoints] = useState([]);
     const [ptrCoordinate, setPtrCod] = useState(null);
     const [houseDetail, setDetail] = useState(null);
@@ -24,7 +26,24 @@ const Map = ({criteria}) => {
       points,
       bounds,
       zoom,
-      options: { maxZoom: 20 }
+      options: { 
+        radius: 75,
+        maxZoom: 20,
+        map: (props) => ({
+          sum: props.unitPrice,
+          // allinfo: [{
+          //   id: props.id, 
+          //   unitPrice: props.unitPrice, 
+          //   buildingType: props.buildingType
+          // }]
+        }),
+        reduce: (acc, props) => {
+          acc.sum += props.sum
+          // acc.allinfo.concat(props.allinfo)
+          // sum: acc.sum + props.sum,
+          // allinfo: acc.allinfo.concat(props.allinfo)
+        }
+       }
     });
 
 
@@ -83,21 +102,40 @@ const Map = ({criteria}) => {
       // console.log("leave");
       setHoverKey(null);
     }
+
+
     const onMarkClick = (key, childprops) => {
-      // console.log(clickKey);
+      // console.log(key);
       // console.log(childprops);
       const {lat, lng} = childprops;
-      //const ratio = Math.hypot(lat-cen.lat, lng-cen.lng)/Math.hypot(bounds[2]-bounds[0],bounds[3]-bounds[1]);
-      const ratio = 1.6*Math.abs((lat-cen.lat)/(bounds[3]-bounds[1]))+Math.abs((lng-cen.lng)/(bounds[2]-bounds[0]));
-      // console.log(ratio);
-      if (
-        ratio >= 0.5) {
+      // compute elipse radius from center
+      const dely = 2.6*(lat-cen.lat)/(bounds[3]-bounds[1]);
+      const delx = 2.6*(lng-cen.lng)/(bounds[2]-bounds[0]);
+      const ratio = Math.hypot(delx,dely);
+      // console.log("ration from center", ratio);
+      if (ratio >= 1) {
         handleMove(key,{lat,lng});
       } else {
         setClickKey(key);
+      }        
+    }
+
+    const getClusterClick = (key) => { // key: Number
+      // console.log(e);
+      // console.log(supercluster.getLeaves(key))
+      const zoomInratio = supercluster.getClusterExpansionZoom(key)
+      if (zoomInratio >= 20 ) {
+        // show all the info
+        const leaves = supercluster.getLeaves(key);
+        const leaveInfo = leaves.map( leaf => ({
+          id: leaf.properties.id,
+          buildingType: leaf.properties.buildingType,
+          unitPrice: leaf.properties.unitPrice
+        }));
+        return leaveInfo;
       }
-      // setClickKey(key);
-        
+      return null;
+      
     }
 
     const handleMove = async (key,{lat,lng}) => {
@@ -129,9 +167,23 @@ const Map = ({criteria}) => {
 
     const showForm = async () => {
       setClickKey(null);
+      console.log(supercluster);
         // show form ...
         
     }
+    // ========== search ==========
+
+    // const searchNeighbor = () => {
+    //   const center = cen;
+    //   // const 
+    // }
+
+    // const search = (cri) => {
+    //   const c = {...cri};
+    //   console.log(c)
+    //   setCriteria(c);
+      
+    // }
 
     // ========== set Boundaries ========
     
@@ -157,15 +209,16 @@ const Map = ({criteria}) => {
     //   console.log(points);
     //   console.log(clusters);
     // },[clusters]);
+    
     useEffect( () => {
       getHouses();
     }, [criteria]);
 
-    
+    // ========== render element ===========
     const clusterMarkers = clusters.map(cluster => {
       const [lng, lat] = cluster.geometry.coordinates;
       const {
-        cluster: isCluster, point_count: pointCount, cluster_id, id, ...rest
+        cluster: isCluster, point_count: pointCount, cluster_id, id, sum, ...rest
       } = cluster.properties;
       if (isCluster) {
         // return cluster Marker
@@ -176,8 +229,12 @@ const Map = ({criteria}) => {
             lat={lat}
             lng={lng}
             size={pointCount}
+            sum={sum}
+            click={clickKey === String(cluster_id)}
             pointSize={points.length}
             hover={hoverKey === String(cluster_id)}
+            getLeaves={getClusterClick}
+            getDetail={getHouseDetail}
             />
         );
       } else {
@@ -206,7 +263,7 @@ const Map = ({criteria}) => {
           <GoogleMapReact
             bootstrapURLKeys={{ key: 'AIzaSyBqlTXRpx8ARKVOHZXDopkEYtsPs0WUHQ0' }}
             center={cen}
-            defaultZoom={40}
+            defaultZoom={14}
             zoom={zoom}
             onClick={onSetMark}
             onChildMouseEnter={onMarkHover}

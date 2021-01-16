@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { InputNumber, Select } from 'antd';
+import { priceConvert } from '../util/util';
 const { Option } = Select;
 const SearchNumber = ({value={}, onChange, unit, min, max, useDomination=true}) => {
     const [number, setNumber] = useState(null);
@@ -40,7 +41,7 @@ const SearchNumber = ({value={}, onChange, unit, min, max, useDomination=true}) 
           min={min}
           max={max}
           value={number}
-          formatter={value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+          formatter={priceConvert}
           parser={value => value.replace(/\$\s?|(,*)/g, '')}
           style={{width: "100px"}}
           onChange={onNumberChange}

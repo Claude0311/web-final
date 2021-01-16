@@ -11,15 +11,18 @@ import {PrivateRoute} from './component/PrivateRoute';
 import { getLocalAccount, removeAccount, useAuth } from './Auth/AuthService';
 
 function App() {
-  const [isLoading, setLoading] = useState(true);
-  const {username, isAuth, login, logout} = useAuth();
-  
+  // const [isLoading, setLoading] = useState(true);
+  const {username, isAuth, login, logout, autoLogin} = useAuth();
+  /*
   const loginAuto = async () => {
     const token = getLocalAccount();
     if (!token) {
       console.log("do not get stored...");
       setLoading(false);
       return;
+    }
+    else {
+      
     }
     // setLoading(true);
     const result = await login(token);
@@ -32,20 +35,21 @@ function App() {
     setLoading(false);
     return;
   } 
+  */
   useEffect(() => {
     // do read cache here
     if (!username) {
       console.log("this is App");
       console.log("try login automatically");
-      loginAuto();
+      autoLogin();
     }
     
   }, []);
 
   // const requireLogin = ()
-  if (isLoading) {
-    return <div><p>is loading...</p></div>;
-  }
+  // if (isLoading) {
+  //   return <div><p>is loading...</p></div>;
+  // }
   return (
     <div className="App">
       <Router>

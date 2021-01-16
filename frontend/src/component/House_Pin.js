@@ -1,8 +1,9 @@
-import { Tooltip, Avatar, Popover,Button } from 'antd';
+import { Tooltip, Avatar, Popover, Divider } from 'antd';
 import {EnvironmentFilled} from '@ant-design/icons';
 import BuildingType from '../axios/buildingType';
 import {useEffect, useState} from 'react'
 import './House_Pin.css';
+import { priceConvert } from '../util/util';
 
 const House_Pin = ({id,buildingType,click,unitPrice,hover,getDetail}) => {
     const [visible, setvisible] = useState(false); // control Popover
@@ -12,7 +13,7 @@ const House_Pin = ({id,buildingType,click,unitPrice,hover,getDetail}) => {
     const content = (
         <>
         <p>Type: {BuildingType[buildingType]}</p>
-        <p>Unit Price: NT${unitPrice}</p>
+        <p>Unit Price: NT${priceConvert(unitPrice)}</p>
         <a onClick={async()=>{
             await setvisible(false);
             console.log("in func",id);
@@ -55,29 +56,64 @@ const House_Pin = ({id,buildingType,click,unitPrice,hover,getDetail}) => {
     );
 }
 
-const House_Cluster = ({id, size, pointSize, hover }) => {
+const House_Cluster = ({sum, size, pointSize, hover, click, ...props }) => {
+    const [points, setPoints] = useState([]);
+    const [visible, setvisible] = useState(false);
     const overflowCount = (size) => (size <= 99)? String(size): "99+";
-    const zoomIn = () => {
-        console.log("zoom in")
-        return;
+
+    const handleClick = () => {
+        const leaves = props.getLeaves(props.id);
+        // console.log(leaves);
+        if (leaves){
+            setPoints(leaves);
+        }
+        setvisible(true);
     }
 
     let ratio = (hover)? 8:0;
-    let markSize = Math.floor(18+ratio+100*size/pointSize);
+    let markSize = Math.floor(ratio+40-0.4*pointSize/size);
+    const content = (
+        <div className="cluster">
+            <p>Average: NT${priceConvert(Math.round(sum/size))}</p>
+            {(points && points.length > 0)?<p>Type: {BuildingType[points[0].buildingType]}</p>:<></>}
+            {(points && points.length > 0)
+                ?points.map((l,ind) => (
+                    <>
+                        <Divider plain>house {ind+1}</Divider>
+                        <p>Unit Price: NT${priceConvert(l.unitPrice)}</p>
+                        <a onClick={async()=>{
+                            await setvisible(false);
+                            props.getDetail(l.id);
+                        }}>more details</a>                    
+                    </>
+                ))
+                :<></>
+            }
+        </div>
+    )
     return (
-        <Avatar 
-            style={{ 
-                backgroundColor: '#0b9',
-                cursor: 'pointer',
-                fontSize: `${(hover? "16":"14")}px`,
-                position: 'absolute',
-                bottom: `-${markSize/2}px`,
-                left: `-${markSize/2}px`
-            }}
-            // style={style}
-            onClick={zoomIn}
-            size={markSize}
-        >{overflowCount(size)}</Avatar>
+        <Popover 
+            placement='right'
+            title={`Cluster with ${size} houses`}
+            visible={click && visible}
+            content={content}
+            trigger="click"
+        >
+            <Avatar 
+                style={{ 
+                    backgroundColor: '#0b9',
+                    cursor: 'pointer',
+                    fontSize: `${(hover? "16":"14")}px`,
+                    position: 'absolute',
+                    bottom: `-${markSize/2}px`,
+                    left: `-${markSize/2}px`
+                }}
+                // style={style}
+                onClick={handleClick}
+                size={markSize}
+            >{overflowCount(size)}</Avatar>
+        </Popover>
+        
     )
 }
 

@@ -1,19 +1,14 @@
-import { useState, useEffect } from 'react';
-import { Input, Layout, Menu, Avatar, Tooltip, Button } from 'antd';
+import { useState, useEffect, useRef } from 'react';
+import { Layout, Menu, Avatar, Tooltip } from 'antd';
 import {
     MenuUnfoldOutlined,
     MenuFoldOutlined,
-    LogoutOutlined,
-    ShopOutlined,
-    UploadOutlined,
     UserOutlined,
-    SearchOutlined,
-    HomeOutlined,
     HomeFilled
   } from '@ant-design/icons';
 import './UserInterface.css';  
 import Map from './Map';
-import SubMenu from 'antd/lib/menu/SubMenu';
+import House_Menu from '../component/House_Menu';
 import SearchForm from '../component/House_Search';
 
 const { Header, Sider, Content } = Layout;
@@ -22,10 +17,13 @@ const UserInterface = ({id,isAuth, logout, history})=> {
     
     const [collapsed, setCollapsed] = useState(false);
     const [criteria, setCriteria] = useState(null);
+    const [myHouses, setMyHouses] = useState([]);
+    
+    const mapRef = useRef(null);
     // const [userHouses, setUserHouses] = useState([]);
-    const myHouses = [
-        "1","2","3"
-    ]
+    // const myHouses = [
+    //     "1","2","3"
+    // ]
     const toggle = () => {
         setCollapsed(!collapsed);
     };
@@ -37,6 +35,14 @@ const UserInterface = ({id,isAuth, logout, history})=> {
     const onHome = () => {
         history.push('/');
     }
+
+    // const setCriteria = (c) => {
+    //     mapRef.current.setCriteria(c);
+    // }
+
+    const searchNeighbor = () => {
+        mapRef.current.searchNeighbor();
+    }
     
     const onLogout = async() => {
         const result = await logout();
@@ -47,6 +53,16 @@ const UserInterface = ({id,isAuth, logout, history})=> {
             console.log(result);
         }
     }
+
+    const houseProfiles = (myHouses && myHouses.length !== 0)
+        ?myHouses.map((ele) => 
+            <Menu.Item key={ele}>MY house{ele}</Menu.Item>)
+        :<Menu.Item key="Not found" disabled>Not found</Menu.Item>
+
+    useEffect(() => {
+        console.log(typeof isAuth);
+    },[]);
+
     return (
     <Layout>
         <Sider 
@@ -65,38 +81,13 @@ const UserInterface = ({id,isAuth, logout, history})=> {
                     <span>Evaluation</span>
                 </div>
             </div>
-
-            <Menu theme="light" mode="inline" defaultSelectedKeys={['home']}>
-                <Menu.Item key="home" icon={<HomeOutlined />}>
-                    Home
-                </Menu.Item>
-                <Menu.Item key="search" icon={<SearchOutlined />}>
-                    {(collapsed)?
-                        "Search":
-                        <Input
-                            name="Search"
-                            placeholder="Search address"
-                            style={{ maxWidth: '80%'}}
-                        ></Input>
-                    }
-                </Menu.Item>
-                <Menu.Item key="profile" icon={<UserOutlined />}>
-                Your profile
-                </Menu.Item>
-                <SubMenu key="houses" icon={<ShopOutlined />} title="Your Houses">
-                    {myHouses.map((ele) => 
-                        <Menu.Item key={ele}>MY house{ele}</Menu.Item>)}
-                </SubMenu>
-                <Menu.Item key="logout" onClick={onLogout} icon={<LogoutOutlined />}>
-                Log out
-                </Menu.Item>
-                <Menu.Item key="n1" icon={<UploadOutlined />}>
-                not done yet
-                </Menu.Item>
-                <Menu.Item key="n2" icon={<UploadOutlined />}>
-                not done yet
-                </Menu.Item>
-            </Menu>
+            
+            <House_Menu 
+                isAuth={isAuth} 
+                logout={logout}
+                houseProfiles={houseProfiles}
+                collapsed={collapsed}
+            />
         </Sider>
         <Layout className="site-layout">
         <Header 
@@ -121,23 +112,25 @@ const UserInterface = ({id,isAuth, logout, history})=> {
             <span
                 style={{
                     display: "flex",
-                    alignItems: "center"}}>
+                    alignItems: "center",
+                    // justifySelf: "center"
+                }}>
                 <SearchForm
                     name="Search Options"
                     setCriteria={handleCriteria}
                 />
-                <Input.Search
-                    placeholder="Search"
-                    style={{ width: 500, margin: '0 20px' }}
-                />
             </span>
-            <Tooltip title={id} placement="bottomRight">
-                <Avatar 
-                    size="default"
-                    style={{ backgroundColor: '#87d068', margin: "0 16px" }} 
-                    icon={<UserOutlined />} 
-                />
-            </Tooltip>
+            <span>
+                <Tooltip 
+                    title={`User: ${id}`}
+                    placement="bottomRight">
+                    <Avatar 
+                        size="default"
+                        style={{ backgroundColor: '#87d068', margin: "0 16px" }} 
+                        icon={<UserOutlined />} 
+                    />
+                </Tooltip>
+            </span>
         </Header>
                 <Content
                     className="site-layout-background"
@@ -151,6 +144,7 @@ const UserInterface = ({id,isAuth, logout, history})=> {
                     <Map 
                         // id={id} 
                         // isAuth={isAuth}
+                        // ref = {mapRef}
                         criteria={criteria}
                     />
                 </Content>       
