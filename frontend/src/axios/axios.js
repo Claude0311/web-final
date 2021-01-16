@@ -110,7 +110,7 @@ export const axiosUserGetValuate = async () => {
         // console.log(valuate);
         return valuate;
     } catch (e) {
-        console.log("fail");
+        console.log("fail to get /valuate/user");
         return null;
     }
 }
@@ -122,7 +122,20 @@ export const axiosAdminGetValuate = async () => {
         // console.log(valuate);
         return valuate;
     } catch (e) {
-        console.log("fail");
+        console.log("fail to get /valuate/auth");
+        return null;
+    }
+}
+
+// ============ score ============
+
+export const axiosGetScoreRule = async () => {
+    try {
+        console.log("axios get score");
+        const {data: rule} = await instance.get('/score');
+        return rule;
+    } catch (e) {
+        console.log("fail to get /score");
         return null;
     }
 }

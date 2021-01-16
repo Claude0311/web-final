@@ -63,12 +63,13 @@ const House_Cluster = ({sum, size, pointSize, hover, click, ...props }) => {
     const overflowCount = (size) => (size <= 99)? String(size): "99+";
 
     const handleClick = () => {
+        // setvisible(false);
         const leaves = props.getLeaves(props.id);
         // console.log(leaves);
         if (leaves){
             setPoints(leaves);
         }
-        setvisible(true);
+        // setvisible(true);
     }
 
     let ratio = (hover)? 8:0;
@@ -96,9 +97,9 @@ const House_Cluster = ({sum, size, pointSize, hover, click, ...props }) => {
         <Popover 
             placement='right'
             title={`Cluster with ${size} houses`}
-            visible={click && visible}
+            visible={hover || (click )}//&& visible
             content={content}
-            trigger="click"
+            // trigger="hover"
         >
             <Avatar 
                 style={{ 
@@ -109,8 +110,9 @@ const House_Cluster = ({sum, size, pointSize, hover, click, ...props }) => {
                     bottom: `-${markSize/2}px`,
                     left: `-${markSize/2}px`
                 }}
-                onClick={handleClick}
+                // onVisibleChange={handleClick}
                 size={markSize}
+                onClick={handleClick}
             >{overflowCount(size)}</Avatar>
         </Popover>
         
@@ -131,14 +133,7 @@ const Current_Pin = ({hover, showForm, click, lat, lng, moveCen})=>{
         fontSize: '20pt'
     }
     let style = (hover)?  myStyleHover: myStyle;
-    // const [visible, setvisible] = useState(false);
-    // const handleVisible = (v) => {
-    //     setvisible(v);
-    // }
-    // const onShowForm = async() => {
-    //     // await handleVisible(false);
-    //     showForm();
-    // }
+
     const content = (
         <div>
             <QueryForm 
@@ -158,6 +153,7 @@ const Current_Pin = ({hover, showForm, click, lat, lng, moveCen})=>{
             trigger="click"
             visible={click}
             content={content}
+            
         >
             <EnvironmentFilled style={style}/>
         </Popover>
@@ -172,7 +168,7 @@ const House_Eval_Pin = (props) => {
         bottom: '0',
         left: '-9pt',
         fontSize: '18pt',
-        color: (props.processed)? '#934':'#de5'
+        color: (props.processed)? '#945':'#fd0'
     };
     const myStyleHover = {
         ...myStyle,

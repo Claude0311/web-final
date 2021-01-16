@@ -69,10 +69,10 @@ const Map = ({points, houses, criteria}) => { //
       // console.log(childprops);
       const {lat, lng} = childprops;
       // compute elipse radius from center
-      const dely = 2.6*(lat-cen.lat)/(bounds[3]-bounds[1]);
-      const delx = 2.6*(lng-cen.lng)/(bounds[2]-bounds[0]);
+      const dely = 2.8*(lat-cen.lat)/(bounds[3]-bounds[1]);
+      const delx = 2.8*(lng-cen.lng)/(bounds[2]-bounds[0]);
       const ratio = Math.hypot(delx,dely);
-      // console.log("ration from center", ratio);
+      console.log("ration from center", ratio);
       if (ratio >= 1) {
         handleMove(key,{lat,lng});
       } else {
@@ -81,9 +81,9 @@ const Map = ({points, houses, criteria}) => { //
     }
 
     const getClusterClick = (key) => { // key: Number
-      // console.log(e);
-      // console.log(supercluster.getLeaves(key))
+      setHoverKey(null);
       const zoomInratio = supercluster.getClusterExpansionZoom(key)
+      console.log(zoomInratio)
       if (zoomInratio >= 20 ) {
         // show all the info
         const leaves = supercluster.getLeaves(key);
@@ -93,9 +93,16 @@ const Map = ({points, houses, criteria}) => { //
           unitPrice: leaf.properties.unitPrice
         }));
         return leaveInfo;
+      } else {
+        window.setTimeout(()=>{
+          setZoom(zoomInratio);
+        },500);
+        const [leaf, ...rest] = supercluster.getChildren(key);
+        const [lng, lat] = leaf.geometry.coordinates;
+        setCen({lat,lng})
+        return null;
       }
-      return null;
-      
+
     }
 
     const handleMove = async (key,{lat,lng}) => {
@@ -119,21 +126,6 @@ const Map = ({points, houses, criteria}) => { //
       setPtrCod({lat, lng});
       
     }
-    //  UNUSED
-    /*
-    const moveCen = (lat,lng) => {
-      const frameTrans  = 60;
-      const delLat = (lat - cen.lat)/frameTrans;
-      const delLng = (lng - cen.lng)/frameTrans;
-      // let count = 0;
-      let timeID = window.setInterval(() => {
-        setCen({lat:cen.lat+delLat, lng:cen.lng+delLng});
-        console.log("moving cen...")
-      }, 50);
-      window.setTimeout(()=> {
-        window.clearInterval(timeID);
-      }, 3000)
-    }*/
 
     const closeDetail = () => {
       setDetail(null);
@@ -141,10 +133,7 @@ const Map = ({points, houses, criteria}) => { //
 
     const showForm = async () => {
       setClickKey(null);
-      console.log(supercluster);
-        // show form ...
-
-        
+      // show form ...  
     }
     // ========== search ==========
 
@@ -181,9 +170,7 @@ const Map = ({points, houses, criteria}) => { //
 
     // ========== useEffect =============
     
-    // useEffect( ()=> {
-    //   console.log(houses)
-    // },[houses]);
+
     
 
     // ========== render element ===========
@@ -248,7 +235,7 @@ const Map = ({points, houses, criteria}) => { //
           <GoogleMapReact
             bootstrapURLKeys={{ key: 'AIzaSyBqlTXRpx8ARKVOHZXDopkEYtsPs0WUHQ0' }}
             center={cen}
-            defaultZoom={14}
+            defaultZoom={12}
             zoom={zoom}
             onClick={onSetMark}
             onChildMouseEnter={onMarkHover}

@@ -10,7 +10,11 @@ import './UserInterface.css';
 import Map from './Map';
 import House_Menu from '../component/House_Menu';
 import SearchForm from '../component/House_Search';
-import { axiosGetHouses, axiosAdminGetValuate, axiosUserGetValuate } from '../axios/axios';
+import { axiosGetHouses,
+        axiosAdminGetValuate,
+        axiosUserGetValuate, 
+        axiosGetScoreRule 
+    } from '../axios/axios';
 import { clusterConvert } from '../util/util';
 const { Header, Sider, Content } = Layout;
 
@@ -20,6 +24,7 @@ const UserInterface = ({id,isAuth, logout, history})=> {
     const [criteria, setCriteria] = useState(null);
     const [points, setPoints] = useState([]); // others
     const [houses, setHouses] = useState(null); // eval
+    const [myPoints, setMyPoints] = useState(null);
     
     const mapRef = useRef(null);
 
@@ -32,56 +37,62 @@ const UserInterface = ({id,isAuth, logout, history})=> {
     }
 
     const onHome = () => {
-        history.push('/');
+        console.log("reset...")
+        setCriteria(null);
+        getHouses();
+        getMyHouses();
+        // history.push('/');
     }
 
     const getEvalHouses = async () => {
         const evalHouses = await axiosAdminGetValuate();
         if (evalHouses !== null) {
-          const evalPoints = evalHouses.map(clusterConvert)
-          setHouses(evalPoints);
-        }
-        // setPoints([]);
-        
+          setHouses(evalHouses);
+        }        
     }
 
     const getMyHouses = async ()  => {
         const myHouses = await axiosUserGetValuate();
-        console.log("myhouses",myHouses);
+        // console.log("myhouses",myHouses);
         if (myHouses !== null){
-          //const evalPoints = myHouses.map(clusterConvert);
-          // console.log("eval",evalPoints);
-          // setHouses(evalPoints);
           setHouses(myHouses);
-        }
-        // setPoints([]);
-        
+        }        
     }
-    // const checkSimilar = (id) => {
-    //   console.log("checksim")
-    //   let similarHouses = [];
-    //   // console.log(houses);
-    //   if (houses !== null) {
-    //     houses.forEach(ele => {
-    //       similarHouses = [ ...similarHouses, ...ele.properties.similar];
-    //     })
-    //     // const similarPoints = similarHouses.map(clusterConvert);
-    //     // console.log("sim",similarPoints);
-    //     // setPoints(clusterConvert);
-    //   }
-    //   // setHouses(houses)
-    // }
+
+    // show similar houses given an id
+    const showSimilar = (id) => {
+      const h = houses.find(ele=>ele._id === id);
+      if (h) {
+        // console.log(h.similar);
+        const similarPoints = h.similar.map(clusterConvert);
+        setPoints(similarPoints);
+        setMyPoints([h]);
+        // move to center
+      }
+    }
+
+    const setMyHouseOnly = () => {
+        setPoints([]);
+        setMyPoints(houses);
+    }
+
+    const viewUnValuate = () => {
+        setPoints([]);
+        getEvalHouses();
+        setMyPoints(houses.filter(e=>!e.processed));
+    }
 
     // const setCriteria = (c) => {
     //     mapRef.current.setCriteria(c);
     // }
+
+
     // ============ getHouses =============
     const getHouses = async () => {
         console.log("getting houses...")
         const req_houses = await axiosGetHouses(criteria);
         if (req_houses !== null){
           const houses_cluster = req_houses.map(clusterConvert);
-          // console.log(houses_cluster);
           setPoints(houses_cluster)
         }
       }
@@ -90,8 +101,14 @@ const UserInterface = ({id,isAuth, logout, history})=> {
         mapRef.current.searchNeighbor();
     }
 
-    const searchhouses = (name) => {
-        const houses = houses.filter(ele=>ele.name === name);
+    const searchhouses = (id) => {
+        const house = houses.filter(ele=>ele._id === id);
+        // setMyPoints()
+    }
+
+    const onViewScoreRule = async() => {
+        const rule = await axiosGetScoreRule();
+        console.log("rule",rule);
     }
     
     const onLogout = async() => {
@@ -112,13 +129,11 @@ const UserInterface = ({id,isAuth, logout, history})=> {
 
     useEffect( () => {
       if (!houses) {
-        if (isAuth) {
-          getEvalHouses();
-        } else {
-          getMyHouses();
-        }
+        getMyHouses();
+        setMyPoints(houses);
       }
     }, [])
+
 
     return (
     <Layout>
@@ -143,8 +158,12 @@ const UserInterface = ({id,isAuth, logout, history})=> {
                 isAuth={isAuth} 
                 onLogout={onLogout}
                 houses={houses}
-                // onMyHouseMode={onMyHouseMode}
+                onHome={onHome}
+                onMyHouseMode={setMyHouseOnly}
+                showSimilar={showSimilar}
                 collapsed={collapsed}
+                onTodoMode={viewUnValuate}
+                onScore={onViewScoreRule}
             />
         </Sider>
         <Layout className="site-layout">
@@ -167,21 +186,22 @@ const UserInterface = ({id,isAuth, logout, history})=> {
                     className='trigger'
                     onClick={toggle} />
             }
-            <span
-                style={{
-                    display: "flex",
-                    alignItems: "center",
-                    // justifySelf: "center"
-                }}>
-                <SearchForm
-                    name="Search Options"
-                    setCriteria={handleCriteria}
-                />
-            </span>
-            <span>
+              <span
+                  style={{
+                      display: "flex",
+                      alignItems: "center",
+                      // justifySelf: "center"
+                  }}>
+                  <SearchForm
+                      name="Search Options"
+                      setCriteria={handleCriteria}
+                  />
+              </span>
+              <span>
                 <Tooltip 
-                    title={`User: ${id}`}
-                    placement="bottomRight">
+                    title={(isAuth)?`Admin: ${id}`:`User: ${id}`}
+                    placement="bottomRight"
+                >
                     <Avatar 
                         size="default"
                         style={{ backgroundColor: '#87d068', margin: "0 16px" }} 
@@ -203,7 +223,7 @@ const UserInterface = ({id,isAuth, logout, history})=> {
                     // id={id} 
                     // isAuth={isAuth}
                     points={points}
-                    houses={houses}
+                    houses={myPoints}
                     criteria={criteria}
                 />
             </Content>       
