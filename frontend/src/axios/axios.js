@@ -4,7 +4,8 @@ import buildingType from './buildingType'
 console.log('NODE_ENV',process.env.NODE_ENV)
 const API_ROOT = (process.env.NODE_ENV==='production')?'':'http://localhost:4000'
 const instance = axios.create({
-  baseURL: API_ROOT
+  baseURL: API_ROOT,
+  withCredentials: true
 })
 
 // =========== login post ============
@@ -43,5 +44,5 @@ export const init = async () => {
     // await instance.get('/houses',{params:{
     //     // buildingType:'公寓'
     // }}).catch(dbCatch)
-    // await instance.get('/valuate/user').catch(dbCatch)
+    await instance.get('/valuate/user').catch(dbCatch)
 }

@@ -8,6 +8,8 @@ import session from 'express-session'
 import connect from 'connect-mongo'
 import env from 'dotenv'
 import craw from './util/crawler'
+import cors from 'cors'
+
 env.config({path:'../.env'})
 
 const app = express()
@@ -23,7 +25,7 @@ DB.once('open',()=>{
 	app.use(bodyParser.json())
 	app.use(function (req, res, next) {
 		res.header('Access-Control-Allow-Origin', 'http://localhost:3000')//讓其他port(ex.3000)可以發post
-		res.header('Access-Control-Allow-Headers','Origin, X-Requested-With, Content-Type, Accept')
+		res.header('Access-Control-Allow-Headers','Origin, X-Requested-With, Content-Type, Accept, Cookie')
 		res.header('Access-Control-Allow-Methods', 'POST, GET, PUT, DELETE, OPTIONS,PATCH')
 		res.header('Access-Control-Allow-Credentials', 'true')
 		next()
@@ -34,11 +36,13 @@ DB.once('open',()=>{
 	app.use(
 		session({
 			name: 'house',
-			secret: 'fuewhzk', // 用来對session id相關的cookie進行簽名，建議128byte亂碼
+			secret: 'fjwngox', // 用来對session id相關的cookie進行簽名，建議128byte亂碼
 			store: new MongoStore({mongooseConnection: DB}),
 			saveUninitialized: false, //prevent race conditions
 			resave: false,
-			cookie: {httpOnly: true, maxAge: 60 * 60 * 1000}
+			cookie: {
+				maxAge: 60 * 60 * 1000
+			}
 		})
 	)
 
