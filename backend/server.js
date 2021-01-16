@@ -33,12 +33,12 @@ DB.once('open',()=>{
 	const MongoStore = connect(session)
 	app.use(
 		session({
-			name: 'houseValuate',
-			secret: 'jgevslv', // 用来對session id相關的cookie進行簽名，建議128byte亂碼
+			name: 'house',
+			secret: 'fuewhzk', // 用来對session id相關的cookie進行簽名，建議128byte亂碼
 			store: new MongoStore({mongooseConnection: DB}),
 			saveUninitialized: false, //prevent race conditions
 			resave: false,
-			cookie: {maxAge: 60 * 60 * 1000}
+			cookie: {httpOnly: true, maxAge: 60 * 60 * 1000}
 		})
 	)
 
