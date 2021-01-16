@@ -1,21 +1,20 @@
 import {useState, useEffect} from 'react';
 import GoogleMapReact from 'google-map-react';
-import { House_Pin, House_Cluster,Current_Pin } from '../component/House_Pin';
+import { House_Pin, House_Cluster,Current_Pin, House_Eval_Pin } from '../component/House_Pin';
 import House_Detail from '../component/House_detail';
-import { axiosGetHouses, axiosGetDetail } from '../axios/axios';
+import { axiosGetDetail } from '../axios/axios';
 import useSupercluster from 'use-supercluster';
 import Fill_in from './Fill_in';
-import buildingType from '../axios/buildingType';
 
 const AnyReactComponent = ({ text }) => <div>{text}</div>;
 
-const Map = ({criteria}) => { //
+const Map = ({points, houses, criteria}) => { //
     const [cen,setCen] = useState({lat: 25.017, lng: 121.537});
     const [zoom,setZoom] = useState(16.0);
     const [bounds, setBounds] = useState(null);
     // const [houses, setHouses] = useState([]);
     // const [criteria, setCriteria] = useState(null);
-    const [points, setPoints] = useState([]);
+    // const [points, setPoints] = useState([]);
     const [ptrCoordinate, setPtrCod] = useState(null);
     const [houseDetail, setDetail] = useState(null);
     const [clickMap, setClickMap] = useState(false);
@@ -31,52 +30,15 @@ const Map = ({criteria}) => { //
         maxZoom: 20,
         map: (props) => ({
           sum: props.unitPrice,
-          // allinfo: [{
-          //   id: props.id, 
-          //   unitPrice: props.unitPrice, 
-          //   buildingType: props.buildingType
-          // }]
         }),
         reduce: (acc, props) => {
           acc.sum += props.sum
-          // acc.allinfo.concat(props.allinfo)
-          // sum: acc.sum + props.sum,
-          // allinfo: acc.allinfo.concat(props.allinfo)
         }
        }
     });
 
-
     // ====== get houses =======
-    const getHouses = async () => {
-      console.log("getting houses...")
-      try {
-        const req_houses = await axiosGetHouses(criteria);
-        // setHouses(req_houses);
-        const houses_cluster = req_houses.map(house => {
-          const {coordinate,...rest} = house;
-          return {
-            type: "Feature",
-            properties: {
-              cluster: false,
-              ...rest
-            },
-            geometry: {
-              type: "Point",
-              coordinates: [
-                coordinate.lng,
-                coordinate.lat
-              ]
-            }
-          }
-        })
-        // console.log(houses_cluster);
-        setPoints(houses_cluster)
-      } catch (e) {
-        console.log(e);
-      }
-
-    }
+    
 
     const getHouseDetail = async (id) => {
       // console.log(id);
@@ -105,7 +67,7 @@ const Map = ({criteria}) => { //
 
 
     const onMarkClick = (key, childprops) => {
-      // console.log(key);
+      console.log("click",key);
       // console.log(childprops);
       const {lat, lng} = childprops;
       // compute elipse radius from center
@@ -201,18 +163,11 @@ const Map = ({criteria}) => { //
     }
 
     // ========== useEffect =============
-    // useEffect( () => {
-    //   console.log(clickKey)
-    // },[clickKey]);
-
-    // useEffect( () => {
-    //   console.log(points);
-    //   console.log(clusters);
-    // },[clusters]);
     
-    useEffect( () => {
-      getHouses();
-    }, [criteria]);
+    // useEffect( ()=> {
+    //   console.log(houses)
+    // },[houses]);
+    
 
     // ========== render element ===========
     const clusterMarkers = clusters.map(cluster => {
@@ -255,6 +210,22 @@ const Map = ({criteria}) => { //
 
     })
 
+    // ============ render myhouses =======
+    const houseMarkers = (houses)? houses.map( house => {
+      const {coordinate,_id, ...rest} = house;
+      // console.log("housemarker",house);
+      return (
+      <House_Eval_Pin
+        key={_id}
+        lat={coordinate.lat}
+        lng={coordinate.lng}
+        hover={hoverKey === _id}
+        click={hoverKey === _id}
+        {...rest}
+      />
+    )}
+    ):<></>;
+
     return(
         <div 
           style={{ height: '84vh', maxWidth: '100%', flexDirection: 'row' }}
@@ -271,7 +242,7 @@ const Map = ({criteria}) => { //
             onChildClick={onMarkClick}
             onChange={onBoundChange}
           >
-            {/* { houseMarkers } */}
+            { houseMarkers }
             {clusterMarkers}
             {(ptrCoordinate)?(
               <Current_Pin

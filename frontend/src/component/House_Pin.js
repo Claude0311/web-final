@@ -1,5 +1,5 @@
 import { Tooltip, Avatar, Popover, Divider } from 'antd';
-import {EnvironmentFilled} from '@ant-design/icons';
+import {EnvironmentFilled, HomeFilled} from '@ant-design/icons';
 import BuildingType from '../axios/buildingType';
 import {useEffect, useState} from 'react'
 import './House_Pin.css';
@@ -160,4 +160,89 @@ const Current_Pin = ({hover, showForm, click})=>{
         </div>
     );
 }
-export {House_Pin, House_Cluster, Current_Pin};
+
+// const MyHouse_Pin = ({hover, click, detail})=>{
+//     const myStyle = {
+//         position: 'absolute',
+//         bottom: '0',
+//         left: '-9pt',
+//         fontSize: '18pt',
+//         color: '#8f0'
+//     };
+//     const myStyleHover = {
+//         ...myStyle,
+//         left: '-10pt',
+//         fontSize: '20pt'
+//     }
+//     let style = (hover)?  myStyleHover: myStyle;
+//     // const [visible, setvisible] = useState(false);
+//     // const handleVisible = (v) => {
+//     //     setvisible(v);
+//     // }
+//     const compareNeighbor = async() => {
+//         // await handleVisible(false);
+//     }
+//     const content = (
+//         <div>
+//             <p>address</p>
+//             <a onClick={}>fill in</a>
+//         </div>
+//     );
+//     return(
+//         <div className="house-pin">
+//         <Popover 
+//             placement='right'
+//             title="New Mark"
+//             visible={click}
+//             // onVisibleChange={handleVisible}
+//             content={content}
+//             trigger="click"
+//         >
+//             <HomeFilled style={style}/>
+//         </Popover>
+//         </div>
+//     );
+// }
+
+const House_Eval_Pin = (props) => {
+    const myStyle = {
+        position: 'absolute',
+        bottom: '0',
+        left: '-9pt',
+        fontSize: '18pt',
+        color: (props.processed)? '#934':'#329'
+    };
+    const myStyleHover = {
+        ...myStyle,
+        left: '-10pt',
+        fontSize: '20pt'
+    }
+    let style = (props.hover)?  myStyleHover: myStyle;
+    // const onCheckSim = () => {
+    //     props.checkSimilar(id);
+    // }
+    const content = (
+        <div>
+            <p>avg: NT${priceConvert(props.avgPrice)}</p>
+            <p>age: {props.age} years</p>
+            <p>floor: {props.floor} floor</p>
+            <p></p>
+            {/* <a onClick={onCheckSim}>view similar</a> */}
+        </div>
+    );
+    return(
+        <div className="house-pin">
+        <Popover 
+            placement='right'
+            title={`${props.user}'s house`}
+            visible={props.click}
+            content={content}
+            trigger="click"
+        >
+            <EnvironmentFilled style={style}/>
+        </Popover>
+        </div>
+    );
+};
+
+export {House_Pin, House_Cluster, Current_Pin, House_Eval_Pin};

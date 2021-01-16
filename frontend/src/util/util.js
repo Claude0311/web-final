@@ -6,3 +6,21 @@ export const priceConvert = value => (
 export const dateConvert = date => (
     `${date}`.replace(/\B(?=(\d{2})(?!\d))/g, '/')
 )
+
+export const clusterConvert = house => {
+    const {coordinate,...rest} = house;
+    return {
+      type: "Feature",
+      properties: {
+        cluster: false,
+        ...rest
+      },
+      geometry: {
+        type: "Point",
+        coordinates: [
+          coordinate.lng,
+          coordinate.lat
+        ]
+      }
+    }
+};

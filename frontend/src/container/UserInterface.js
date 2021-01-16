@@ -10,20 +10,19 @@ import './UserInterface.css';
 import Map from './Map';
 import House_Menu from '../component/House_Menu';
 import SearchForm from '../component/House_Search';
-
+import { axiosGetHouses, axiosAdminGetValuate, axiosUserGetValuate } from '../axios/axios';
+import { clusterConvert } from '../util/util';
 const { Header, Sider, Content } = Layout;
 
 const UserInterface = ({id,isAuth, logout, history})=> {
     
     const [collapsed, setCollapsed] = useState(false);
     const [criteria, setCriteria] = useState(null);
-    const [myHouses, setMyHouses] = useState([]);
+    const [points, setPoints] = useState([]); // others
+    const [houses, setHouses] = useState(null); // eval
     
     const mapRef = useRef(null);
-    // const [userHouses, setUserHouses] = useState([]);
-    // const myHouses = [
-    //     "1","2","3"
-    // ]
+
     const toggle = () => {
         setCollapsed(!collapsed);
     };
@@ -36,12 +35,63 @@ const UserInterface = ({id,isAuth, logout, history})=> {
         history.push('/');
     }
 
+    const getEvalHouses = async () => {
+        const evalHouses = await axiosAdminGetValuate();
+        if (evalHouses !== null) {
+          const evalPoints = evalHouses.map(clusterConvert)
+          setHouses(evalPoints);
+        }
+        // setPoints([]);
+        
+    }
+
+    const getMyHouses = async ()  => {
+        const myHouses = await axiosUserGetValuate();
+        console.log("myhouses",myHouses);
+        if (myHouses !== null){
+          //const evalPoints = myHouses.map(clusterConvert);
+          // console.log("eval",evalPoints);
+          // setHouses(evalPoints);
+          setHouses(myHouses);
+        }
+        // setPoints([]);
+        
+    }
+    // const checkSimilar = (id) => {
+    //   console.log("checksim")
+    //   let similarHouses = [];
+    //   // console.log(houses);
+    //   if (houses !== null) {
+    //     houses.forEach(ele => {
+    //       similarHouses = [ ...similarHouses, ...ele.properties.similar];
+    //     })
+    //     // const similarPoints = similarHouses.map(clusterConvert);
+    //     // console.log("sim",similarPoints);
+    //     // setPoints(clusterConvert);
+    //   }
+    //   // setHouses(houses)
+    // }
+
     // const setCriteria = (c) => {
     //     mapRef.current.setCriteria(c);
     // }
+    // ============ getHouses =============
+    const getHouses = async () => {
+        console.log("getting houses...")
+        const req_houses = await axiosGetHouses(criteria);
+        if (req_houses !== null){
+          const houses_cluster = req_houses.map(clusterConvert);
+          // console.log(houses_cluster);
+          setPoints(houses_cluster)
+        }
+      }
 
     const searchNeighbor = () => {
         mapRef.current.searchNeighbor();
+    }
+
+    const searchhouses = (name) => {
+        const houses = houses.filter(ele=>ele.name === name);
     }
     
     const onLogout = async() => {
@@ -54,14 +104,21 @@ const UserInterface = ({id,isAuth, logout, history})=> {
         }
     }
 
-    const houseProfiles = (myHouses && myHouses.length !== 0)
-        ?myHouses.map((ele) => 
-            <Menu.Item key={ele}>MY house{ele}</Menu.Item>)
-        :<Menu.Item key="Not found" disabled>Not found</Menu.Item>
+    
 
-    useEffect(() => {
-        console.log(typeof isAuth);
-    },[]);
+    useEffect( () => {
+        getHouses();
+    }, [criteria]);
+
+    useEffect( () => {
+      if (!houses) {
+        if (isAuth) {
+          getEvalHouses();
+        } else {
+          getMyHouses();
+        }
+      }
+    }, [])
 
     return (
     <Layout>
@@ -84,8 +141,9 @@ const UserInterface = ({id,isAuth, logout, history})=> {
             
             <House_Menu 
                 isAuth={isAuth} 
-                logout={logout}
-                houseProfiles={houseProfiles}
+                onLogout={onLogout}
+                houses={houses}
+                // onMyHouseMode={onMyHouseMode}
                 collapsed={collapsed}
             />
         </Sider>
@@ -144,8 +202,11 @@ const UserInterface = ({id,isAuth, logout, history})=> {
                     <Map 
                         // id={id} 
                         // isAuth={isAuth}
-                        // ref = {mapRef}
+                        ref = {mapRef}
                         criteria={criteria}
+                        points={points}
+                        houses={houses}
+                        // setHouses={houses}
                     />
                 </Content>       
         </Layout>
