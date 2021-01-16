@@ -37,7 +37,7 @@
 .login-form {
   max-width: 400px;
 }
-.login-form .login-admin {
+.login-form .register {
   float: left;
   justify-self: flex-end;
   margin-left: 0px;
