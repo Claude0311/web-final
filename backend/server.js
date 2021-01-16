@@ -8,7 +8,6 @@ import session from 'express-session'
 import connect from 'connect-mongo'
 import env from 'dotenv'
 import craw from './util/crawler'
-import cors from 'cors'
 
 env.config({path:'../.env'})
 
