@@ -144,7 +144,7 @@ const SearchForm = ({name,setCriteria}) => {
           </Button>,
           <Button key="submit" type="primary" loading={isLoading} onClick={handleOK}>
             Submit
-          </Button>,
+          </Button>
         ]}
       >
       <Form

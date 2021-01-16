@@ -148,20 +148,20 @@ const UserInterface = ({id,isAuth, logout, history})=> {
             />
         </Sider>
         <Layout className="site-layout">
-        <Header 
-            className="site-layout-background" 
-            theme="light"
-            style={{ 
-                padding: '10px', 
-                display: 'flex',
-                alignItems: "center",
-                justifyContent: "space-between"  
-            }}
-        >
-            { (collapsed) ? 
-                <MenuUnfoldOutlined 
-                    className='trigger'
-                    onClick={toggle} />
+            <Header 
+                className="site-layout-background" 
+                theme="light"
+                style={{ 
+                    padding: '10px', 
+                    display: 'flex',
+                    alignItems: "center",
+                    justifyContent: "space-between"  
+                }}
+            >
+                { (collapsed) ? 
+                    <MenuUnfoldOutlined 
+                        className='trigger'
+                        onClick={toggle} />
                     : 
                 <MenuFoldOutlined
                     className='trigger'
@@ -188,27 +188,25 @@ const UserInterface = ({id,isAuth, logout, history})=> {
                         icon={<UserOutlined />} 
                     />
                 </Tooltip>
-            </span>
-        </Header>
-                <Content
-                    className="site-layout-background"
-                    style={{
-                    margin: '20px 24px',
-                    padding: 0,
-                    minHeight: 280,
-                    overflow: 'hidden'
-                    }}
-                >
-                    <Map 
-                        // id={id} 
-                        // isAuth={isAuth}
-                        ref = {mapRef}
-                        criteria={criteria}
-                        points={points}
-                        houses={houses}
-                        // setHouses={houses}
-                    />
-                </Content>       
+              </span>
+            </Header>
+            <Content
+                className="site-layout-background"
+                style={{
+                margin: '20px 24px',
+                padding: 0,
+                minHeight: 280,
+                overflow: 'hidden'
+                }}
+            >
+                <Map 
+                    // id={id} 
+                    // isAuth={isAuth}
+                    points={points}
+                    houses={houses}
+                    criteria={criteria}
+                />
+            </Content>       
         </Layout>
     </Layout>
     );

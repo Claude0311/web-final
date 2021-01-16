@@ -4,7 +4,6 @@ import { House_Pin, House_Cluster,Current_Pin, House_Eval_Pin } from '../compone
 import House_Detail from '../component/House_detail';
 import { axiosGetDetail } from '../axios/axios';
 import useSupercluster from 'use-supercluster';
-import Fill_in from './Fill_in';
 
 const AnyReactComponent = ({ text }) => <div>{text}</div>;
 
@@ -17,7 +16,6 @@ const Map = ({points, houses, criteria}) => { //
     // const [points, setPoints] = useState([]);
     const [ptrCoordinate, setPtrCod] = useState(null);
     const [houseDetail, setDetail] = useState(null);
-    const [clickMap, setClickMap] = useState(false);
     const [hoverKey, setHoverKey] = useState(null);
     const [clickKey, setClickKey] = useState(null);
 
@@ -119,9 +117,23 @@ const Map = ({points, houses, criteria}) => { //
       }
       const {lat, lng} = point;
       setPtrCod({lat, lng});
-      setClickMap(false)
       
     }
+    //  UNUSED
+    /*
+    const moveCen = (lat,lng) => {
+      const frameTrans  = 60;
+      const delLat = (lat - cen.lat)/frameTrans;
+      const delLng = (lng - cen.lng)/frameTrans;
+      // let count = 0;
+      let timeID = window.setInterval(() => {
+        setCen({lat:cen.lat+delLat, lng:cen.lng+delLng});
+        console.log("moving cen...")
+      }, 50);
+      window.setTimeout(()=> {
+        window.clearInterval(timeID);
+      }, 3000)
+    }*/
 
     const closeDetail = () => {
       setDetail(null);
@@ -131,6 +143,7 @@ const Map = ({points, houses, criteria}) => { //
       setClickKey(null);
       console.log(supercluster);
         // show form ...
+
         
     }
     // ========== search ==========
@@ -146,6 +159,10 @@ const Map = ({points, houses, criteria}) => { //
     //   setCriteria(c);
       
     // }
+
+    const moveCen = (lat, lng) => {
+      setCen({lat, lng})
+    }
 
     // ========== set Boundaries ========
     
@@ -227,10 +244,7 @@ const Map = ({points, houses, criteria}) => { //
     ):<></>;
 
     return(
-        <div 
-          style={{ height: '84vh', maxWidth: '100%', flexDirection: 'row' }}
-        >
-          {clickMap? <Fill_in lat={ptrCoordinate.lat} lng={ptrCoordinate.lng} />: <></>}
+        <div style={{ height: '100vh', width: '100%', flexDirection: 'row' }}>
           <GoogleMapReact
             bootstrapURLKeys={{ key: 'AIzaSyBqlTXRpx8ARKVOHZXDopkEYtsPs0WUHQ0' }}
             center={cen}
@@ -251,6 +265,9 @@ const Map = ({points, houses, criteria}) => { //
                 showForm={showForm}
                 hover={hoverKey==="myPin"}
                 click={clickKey==="myPin"}
+                lat={ptrCoordinate.lat} 
+                lng={ptrCoordinate.lng}
+                moveCen={moveCen}
               />
             ):<></>}
           </GoogleMapReact>

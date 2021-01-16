@@ -4,6 +4,7 @@ import BuildingType from '../axios/buildingType';
 import {useEffect, useState} from 'react'
 import './House_Pin.css';
 import { priceConvert } from '../util/util';
+import QueryForm from './House_Query';
 
 const House_Pin = ({id,buildingType,click,unitPrice,hover,getDetail}) => {
     const [visible, setvisible] = useState(false); // control Popover
@@ -116,7 +117,7 @@ const House_Cluster = ({sum, size, pointSize, hover, click, ...props }) => {
     )
 }
 
-const Current_Pin = ({hover, showForm, click})=>{
+const Current_Pin = ({hover, showForm, click, lat, lng, moveCen})=>{
     const myStyle = {
         position: 'absolute',
         bottom: '0',
@@ -140,8 +141,13 @@ const Current_Pin = ({hover, showForm, click})=>{
     // }
     const content = (
         <div>
-            <p>address</p>
-            <a onClick={showForm}>fill in</a>
+            <QueryForm 
+                name="inquire house price" 
+                showForm={showForm} 
+                lat={lat} 
+                lng={lng}
+                moveCen={moveCen}
+            />
         </div>
     );
     return(
