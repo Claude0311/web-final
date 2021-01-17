@@ -1,10 +1,12 @@
 import { ErrorHandler } from "../error"
+import env from 'dotenv'
+env.config()
 
 const isUser = (req,res,next) => {
     const {user} = req.session
-    console.log('yuser',req.session)
-    console.log('isUser',user)
-    if(!user) throw new ErrorHandler(404,'not login')
+    // console.log('yuser',req.session)
+    // console.log('user',user)
+    if(!user&&process.env.USE_AUTH==="true") throw new ErrorHandler(404,'not login')
     next()
 }
 
