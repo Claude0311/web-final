@@ -36,6 +36,7 @@ const UserInterface = ({id,isAuth, logout, history})=> {
         setCriteria(c);
     }
 
+    // ================= MENU functions ===================
     const onHome = () => {
         console.log("reset...")
         setCriteria(null);
@@ -45,9 +46,13 @@ const UserInterface = ({id,isAuth, logout, history})=> {
     }
 
     const getEvalHouses = async () => {
+        console.log("open admin mode...");
         const evalHouses = await axiosAdminGetValuate();
         if (evalHouses !== null) {
-          setHouses(evalHouses);
+            const evalAuth = evalHouses.map(house => ({...house, auth: true}));
+            setHouses(evalAuth);
+            setMyPoints(evalAuth);
+            console.log("evalAuth",evalAuth);
         }        
     }
 
@@ -56,6 +61,7 @@ const UserInterface = ({id,isAuth, logout, history})=> {
         // console.log("myhouses",myHouses);
         if (myHouses !== null){
           setHouses(myHouses);
+          setMyPoints(myHouses);
         }        
     }
 
@@ -70,6 +76,7 @@ const UserInterface = ({id,isAuth, logout, history})=> {
         // move to center
       }
     }
+
 
     const setMyHouseOnly = () => {
         setPoints([]);
@@ -97,15 +104,12 @@ const UserInterface = ({id,isAuth, logout, history})=> {
         }
       }
 
-    const searchNeighbor = () => {
-        mapRef.current.searchNeighbor();
-    }
-
     const searchhouses = (id) => {
-        const house = houses.filter(ele=>ele._id === id);
-        // setMyPoints()
+        console.log("search",id)
+        const house = houses.filter(ele=>ele._id.includes(id));
+        setMyPoints(house);
     }
-
+    // =============== Score ==================
     const onViewScoreRule = async() => {
         const rule = await axiosGetScoreRule();
         console.log("rule",rule);
@@ -129,8 +133,7 @@ const UserInterface = ({id,isAuth, logout, history})=> {
 
     useEffect( () => {
       if (!houses) {
-        getMyHouses();
-        setMyPoints(houses);
+        getMyHouses()
       }
     }, [])
 
@@ -164,6 +167,7 @@ const UserInterface = ({id,isAuth, logout, history})=> {
                 collapsed={collapsed}
                 onTodoMode={viewUnValuate}
                 onScore={onViewScoreRule}
+                
             />
         </Sider>
         <Layout className="site-layout">
@@ -195,6 +199,7 @@ const UserInterface = ({id,isAuth, logout, history})=> {
                   <SearchForm
                       name="Search Options"
                       setCriteria={handleCriteria}
+                      onSearch={searchhouses}
                   />
               </span>
               <span>

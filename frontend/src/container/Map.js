@@ -65,14 +65,13 @@ const Map = ({points, houses, criteria}) => { //
 
 
     const onMarkClick = (key, childprops) => {
-      console.log("click",key);
-      // console.log(childprops);
+      // console.log("click",key);
       const {lat, lng} = childprops;
       // compute elipse radius from center
       const dely = 2.8*(lat-cen.lat)/(bounds[3]-bounds[1]);
       const delx = 2.8*(lng-cen.lng)/(bounds[2]-bounds[0]);
       const ratio = Math.hypot(delx,dely);
-      console.log("ration from center", ratio);
+      // console.log("ration from center", ratio);
       if (ratio >= 1) {
         handleMove(key,{lat,lng});
       } else {
@@ -216,15 +215,16 @@ const Map = ({points, houses, criteria}) => { //
 
     // ============ render myhouses =======
     const houseMarkers = (houses)? houses.map( house => {
-      const {coordinate,_id, ...rest} = house;
+      const {coordinate,similar,_id, ...rest} = house;
       // console.log("housemarker",house);
       return (
       <House_Eval_Pin
         key={_id}
+        id={_id}
         lat={coordinate.lat}
         lng={coordinate.lng}
         hover={hoverKey === _id}
-        click={hoverKey === _id}
+        click={clickKey === _id}
         {...rest}
       />
     )}

@@ -304,7 +304,7 @@ GET /houses/:id
 | Name     | Type       | Description                           |
 |----------|------------|---------------------------------------|
 | id | `String` | ID from永慶網站 |
-| buildingType | `String` |  <li>公寓(無電梯)</li> <li>大樓(10樓以下有電梯)</li> <li>華夏(11樓以上有電梯)</li>  |
+| buildingType | `Number` | 0~2  <li>0: 公寓(5樓含以下無電梯)</li> <li>1: 華廈(10層含以下有電梯)</li> <li>2: 住宅大樓(11層含以上有電梯)</li>  |
 | coordinate | `Object` | 經緯度 |
 | &ensp;lat | `Number` | 緯度 |
 | &ensp;lng | `Number` | 經度 |
@@ -353,7 +353,7 @@ GET /houses?buildType=
 
 | Name     | Type       | Description                           |
 |----------|------------|---------------------------------------|
-| buildingType | `String` | (optional)  <li>公寓(無電梯)</li> <li>大樓(10樓以下有電梯)</li> <li>華夏(11樓以上有電梯)</li>  |
+| buildingType | `Number` | 0~2(optional)  <li>0: 公寓(5樓含以下無電梯)</li> <li>1: 華廈(10層含以下有電梯)</li> <li>2: 住宅大樓(11層含以上有電梯)</li>  |
 | neighbor | `Object` | 搜索附近(optional) |
 | &ensp;center | `Object` | 中心 |
 | &ensp;&ensp;lat | `Object` | 中心緯度 |
@@ -388,7 +388,7 @@ axios.get('/houses',{params:{
 |----------|------------|---------------------------------------|
 | - | `Object[]` | array of Houses |
 | &ensp;id | `String` | id from 永慶房屋 |
-| &ensp;buildingType | `String` | 房屋型態  <li>公寓(無電梯)</li> <li>電梯大樓(10樓以下有電梯)</li> <li>華夏(11樓以上有電梯)</li>  |
+| buildingType | `Number` | 0~2  <li>0: 公寓(5樓含以下無電梯)</li> <li>1: 華廈(10層含以下有電梯)</li> <li>2: 住宅大樓(11層含以上有電梯)</li>  |
 | &ensp;coordinate | `Object` | 經緯度 |
 | &ensp;&ensp;lat | `Number` | 緯度 |
 | &ensp;&ensp;lng | `Number` | 經度 |
@@ -565,7 +565,7 @@ PATCH /valuate/user
 | _id | `String` | 待估房子的_id |
 | lat | `Number` | 緯度(optional) |
 | lng | `Number` | 經度(optional) |
-| buildingType | `String` | (optional) 0~2  <li>0: 公寓(5樓含以下無電梯)</li> <li>1: 華廈(10層含以下有電梯)</li> <li>2: 住宅大樓(11層含以上有電梯)</li>  |
+| buildingType | `Number` | 0~2(optional)  <li>0: 公寓(5樓含以下無電梯)</li> <li>1: 華廈(10層含以下有電梯)</li> <li>2: 住宅大樓(11層含以上有電梯)</li>  |
 | floor | `Number` | 樓層(optional) |
 | age | `Number` | 屋齡(optional) |
 
@@ -656,13 +656,13 @@ GET /valuate/auth
 | &ensp;_id | `Object` | 待估房子的_id，put時回傳 |
 | &ensp;coordinate | `Object` | {lat,lng}經緯度 |
 | &ensp;user | `String` | default b07901029 |
-| &ensp;buildingType | `String` |  <li>公寓(無電梯)</li> <li>大樓(10樓以下有電梯)</li> <li>華夏(11樓以上有電梯)</li>  |
+| &ensp;buildingType | `Number` | 0~2  <li>0: 公寓(5樓含以下無電梯)</li> <li>1: 華廈(10層含以下有電梯)</li> <li>2: 住宅大樓(11層含以上有電梯)</li>  |
 | &ensp;age | `Number` | 屋齡 |
 | &ensp;floor | `Number` | 樓層 |
 | &ensp;avgPrice | `Number` | 系統算出來的$ |
 | &ensp;similar | `Object[]` | 附近相似的房子 |
 | &ensp;&ensp;id | `String` | id from 永慶房屋 |
-| &ensp;&ensp;buildingType | `String` | 房屋型態 0~2  <li>0: 公寓(5樓含以下無電梯)</li> <li>1: 華廈(10層含以下有電梯)</li> <li>2: 住宅大樓(11層含以上有電梯)</li>  |
+| &ensp;&ensp;buildingType | `Number` | 房屋型態 0~2  <li>0: 公寓(5樓含以下無電梯)</li> <li>1: 華廈(10層含以下有電梯)</li> <li>2: 住宅大樓(11層含以上有電梯)</li>  |
 | &ensp;&ensp;coordinate | `Object` | 經緯度 |
 | &ensp;&ensp;&ensp;lat | `Number` | 緯度 |
 | &ensp;&ensp;&ensp;lng | `Number` | 經度 |
@@ -696,13 +696,13 @@ GET /valuate/user
 | &ensp;_id | `Object` | 待估房子的_id，put時回傳 |
 | &ensp;coordinate | `Object` | {lat,lng}經緯度 |
 | &ensp;user | `String` | 捨棄，改使用存在後端的session |
-| &ensp;buildingType | `String` | 0~2  <li>0: 公寓(5樓含以下無電梯)</li> <li>1: 華廈(10層含以下有電梯)</li> <li>2: 住宅大樓(11層含以上有電梯)</li>  |
+| &ensp;buildingType | `Number` | 0~2  <li>0: 公寓(5樓含以下無電梯)</li> <li>1: 華廈(10層含以下有電梯)</li> <li>2: 住宅大樓(11層含以上有電梯)</li>  |
 | &ensp;age | `Number` | 屋齡 |
 | &ensp;floor | `Number` | 樓層 |
 | &ensp;avgPrice | `Number` | 系統算出來的$ |
 | &ensp;similar | `Object[]` | 附近相似的房子 |
 | &ensp;&ensp;id | `String` | id from 永慶房屋 |
-| &ensp;&ensp;buildingType | `String` | 房屋型態 0~2  <li>0: 公寓(5樓含以下無電梯)</li> <li>1: 華廈(10層含以下有電梯)</li> <li>2: 住宅大樓(11層含以上有電梯)</li>  |
+| &ensp;&ensp;buildingType | `Number` | 房屋型態 0~2  <li>0: 公寓(5樓含以下無電梯)</li> <li>1: 華廈(10層含以下有電梯)</li> <li>2: 住宅大樓(11層含以上有電梯)</li>  |
 | &ensp;&ensp;coordinate | `Object` | 經緯度 |
 | &ensp;&ensp;&ensp;lat | `Number` | 緯度 |
 | &ensp;&ensp;&ensp;lng | `Number` | 經度 |

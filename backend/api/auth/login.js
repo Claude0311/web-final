@@ -22,17 +22,16 @@ import Hash from "../../model/Hash"
  */
 const login = expressAsyncHandler(async (req,res,next) => {
     let {user,password} = req.body
-    if(process.env.USE_AUTH==="true"){
-        const myHash = await Hash.getHash()
-        password = await bcrypt.hash(password,myHash)
-        const loginUser = await User.findOne({user,password}).catch(dbCatch)
-        if(!loginUser) throw new ErrorHandler(400,'未註冊或密碼錯誤')
+    const myHash = await Hash.getHash()
+    password = await bcrypt.hash(password,myHash)
+    const loginUser = await User.findOne({user,password}).catch(dbCatch)
+    if(!loginUser) throw new ErrorHandler(400,'未註冊或密碼錯誤')
+    req.session.regenerate(function (err) {
+        if(err) throw new ErrorHandler(500,'session錯誤')
         req.session.auth = loginUser.isAuth
-    }else{
-        req.session.auth = false
-    }
-    req.session.user = user
-    res.status(200).send({user,auth:req.session.auth})
+        req.session.user = user
+        res.status(200).send({user,auth:req.session.auth})
+    })
 })
 
 import validator from '../middleware/validation'

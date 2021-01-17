@@ -59,17 +59,14 @@ const House_Pin = ({id,buildingType,click,unitPrice,hover,getDetail}) => {
 
 const House_Cluster = ({sum, size, pointSize, hover, click, ...props }) => {
     const [points, setPoints] = useState([]);
-    const [visible, setvisible] = useState(false);
     const overflowCount = (size) => (size <= 99)? String(size): "99+";
 
     const handleClick = () => {
-        // setvisible(false);
         const leaves = props.getLeaves(props.id);
         // console.log(leaves);
         if (leaves){
             setPoints(leaves);
         }
-        // setvisible(true);
     }
 
     let ratio = (hover)? 8:0;
@@ -77,14 +74,17 @@ const House_Cluster = ({sum, size, pointSize, hover, click, ...props }) => {
     const content = (
         <div className="cluster">
             <p>Average: NT${priceConvert(Math.round(sum/size))}</p>
-            {(points && points.length > 0)?<p>Type: {BuildingType[points[0].buildingType]}</p>:<></>}
+            {(points && points.length > 0)
+                ?<p>Type: {BuildingType[points[0].buildingType]}</p>
+                :<a onClick={handleClick}>get more</a>
+            }
             {(points && points.length > 0)
                 ?points.map((l,ind) => (
                     <>
                         <Divider plain>house {ind+1}</Divider>
                         <p>Unit Price: NT${priceConvert(l.unitPrice)}</p>
                         <a onClick={async()=>{
-                            await setvisible(false);
+                            // await setvisible(false);
                             props.getDetail(l.id);
                         }}>more details</a>                    
                     </>
@@ -97,9 +97,9 @@ const House_Cluster = ({sum, size, pointSize, hover, click, ...props }) => {
         <Popover 
             placement='right'
             title={`Cluster with ${size} houses`}
-            visible={hover || (click )}//&& visible
+            visible={click}
             content={content}
-            // trigger="hover"
+            trigger="click"
         >
             <Avatar 
                 style={{ 
@@ -110,9 +110,7 @@ const House_Cluster = ({sum, size, pointSize, hover, click, ...props }) => {
                     bottom: `-${markSize/2}px`,
                     left: `-${markSize/2}px`
                 }}
-                // onVisibleChange={handleClick}
                 size={markSize}
-                onClick={handleClick}
             >{overflowCount(size)}</Avatar>
         </Popover>
         
@@ -163,29 +161,38 @@ const Current_Pin = ({hover, showForm, click, lat, lng, moveCen})=>{
 
 // ====== the pin for user when it complete the query
 const House_Eval_Pin = (props) => {
+    // processed or not
+    // admin or not
     const myStyle = {
         position: 'absolute',
         bottom: '0',
         left: '-9pt',
         fontSize: '18pt',
-        color: (props.processed)? '#945':'#fd0'
+        color: (props.auth)
+            ? ((props.processed)?'#945':'#fd0')
+            : ((props.processed)?'#634':'#460')
     };
     const myStyleHover = {
         ...myStyle,
         left: '-10pt',
         fontSize: '20pt'
     }
+    const authFunction = (props.auth)? (
+        <a onClick={props.setManualPrice} >Set Manual Price</a>
+    ):<></>;
     let style = (props.hover)?  myStyleHover: myStyle;
-    // const onCheckSim = () => {
-    //     props.checkSimilar(id);
-    // }
+
+    // useEffect(()=>{
+    //     console.log("this  is eval pin");
+    //     console.log(props);
+    // })
     const content = (
         <div>
             <p>avg: NT${priceConvert(props.avgPrice)}</p>
             <p>age: {props.age} years</p>
             <p>floor: {props.floor} floor</p>
             <p></p>
-            {/* <a onClick={onCheckSim}>view similar</a> */}
+            {authFunction}
         </div>
     );
     return(
@@ -193,9 +200,9 @@ const House_Eval_Pin = (props) => {
         <Popover 
             placement='right'
             title={`${props.user}'s house`}
+            trigger="click"
             visible={props.click}
             content={content}
-            trigger="click"
         >
             <EnvironmentFilled style={style}/>
         </Popover>
