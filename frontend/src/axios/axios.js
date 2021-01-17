@@ -100,30 +100,10 @@ export const axiosGetDetail = async (id) => {
 // ============ test =============
 export const init = async () => {
     const dbCatch = e=>{console.log('myError:',e?.response?.data?.msg)}
-    // const {data:{user,auth}} = await instance.post('/login',{user:'b07901029',password:'123'}).catch(dbCatch)
-    // console.log(user,auth)
-    // await instance.post('/valuate',{lat:25,lng:121,buildingType:0},{withCredentials:true}).catch(dbCatch)
-    // await instance.post('/addAuth',{user:'b07901029',isAuth:true}).catch(dbCatch)
-    // await axios('http://localhost:4000/addAuth', {
-    //     method: "post",
-    //     data:{user:'b07901029',isAuth:true},
-    //     withCredentials: true
-    // }).catch(dbCatch)
-    // const {data} = await instance.get('/houses',{params:{
-    //     // buildingType:'公寓'
-    // }}).catch(dbCatch)
-    // console.log(data)
-    // const {data} = await instance.get('/valuate/auth').catch(dbCatch)
-    // console.log('data',data[0])
-    // await instance.patch('/valuate/auth').catch(dbCatch)
-    // const {data:response} = await instance.get('/houses',{params:{
-    //     buildingType:'公寓',
-    //     neighbor:{center:{lat:'27',lng:'121'},distance:30},
-    //     unitPrice:{lb:500000,ub:600000},
-    //     hasParking:true
-    // }})
-    // console.log(response)
-    // return response
+    const {data:{user,auth}} = await instance.post('/login',{user:'b07901029',password:'123'}).catch(dbCatch)
+    console.log(user,auth)
+    // await instance.post('/score')
+    await instance.patch('/valuate/user',{_id:'6002b05b9aec5d3aac4a69b4',buildingType:1}).catch(dbCatch)
 }
 
 export const testErr = async () => {

@@ -32,6 +32,7 @@ const resetScore = async (req,res,next)=>{
         {priority:3,className:'Distance',param:500},
         {priority:4,className:'Time',param:6},
         {priority:5,className:'Age',param:5},
+        {priority:6,className:'Floor',param:1}
     ]
     const myRules = (await Score.insertMany(rules).catch(dbCatch)).map(({param,description,priority,className})=>{
         return {param,description,priority,className}

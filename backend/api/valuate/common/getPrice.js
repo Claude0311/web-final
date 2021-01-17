@@ -19,7 +19,7 @@ const findSimilar = async (req,res,next) => {
             //calculate avgPrice
             let floor = 1
             try{floor = detail.floor.floor}catch{}
-            console.log(floor,unitPrice)
+            // console.log(floor,unitPrice)
             return accumulator+unitPrice/Math.pow(pricePerFloor,floor)
         },0)
         *Math.pow(pricePerFloor,userFloor)
