@@ -1,4 +1,6 @@
 import { ErrorHandler } from "../error"
+import env from 'dotenv'
+env.config()
 
 const isUser = (req,res,next) => {
     const {user} = req.session
