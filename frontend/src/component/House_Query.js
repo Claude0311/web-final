@@ -44,7 +44,7 @@ const QueryForm = ({name, showForm, lat, lng, moveCen, handleAddHouses}) => {
 			numOfFloor,
 			houseAge
 			}) => {
-      const {similar, avgPrice} = await sendHouseInformation(lat, lng, parseInt(buildingType), numOfFloor, houseAge)
+      await sendHouseInformation(lat, lng, parseInt(buildingType), numOfFloor, houseAge)
       handleAddHouses()
 		}
 

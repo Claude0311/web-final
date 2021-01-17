@@ -209,7 +209,7 @@ const House_Eval_Pin = (props) => {
 };
 
 // ====== the pin for user when it just complete the query
-const House_New_Pin = (props) => {
+const Similar_House_Pin = (props) => {
     const style = {
         position: 'absolute',
         bottom: '0',
@@ -222,21 +222,17 @@ const House_New_Pin = (props) => {
     // }
     const content = (
         <div>
-            <p>avg: NT${priceConvert(props.avgPrice)}</p>
-            <p>age: {props.age} years</p>
-            <p>floor: {props.floor} floor</p>
-            <p></p>
-            {/* <a onClick={onCheckSim}>view similar</a> */}
+            <p>price: NT${priceConvert(props.unitPrice)}</p>
         </div>
     );
     return(
         <div className="house-pin">
         <Popover 
             placement='right'
-            title={`${props.user}'s house`}
-            visible={props.click}
+            title="similar house"
+            visible={true}
             content={content}
-            trigger="click"
+            trigger="hover"
         >
             <EnvironmentFilled style={style}/>
         </Popover>
@@ -244,4 +240,4 @@ const House_New_Pin = (props) => {
     );
 };
 
-export {House_Pin, House_Cluster, Current_Pin, House_Eval_Pin, House_New_Pin};
+export {House_Pin, House_Cluster, Current_Pin, House_Eval_Pin, Similar_House_Pin};

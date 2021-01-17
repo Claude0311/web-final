@@ -1,13 +1,13 @@
 import {useState, useEffect} from 'react';
 import GoogleMapReact from 'google-map-react';
-import { House_Pin, House_Cluster,Current_Pin, House_Eval_Pin, House_New_Pin } from '../component/House_Pin';
+import { House_Pin, House_Cluster,Current_Pin, House_Eval_Pin, Similar_House_Pin } from '../component/House_Pin';
 import House_Detail from '../component/House_detail';
 import { axiosGetDetail } from '../axios/axios';
 import useSupercluster from 'use-supercluster';
 
 const AnyReactComponent = ({ text }) => <div>{text}</div>;
 
-const Map = ({points, houses, criteria, onAddNewHouses}) => { //
+const Map = ({points, houses, onAddNewHouses, similarHouses, cleanSimilarHouses}) => { //
     const [cen,setCen] = useState({lat: 25.017, lng: 121.537});
     const [zoom,setZoom] = useState(16.0);
     const [bounds, setBounds] = useState(null);
@@ -18,7 +18,6 @@ const Map = ({points, houses, criteria, onAddNewHouses}) => { //
     const [houseDetail, setDetail] = useState(null);
     const [hoverKey, setHoverKey] = useState(null);
     const [clickKey, setClickKey] = useState(null);
-    const [similarHouses, setSimilarHouses] = useState(null)
 
     const { clusters, supercluster } = useSupercluster({
       points,
@@ -117,7 +116,7 @@ const Map = ({points, houses, criteria, onAddNewHouses}) => { //
         return;
       }
       if(similarHouses) {
-        setSimilarHouses(null)
+        cleanSimilarHouses()
         return
       }
       const {lat, lng} = point;
@@ -252,6 +251,20 @@ const Map = ({points, houses, criteria, onAddNewHouses}) => { //
       />
     )}
     ):<></>;
+    
+    // ============= similar houses ===========
+    const similarMarkers = (similarHouses)? similarHouses.map( house => {
+      const {coordinate, unitPrice, _id, ...rest} = house
+      return (
+        <Similar_House_Pin 
+          key={_id}
+          unitPrice={unitPrice}
+          lat={coordinate.lat}
+          lng={coordinate.lng}
+          {...rest}
+        />
+      )
+    }): <></>
 
     return(
         <div style={{ height: '100vh', width: '100%', flexDirection: 'row' }}>
@@ -281,6 +294,7 @@ const Map = ({points, houses, criteria, onAddNewHouses}) => { //
                 handleAddHouses={handleAddHouses}
               />
             ): <></>}
+            {similarMarkers}
           </GoogleMapReact>
           {(houseDetail)?
             <House_Detail detail={houseDetail} onClose={closeDetail}/>
