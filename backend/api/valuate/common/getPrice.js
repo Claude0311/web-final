@@ -27,11 +27,11 @@ const findSimilar = async (req,res,next) => {
     const {similar:similar_temp,valuate} = req
     const {floor:userFloor,age:userAge,biuldingType:userBuild} = valuate
     //normalize unitPrice by some rules
-    let similar = similar_temp.map(({_id,unitPrice,biuldingType:dbBuild,detail})=>{
+    let similar = similar_temp.map(({unitPrice,biuldingType:dbBuild,detail,_doc})=>{
         const dbFloor = detail?.floor?.floor
         const dbAge = detail?.age
         const price = unitPrice * floorFac(userFloor,dbFloor) * ageFac(userAge,dbAge) * buildingFac(userBuild,dbBuild,unitPrice)
-        return {_id,price}
+        return {..._doc,price}
     })
     //rm extreme case
     if(similar.length>100) similar = similar.sort(()=>0.5-Math.random()).slice(0,100)
@@ -53,7 +53,7 @@ const findSimilar = async (req,res,next) => {
     valuate.avgPrice = avgPrice
     await valuate.save()
         .catch(dbCatch)
-    res.send({similar,avgPrice})
+    res.send({similar:similar.map(({price,...props})=>props),avgPrice})
 }
 
 export default asyncHandler(findSimilar)
