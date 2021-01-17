@@ -20,6 +20,7 @@ const UserInterface = ({id,isAuth, logout, history})=> {
     const [criteria, setCriteria] = useState(null);
     const [points, setPoints] = useState([]); // others
     const [houses, setHouses] = useState(null); // eval
+    const [newlyAddHouses, setNewlyAddHouses] = useState(0)
     
     const mapRef = useRef(null);
 
@@ -56,6 +57,10 @@ const UserInterface = ({id,isAuth, logout, history})=> {
         }
         // setPoints([]);
         
+    }
+
+    const onAddNewHouses = () => {
+        setNewlyAddHouses(newlyAddHouses+1)
     }
     // const checkSimilar = (id) => {
     //   console.log("checksim")
@@ -111,14 +116,15 @@ const UserInterface = ({id,isAuth, logout, history})=> {
     }, [criteria]);
 
     useEffect( () => {
-      if (!houses) {
+      // if (!houses) {
         if (isAuth) {
           getEvalHouses();
         } else {
           getMyHouses();
         }
-      }
-    }, [])
+        console.log(newlyAddHouses)
+      // }
+    }, [newlyAddHouses])
 
     return (
     <Layout>
@@ -190,38 +196,7 @@ const UserInterface = ({id,isAuth, logout, history})=> {
                 </Tooltip>
             </span>
         </Header>
-                <Content
-                    className="site-layout-background"
-                    style={{
-                    margin: '20px 24px',
-                    padding: 0,
-                    minHeight: 280,
-                    overflow: 'hidden'
-                    }}
-                >
-                    <Map 
-                        // id={id} 
-                        // isAuth={isAuth}
-                        ref = {mapRef}
-                        criteria={criteria}
-                        points={points}
-                        houses={houses}
-                        // setHouses={houses}
-                    />
-                    <Input.Search
-                        placeholder="Search"
-                        style={{ width: 500, margin: '0 20px' }}
-                    />
-                </span>
-                <Tooltip title={id} placement="bottomRight">
-                    <Avatar 
-                        size="default"
-                        style={{ backgroundColor: '#87d068', margin: "0 16px" }} 
-                        icon={<UserOutlined />} 
-                    />
-                </Tooltip>
-            </Header>
-            <Content
+         <Content
                 className="site-layout-background"
                 style={{
                 margin: '20px 24px',
@@ -233,7 +208,10 @@ const UserInterface = ({id,isAuth, logout, history})=> {
                 <Map 
                     // id={id} 
                     // isAuth={isAuth}
+                    points={points}
+                    houses={houses}
                     criteria={criteria}
+                    onAddNewHouses={onAddNewHouses}
                 />
             </Content>       
         </Layout>

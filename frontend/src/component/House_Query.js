@@ -27,7 +27,7 @@ const formItemLayout = {
   wrapperCol: { span: 14 },
 };
 
-const QueryForm = ({name, showForm, lat, lng, moveCen}) => {
+const QueryForm = ({name, showForm, lat, lng, moveCen, handleAddHouses}) => {
     const [form] = Form.useForm()
     const [visible, setVisible] = useState(false)
     const [isLoading, setLoading] = useState(false)
@@ -39,13 +39,13 @@ const QueryForm = ({name, showForm, lat, lng, moveCen}) => {
 		const MaxAge = 50
 		
 		// get value of requirement 
-		const onFinish = ({
+		const onFinish = async({
 			buildingType,
 			numOfFloor,
 			houseAge
 			}) => {
-			sendHouseInformation(lat, lng, parseInt(buildingType), numOfFloor, houseAge)
-			// setCriteria(criteria)
+      const {similar, avgPrice} = await sendHouseInformation(lat, lng, parseInt(buildingType), numOfFloor, houseAge)
+      handleAddHouses()
 		}
 
     const showQueryForm = () => {
@@ -60,7 +60,7 @@ const QueryForm = ({name, showForm, lat, lng, moveCen}) => {
 			await form.submit();
 			setLoading(false);
       setVisible(false);
-      moveCen(lat, lng)
+      moveCen(lat, lng)     
 		}
 		const handleCancel = () => {
 			setVisible(false);

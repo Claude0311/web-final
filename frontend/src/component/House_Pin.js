@@ -109,7 +109,6 @@ const House_Cluster = ({sum, size, pointSize, hover, click, ...props }) => {
                     bottom: `-${markSize/2}px`,
                     left: `-${markSize/2}px`
                 }}
-                // style={style}
                 onClick={handleClick}
                 size={markSize}
             >{overflowCount(size)}</Avatar>
@@ -118,7 +117,7 @@ const House_Cluster = ({sum, size, pointSize, hover, click, ...props }) => {
     )
 }
 
-const Current_Pin = ({hover, showForm, click, lat, lng, moveCen})=>{
+const Current_Pin = ({hover, showForm, click, lat, lng, moveCen, handleAddHouses})=>{
     const myStyle = {
         position: 'absolute',
         bottom: '0',
@@ -148,6 +147,7 @@ const Current_Pin = ({hover, showForm, click, lat, lng, moveCen})=>{
                 lat={lat} 
                 lng={lng}
                 moveCen={moveCen}
+                handleAddHouses={handleAddHouses}
             />
         </div>
     );
@@ -156,10 +156,9 @@ const Current_Pin = ({hover, showForm, click, lat, lng, moveCen})=>{
         <Popover 
             placement='right'
             title="New Mark"
-            visible={click}
-            // onVisibleChange={handleVisible}
-            content={content}
             trigger="click"
+            visible={click}
+            content={content}
         >
             <EnvironmentFilled style={style}/>
         </Popover>
@@ -167,56 +166,14 @@ const Current_Pin = ({hover, showForm, click, lat, lng, moveCen})=>{
     );
 }
 
-// const MyHouse_Pin = ({hover, click, detail})=>{
-//     const myStyle = {
-//         position: 'absolute',
-//         bottom: '0',
-//         left: '-9pt',
-//         fontSize: '18pt',
-//         color: '#8f0'
-//     };
-//     const myStyleHover = {
-//         ...myStyle,
-//         left: '-10pt',
-//         fontSize: '20pt'
-//     }
-//     let style = (hover)?  myStyleHover: myStyle;
-//     // const [visible, setvisible] = useState(false);
-//     // const handleVisible = (v) => {
-//     //     setvisible(v);
-//     // }
-//     const compareNeighbor = async() => {
-//         // await handleVisible(false);
-//     }
-//     const content = (
-//         <div>
-//             <p>address</p>
-//             <a onClick={}>fill in</a>
-//         </div>
-//     );
-//     return(
-//         <div className="house-pin">
-//         <Popover 
-//             placement='right'
-//             title="New Mark"
-//             visible={click}
-//             // onVisibleChange={handleVisible}
-//             content={content}
-//             trigger="click"
-//         >
-//             <HomeFilled style={style}/>
-//         </Popover>
-//         </div>
-//     );
-// }
-
+// ====== the pin for user when it complete the query
 const House_Eval_Pin = (props) => {
     const myStyle = {
         position: 'absolute',
         bottom: '0',
         left: '-9pt',
         fontSize: '18pt',
-        color: (props.processed)? '#934':'#329'
+        color: (props.processed)? '#934':'#de5'
     };
     const myStyleHover = {
         ...myStyle,
@@ -251,4 +208,40 @@ const House_Eval_Pin = (props) => {
     );
 };
 
-export {House_Pin, House_Cluster, Current_Pin, House_Eval_Pin};
+// ====== the pin for user when it just complete the query
+const House_New_Pin = (props) => {
+    const style = {
+        position: 'absolute',
+        bottom: '0',
+        left: '-9pt',
+        fontSize: '18pt',
+        color: 'rgb(209, 7, 209)'
+    }
+    // const onCheckSim = () => {
+    //     props.checkSimilar(id);
+    // }
+    const content = (
+        <div>
+            <p>avg: NT${priceConvert(props.avgPrice)}</p>
+            <p>age: {props.age} years</p>
+            <p>floor: {props.floor} floor</p>
+            <p></p>
+            {/* <a onClick={onCheckSim}>view similar</a> */}
+        </div>
+    );
+    return(
+        <div className="house-pin">
+        <Popover 
+            placement='right'
+            title={`${props.user}'s house`}
+            visible={props.click}
+            content={content}
+            trigger="click"
+        >
+            <EnvironmentFilled style={style}/>
+        </Popover>
+        </div>
+    );
+};
+
+export {House_Pin, House_Cluster, Current_Pin, House_Eval_Pin, House_New_Pin};

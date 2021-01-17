@@ -1,13 +1,13 @@
 import {useState, useEffect} from 'react';
 import GoogleMapReact from 'google-map-react';
-import { House_Pin, House_Cluster,Current_Pin, House_Eval_Pin } from '../component/House_Pin';
+import { House_Pin, House_Cluster,Current_Pin, House_Eval_Pin, House_New_Pin } from '../component/House_Pin';
 import House_Detail from '../component/House_detail';
 import { axiosGetDetail } from '../axios/axios';
 import useSupercluster from 'use-supercluster';
 
 const AnyReactComponent = ({ text }) => <div>{text}</div>;
 
-const Map = ({points, houses, criteria}) => { //
+const Map = ({points, houses, criteria, onAddNewHouses}) => { //
     const [cen,setCen] = useState({lat: 25.017, lng: 121.537});
     const [zoom,setZoom] = useState(16.0);
     const [bounds, setBounds] = useState(null);
@@ -18,6 +18,7 @@ const Map = ({points, houses, criteria}) => { //
     const [houseDetail, setDetail] = useState(null);
     const [hoverKey, setHoverKey] = useState(null);
     const [clickKey, setClickKey] = useState(null);
+    const [similarHouses, setSimilarHouses] = useState(null)
 
     const { clusters, supercluster } = useSupercluster({
       points,
@@ -115,6 +116,10 @@ const Map = ({points, houses, criteria}) => { //
         setPtrCod(null);
         return;
       }
+      if(similarHouses) {
+        setSimilarHouses(null)
+        return
+      }
       const {lat, lng} = point;
       setPtrCod({lat, lng});
       
@@ -162,6 +167,11 @@ const Map = ({points, houses, criteria}) => { //
 
     const moveCen = (lat, lng) => {
       setCen({lat, lng})
+    }
+
+    const handleAddHouses = () => {
+      onAddNewHouses()
+      setPtrCod(null)
     }
 
     // ========== set Boundaries ========
@@ -256,9 +266,9 @@ const Map = ({points, houses, criteria}) => { //
             onChildClick={onMarkClick}
             onChange={onBoundChange}
           >
-            { houseMarkers }
             {clusterMarkers}
-            {(ptrCoordinate)?(
+            {houseMarkers}
+            {(ptrCoordinate)? (
               <Current_Pin
                 key="myPin"
                 {...ptrCoordinate}
@@ -268,8 +278,9 @@ const Map = ({points, houses, criteria}) => { //
                 lat={ptrCoordinate.lat} 
                 lng={ptrCoordinate.lng}
                 moveCen={moveCen}
+                handleAddHouses={handleAddHouses}
               />
-            ):<></>}
+            ): <></>}
           </GoogleMapReact>
           {(houseDetail)?
             <House_Detail detail={houseDetail} onClose={closeDetail}/>
