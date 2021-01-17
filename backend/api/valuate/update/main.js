@@ -1,11 +1,12 @@
 import express from 'express'
-import {isAuth} from '../../auth'
 import auth from './auth'
 import user from './user'
 
-const router = express.Router()
+const router_in = express.Router()
+const router_auth = express.Router()
 
-router.patch('/user',user)
-router.patch('/auth',isAuth,auth)
+router_in.patch('/user',user)
+router_auth.patch('/auth',auth)
 
-export default router
+export default router_in
+export {router_auth as update_auth}

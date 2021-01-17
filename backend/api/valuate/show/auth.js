@@ -13,16 +13,16 @@ import { dbCatch } from "../../error"
  * @apiSuccess {Object} -._id 待估房子的_id，put時回傳
  * @apiSuccess {Object} -.coordinate {lat,lng}經緯度
  * @apiSuccess {String} -.user default b07901029
- * @apiSuccess {String} -.buildingType
- *   - 公寓(無電梯)
- *   - 大樓(10樓以下有電梯)
- *   - 華夏(11樓以上有電梯)
+ * @apiSuccess {Number} -.buildingType 0~2
+ *  - 0: 公寓(5樓含以下無電梯)
+ *  - 1: 華廈(10層含以下有電梯)
+ *  - 2: 住宅大樓(11層含以上有電梯)
  * @apiSuccess {Number} -.age 屋齡
  * @apiSuccess {Number} -.floor 樓層
  * @apiSuccess {Number} -.avgPrice 系統算出來的$
  * @apiSuccess {Object[]} -.similar 附近相似的房子
  * @apiSuccess {String} -.similar.id id from 永慶房屋
- * @apiSuccess {String} -.similar.buildingType 房屋型態 0~2
+ * @apiSuccess {Number} -.similar.buildingType 房屋型態 0~2
  *  - 0: 公寓(5樓含以下無電梯)
  *  - 1: 華廈(10層含以下有電梯)
  *  - 2: 住宅大樓(11層含以上有電梯)

@@ -15,10 +15,10 @@ import asyncHandler from 'express-async-handler'
  * @apiparam {String} id ID from /getHouses
  * 
  * @apiSuccess {String} id ID from永慶網站
- * @apiSuccess {String} buildingType
- *   - 公寓(無電梯)
- *   - 大樓(10樓以下有電梯)
- *   - 華夏(11樓以上有電梯)
+ * @apiSuccess {Number} buildingType 0~2
+ *  - 0: 公寓(5樓含以下無電梯)
+ *  - 1: 華廈(10層含以下有電梯)
+ *  - 2: 住宅大樓(11層含以上有電梯)
  * @apiSuccess {Object} coordinate  經緯度
  * @apiSuccess {Number} coordinate.lat 緯度
  * @apiSuccess {Number} coordinate.lng 經度

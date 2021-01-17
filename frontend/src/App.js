@@ -2,7 +2,7 @@
 import './App.css';
 import { useEffect, useState} from 'react'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
-
+import Post from './container/Post'
 
 import Login from './container/Login'
 import UserInterface from './container/UserInterface';
@@ -52,6 +52,7 @@ function App() {
   // }
   return (
     <div className="App">
+      <Post/>
       <Router>
         <Switch>
           <PrivateRoute 
