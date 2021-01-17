@@ -100,13 +100,9 @@ export const axiosGetDetail = async (id) => {
 // ============ test =============
 export const init = async () => {
     const dbCatch = e=>{console.log('myError:',e?.response?.data?.msg)}
-    const {data:{user,auth}} = await instance.post('/login',{user:'b07901029',password:'123'}).catch(dbCatch)
-    console.log(user,auth)
-    // await instance.post('/score')
-    const {data} = await instance.get('/valuate/user')
-    data.forEach(async ({_id}) => {
-        await instance.patch('/valuate/user',{_id}).catch(dbCatch)
-    })
+    // const {data:{user,auth}} = await instance.post('/login',{user:'b07901029',password:'123'}).catch(dbCatch)
+    // console.log(user,auth)
+    // const {data} = await instance.get('/valuate/user')
 }
 
 export const testErr = async () => {
