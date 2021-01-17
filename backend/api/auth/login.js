@@ -30,6 +30,7 @@ const login = expressAsyncHandler(async (req,res,next) => {
         if(err) throw new ErrorHandler(500,'session錯誤')
         req.session.auth = loginUser.isAuth
         req.session.user = user
+        // console.log({user})
         res.status(200).send({user,auth:req.session.auth})
     })
 })
