@@ -5,6 +5,7 @@ import {useEffect, useState} from 'react'
 import './House_Pin.css';
 import { priceConvert } from '../util/util';
 import QueryForm from './House_Query';
+import { SetManualPriceForm } from './House_Valuate';
 
 const House_Pin = ({id,buildingType,click,unitPrice,hover,getDetail}) => {
     const [visible, setvisible] = useState(false); // control Popover
@@ -177,9 +178,15 @@ const House_Eval_Pin = (props) => {
         left: '-10pt',
         fontSize: '20pt'
     }
-    const authFunction = (props.auth)? (
-        <a onClick={props.setManualPrice} >Set Manual Price</a>
-    ):<></>;
+    const setPrice = (p) => {
+        props.setManualPrice({_id:props.id, manualPrice:p});
+    }
+    const authFunction = (props.auth)
+        ?
+        <SetManualPriceForm 
+            setPrice={setPrice}
+        >Set Manual Price</SetManualPriceForm>
+        : <a onClick={props.updateInfo} >Update information</a>
     let style = (props.hover)?  myStyleHover: myStyle;
 
     // useEffect(()=>{
@@ -189,8 +196,8 @@ const House_Eval_Pin = (props) => {
     const content = (
         <div>
             <p>avg: NT${priceConvert(props.avgPrice)}</p>
-            <p>age: {props.age} years</p>
-            <p>floor: {props.floor} floor</p>
+            {(props.age)? <p>age: {props.age} years</p> :<></>}
+            {(props.floor)? <p>floor: {props.floor} floor</p> :<></>}
             <p></p>
             {authFunction}
         </div>

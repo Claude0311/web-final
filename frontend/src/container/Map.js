@@ -7,7 +7,7 @@ import useSupercluster from 'use-supercluster';
 
 const AnyReactComponent = ({ text }) => <div>{text}</div>;
 
-const Map = ({points, houses, criteria}) => { //
+const Map = ({ points, houses, setManualPrice, ...rest }) => { //
     const [cen,setCen] = useState({lat: 25.017, lng: 121.537});
     const [zoom,setZoom] = useState(16.0);
     const [bounds, setBounds] = useState(null);
@@ -225,13 +225,14 @@ const Map = ({points, houses, criteria}) => { //
         lng={coordinate.lng}
         hover={hoverKey === _id}
         click={clickKey === _id}
+        setManualPrice={setManualPrice}
         {...rest}
       />
     )}
     ):<></>;
 
     return(
-        <div style={{ height: '100vh', width: '100%', flexDirection: 'row' }}>
+        <div style={{ height: '86vh', width: '100%', flexDirection: 'row' }}>
           <GoogleMapReact
             bootstrapURLKeys={{ key: 'AIzaSyBqlTXRpx8ARKVOHZXDopkEYtsPs0WUHQ0' }}
             center={cen}
@@ -242,6 +243,7 @@ const Map = ({points, houses, criteria}) => { //
             onChildMouseLeave={onMarkLeave}
             onChildClick={onMarkClick}
             onChange={onBoundChange}
+            {...rest}
           >
             {clusterMarkers}
             {houseMarkers}

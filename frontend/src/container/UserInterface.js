@@ -13,12 +13,13 @@ import SearchForm from '../component/House_Search';
 import { axiosGetHouses,
         axiosAdminGetValuate,
         axiosUserGetValuate, 
-        axiosGetScoreRule 
+        axiosGetScoreRule,
+        axiosSetManualPrice
     } from '../axios/axios';
 import { clusterConvert } from '../util/util';
 const { Header, Sider, Content } = Layout;
 
-const UserInterface = ({id,isAuth, logout, history})=> {
+const UserInterface = ({id,isAuth, logout, history,...rest})=> {
     
     const [collapsed, setCollapsed] = useState(false);
     const [criteria, setCriteria] = useState(null);
@@ -49,10 +50,13 @@ const UserInterface = ({id,isAuth, logout, history})=> {
         console.log("open admin mode...");
         const evalHouses = await axiosAdminGetValuate();
         if (evalHouses !== null) {
-            const evalAuth = evalHouses.map(house => ({...house, auth: true}));
+            const evalAuth = evalHouses.map(house => (
+                { ...house,
+                    auth: true,
+                }));
             setHouses(evalAuth);
             setMyPoints(evalAuth);
-            console.log("evalAuth",evalAuth);
+            // console.log("evalAuth",evalAuth);
         }        
     }
 
@@ -93,7 +97,17 @@ const UserInterface = ({id,isAuth, logout, history})=> {
     //     mapRef.current.setCriteria(c);
     // }
 
-
+    const setManualPrice = async ({_id, manualPrice}) => {
+        const reply = await axiosSetManualPrice({_id, manualPrice});
+        console.log(reply);
+        if (reply) {
+            console.log("get my houses again...")
+            getMyHouses();
+        }
+        console.log(rest)
+        // console.log(mapRef);
+        
+    }
     // ============ getHouses =============
     const getHouses = async () => {
         console.log("getting houses...")
@@ -124,7 +138,9 @@ const UserInterface = ({id,isAuth, logout, history})=> {
             console.log(result);
         }
     }
-
+    useEffect( ()=> {
+        console.log("cur", mapRef.current)
+    },[mapRef])
     
 
     useEffect( () => {
@@ -220,16 +236,17 @@ const UserInterface = ({id,isAuth, logout, history})=> {
                 style={{
                 margin: '20px 24px',
                 padding: 0,
-                minHeight: 280,
                 overflow: 'hidden'
                 }}
             >
                 <Map 
                     // id={id} 
                     // isAuth={isAuth}
+                    ref={mapRef}
                     points={points}
                     houses={myPoints}
                     criteria={criteria}
+                    setManualPrice={setManualPrice}
                 />
             </Content>       
         </Layout>
