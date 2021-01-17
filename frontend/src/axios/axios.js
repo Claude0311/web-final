@@ -100,11 +100,11 @@ export const axiosGetDetail = async (id) => {
 // ============ test =============
 export const init = async () => {
     const dbCatch = e=>{console.log(e?.response?.data?.msg)}
-    // await instance.post('/login',{user:'b07901029',password:'123'}).catch(dbCatch)
-    // await instance.get('/houses',{params:{
-    //     // buildingType:'公寓'
-    // }}).catch(dbCatch)
-    // await instance.get('/valuate/user').catch(dbCatch)
+    await instance.post('/login',{user:'b07901029',password:'123'}).catch(dbCatch)
+    await instance.get('/houses',{params:{
+        // buildingType:'公寓'
+    }}).catch(dbCatch)
+    await instance.patch('/valuate/auth').catch(dbCatch)
     // const {data:response} = await instance.get('/houses',{params:{
     //     buildingType:'公寓',
     //     neighbor:{center:{lat:'27',lng:'121'},distance:30},
