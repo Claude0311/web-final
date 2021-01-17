@@ -24,23 +24,31 @@ const buildingFac = (userBuild,dbBuild,unitPrice)=>{
     return 1
 }
 const findSimilar = async (req,res,next) => {
-    const {similar,valuate} = req
+    const {similar:similar_temp,valuate} = req
     const {floor:userFloor,age:userAge,biuldingType:userBuild} = valuate
-    if(similar.length>=5){
-        similar.sort((a,b)=>a.unitPrice-b.unitPrice)
-        similar.pop()
-        similar.shift()
-    }
-    const avgPrice = Math.round(
-        similar.reduce((accumulator, {biuldingType:dbBuild,unitPrice,detail})=>{
-            const dbFloor = detail?.floor?.floor
-            const dbAge = detail?.age
-            console.log(dbFloor,unitPrice)
-            return accumulator + unitPrice * floorFac(userFloor,dbFloor) * ageFac(userAge,dbAge) * buildingFac(userBuild,dbBuild,unitPrice)
-        },0)
-        /similar.length
+    //normalize unitPrice by some rules
+    let similar = similar_temp.map(({_id,unitPrice,biuldingType:dbBuild,detail})=>{
+        const dbFloor = detail?.floor?.floor
+        const dbAge = detail?.age
+        const price = unitPrice * floorFac(userFloor,dbFloor) * ageFac(userAge,dbAge) * buildingFac(userBuild,dbBuild,unitPrice)
+        return {_id,price}
+    })
+    //rm extreme case
+    if(similar.length>100) similar = similar.sort(()=>0.5-Math.random()).slice(0,100)
+    similar.sort((a,b)=>a.price-b.price)
+    similar = similar.slice(
+        Math.floor(0.2*similar.length),
+        Math.ceil(0.8*similar.length)
     )
+    //cal avg
+    const avgPrice = Math.round(
+        similar.reduce((accumulator, {price})=>{
+            return accumulator + price
+        },0)/similar.length
+    )
+    console.log('each',similar.map(({price})=>(price)))
     console.log('avg',avgPrice)
+    //save data
     valuate.similar = similar.map(({_id})=>_id)
     valuate.avgPrice = avgPrice
     await valuate.save()

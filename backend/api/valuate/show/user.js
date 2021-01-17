@@ -36,7 +36,8 @@ import { dbCatch } from "../../error"
  */
 const show_auth = async (req,res,next) => {
     let {user} = req.session
-    if(user===undefined) user='b07901029'
+    console.log({user})
+    // if(user===undefined) user='b07901029'
     const valuates = await Valuate
         .find({user})
         .populate('similar')

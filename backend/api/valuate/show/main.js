@@ -1,10 +1,12 @@
 import express from 'express'
 import auth from './auth'
 import user from './user'
-import {isAuth} from '../../auth'
-const router = express.Router()
 
-router.get('/user',user)
-router.get('/auth',isAuth,auth)
+const router_in = express.Router()
+const router_auth = express.Router()
 
-export default router
+router_in.get('/user',user)
+router_auth.get('/auth',auth)
+
+export default router_in
+export {router_auth as show_auth}
