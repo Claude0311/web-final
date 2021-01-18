@@ -14,23 +14,28 @@ const ageFac = (userAge,dbAge) => {
     if(ageDiff<0) return 1.2
     return 1
 }
-const buildingFac = (userBuild,dbBuild,unitPrice)=>{
-    if(isNaN(userBuild) || isNaN(dbBuild) || userBuild===dbBuild) return 1
+const buildingFac = (userBuild,dbBuild,price)=>{
+    if(isNaN(userBuild) || isNaN(dbBuild) || userBuild===dbBuild) return price
     const buildMix = [userBuild,dbBuild]
-    if(buildMix===[1,2]) return (unitPrice-40000)/unitPrice
-    if(buildMix===[2,1]) return (unitPrice+40000)/unitPrice
-    if(buildMix===[0,1]) return 0.75
-    if(buildMix===[1,0]) return 1.25
-    return 1
+    if(buildMix===[1,2]) return price-40000
+    if(buildMix===[2,1]) return price+40000
+    if(buildMix===[0,1]) return price*0.75
+    if(buildMix===[1,0]) return price/0.75
+    if(buildMix===[0,2]) return (price-40000)*0.75
+    if(buildMix===[2,0]) return price/0.75+40000
+    return price
 }
 const findSimilar = async (req,res,next) => {
     const {similar:similar_temp,valuate} = req
-    const {floor:userFloor,age:userAge,biuldingType:userBuild} = valuate
+    const {floor:userFloor,age:userAge,buildingType:userBuild} = valuate
     //normalize unitPrice by some rules
     let similar = similar_temp.map(({unitPrice,biuldingType:dbBuild,detail,_doc})=>{
         const dbFloor = detail?.floor?.floor
         const dbAge = detail?.age
-        const price = unitPrice * floorFac(userFloor,dbFloor) * ageFac(userAge,dbAge) * buildingFac(userBuild,dbBuild,unitPrice)
+        let price = unitPrice
+        price *= floorFac(userFloor,dbFloor)
+        price = buildingFac(userBuild,dbBuild,price)
+        price *= ageFac(userAge,dbAge)
         return {..._doc,price}
     })
     //rm extreme case
