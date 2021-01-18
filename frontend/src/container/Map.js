@@ -1,63 +1,41 @@
 import {useState, useEffect} from 'react';
 import GoogleMapReact from 'google-map-react';
-import { House_Pin, House_Cluster,Current_Pin } from '../component/House_Pin';
+import { House_Pin, House_Cluster,Current_Pin, House_Eval_Pin, Similar_House_Pin, New_House_pin } from '../component/House_Pin';
 import House_Detail from '../component/House_detail';
-import { axiosGetHouses, axiosGetDetail } from '../axios/axios';
+import { axiosGetDetail } from '../axios/axios';
 import useSupercluster from 'use-supercluster';
-import Fill_in from './Fill_in';
 
-const AnyReactComponent = ({ text }) => <div>{text}</div>;
+// const AnyReactComponent = ({ text }) => <div>{text}</div>;
 
-const Map = ({criteria}) => {
-    const [cen,setCen] = useState({lat: 25.017, lng: 121.537});
+const Map = ({ points, houses, setManualPrice, apiKey, getMyHouses, ...rest }) => { //
+    const [cen,setCen] = useState({lat: 25.007414, lng: 121.51505})// {lat: 25.017, lng: 121.537});
     const [zoom,setZoom] = useState(16.0);
     const [bounds, setBounds] = useState(null);
-    // const [houses, setHouses] = useState([]);
-    const [points, setPoints] = useState([]);
     const [ptrCoordinate, setPtrCod] = useState(null);
     const [houseDetail, setDetail] = useState(null);
-    const [clickMap, setClickMap] = useState(false);
     const [hoverKey, setHoverKey] = useState(null);
     const [clickKey, setClickKey] = useState(null);
+    const [newHouse, setNewHouse] = useState(null)
+    const [similarHouses, setSimilarHouses] = useState(null)
 
     const { clusters, supercluster } = useSupercluster({
       points,
       bounds,
       zoom,
-      options: { maxZoom: 20 }
+      options: { 
+        radius: 75,
+        maxZoom: 20,
+        map: (props) => ({
+          sum: props.unitPrice,
+        }),
+        reduce: (acc, props) => {
+          acc.sum += props.sum
+        }
+       }
     });
 
-
     // ====== get houses =======
-    const getHouses = async () => {
-      console.log("getting houses...")
-      try {
-        const req_houses = await axiosGetHouses(criteria);
-        // setHouses(req_houses);
-        const houses_cluster = req_houses.map(house => {
-          const {coordinate,...rest} = house;
-          return {
-            type: "Feature",
-            properties: {
-              cluster: false,
-              ...rest
-            },
-            geometry: {
-              type: "Point",
-              coordinates: [
-                coordinate.lng,
-                coordinate.lat
-              ]
-            }
-          }
-        })
-        // console.log(houses_cluster);
-        setPoints(houses_cluster)
-      } catch (e) {
-        console.log(e);
-      }
-
-    }
+    
 
     const getHouseDetail = async (id) => {
       // console.log(id);
@@ -83,21 +61,46 @@ const Map = ({criteria}) => {
       // console.log("leave");
       setHoverKey(null);
     }
+
+
     const onMarkClick = (key, childprops) => {
-      // console.log(clickKey);
-      // console.log(childprops);
+      // console.log("click",key);
       const {lat, lng} = childprops;
-      //const ratio = Math.hypot(lat-cen.lat, lng-cen.lng)/Math.hypot(bounds[2]-bounds[0],bounds[3]-bounds[1]);
-      const ratio = 1.6*Math.abs((lat-cen.lat)/(bounds[3]-bounds[1]))+Math.abs((lng-cen.lng)/(bounds[2]-bounds[0]));
-      // console.log(ratio);
-      if (
-        ratio >= 0.5) {
+      // compute elipse radius from center
+      const dely = 2.8*(lat-cen.lat)/(bounds[3]-bounds[1]);
+      const delx = 2.8*(lng-cen.lng)/(bounds[2]-bounds[0]);
+      const ratio = Math.hypot(delx,dely);
+      // console.log("ration from center", ratio);
+      if (ratio >= 1) {
         handleMove(key,{lat,lng});
       } else {
         setClickKey(key);
+      }        
+    }
+
+    const getClusterClick = (key) => { // key: Number
+      setHoverKey(null);
+      const zoomInratio = supercluster.getClusterExpansionZoom(key)
+      console.log(zoomInratio)
+      if (zoomInratio >= 20 ) {
+        // show all the info
+        const leaves = supercluster.getLeaves(key);
+        const leaveInfo = leaves.map( leaf => ({
+          id: leaf.properties.id,
+          buildingType: leaf.properties.buildingType,
+          unitPrice: leaf.properties.unitPrice
+        }));
+        return leaveInfo;
+      } else {
+        window.setTimeout(()=>{
+          setZoom(zoomInratio);
+        },500);
+        const [leaf, ...rest] = supercluster.getChildren(key);
+        const [lng, lat] = leaf.geometry.coordinates;
+        setCen({lat,lng})
+        return null;
       }
-      // setClickKey(key);
-        
+
     }
 
     const handleMove = async (key,{lat,lng}) => {
@@ -109,17 +112,31 @@ const Map = ({criteria}) => {
     }
 
     const onSetMark = (point) => {
+      if(similarHouses) {
+        setSimilarHouses(null)
+      }
       if (clickKey) {
         setClickKey(null);
         return;
-      } 
+      }
+      if(newHouse) {
+        if(newHouse.showInfor) {
+          let tempHouse = newHouse
+          tempHouse.showInfor = false
+          setNewHouse(tempHouse)
+          return
+        }
+      }
       if (ptrCoordinate) {
         setPtrCod(null);
         return;
       }
+      if(newHouse) {
+        setNewHouse(null)
+        getMyHouses()
+      }
       const {lat, lng} = point;
       setPtrCod({lat, lng});
-      setClickMap(false)
       
     }
 
@@ -129,8 +146,43 @@ const Map = ({criteria}) => {
 
     const showForm = async () => {
       setClickKey(null);
-        // show form ...
-        
+      // show form ...  
+    }
+    // ========== search ==========
+
+    // const searchNeighbor = () => {
+    //   const center = cen;
+    //   // const 
+    // }
+
+    // const search = (cri) => {
+    //   const c = {...cri};
+    //   console.log(c)
+    //   setCriteria(c);
+      
+    // }
+
+    const moveCen = (lat, lng) => {
+      setCen({lat, lng})
+    }
+
+    const showNewHouse = async(similar, avgPrice, buildingType, floor, age) => {
+      await setNewHouse({
+        lat: ptrCoordinate.lat,
+        lng: ptrCoordinate.lng,
+        avgPrice,
+        buildingType,
+        floor,
+        age,
+        showInfor: true
+      })
+      setPtrCod(null)
+      setSimilarHouses(similar)
+    }
+
+    const handleAddHouses = () => {
+      if(newHouse) setNewHouse(null)
+      getMyHouses()
     }
 
     // ========== set Boundaries ========
@@ -149,23 +201,18 @@ const Map = ({criteria}) => {
     }
 
     // ========== useEffect =============
-    // useEffect( () => {
-    //   console.log(clickKey)
-    // },[clickKey]);
-
-    // useEffect( () => {
-    //   console.log(points);
-    //   console.log(clusters);
-    // },[clusters]);
-    useEffect( () => {
-      getHouses();
-    }, [criteria]);
+    
+    // useEffect(()=>{
+    //   console.log("map",apiKey)
+    // },[apiKey]);
 
     
+
+    // ========== render element ===========
     const clusterMarkers = clusters.map(cluster => {
       const [lng, lat] = cluster.geometry.coordinates;
       const {
-        cluster: isCluster, point_count: pointCount, cluster_id, id, ...rest
+        cluster: isCluster, point_count: pointCount, cluster_id, id, sum, ...rest
       } = cluster.properties;
       if (isCluster) {
         // return cluster Marker
@@ -176,8 +223,12 @@ const Map = ({criteria}) => {
             lat={lat}
             lng={lng}
             size={pointCount}
+            sum={sum}
+            click={clickKey === String(cluster_id)}
             pointSize={points.length}
             hover={hoverKey === String(cluster_id)}
+            getLeaves={getClusterClick}
+            getDetail={getHouseDetail}
             />
         );
       } else {
@@ -198,33 +249,88 @@ const Map = ({criteria}) => {
 
     })
 
+    // ============ render myhouses =======
+    const houseMarkers = (houses)? houses.map( house => {
+      const {coordinate,similar,_id, ...rest} = house;
+      const showSim = () => {
+        setSimilarHouses(similar)
+      }
+      // console.log("housemarker",house);
+      return (
+      <House_Eval_Pin
+        key={_id}
+        id={_id}
+        lat={coordinate.lat}
+        lng={coordinate.lng}
+        hover={hoverKey === _id}
+        click={clickKey === _id}
+        setManualPrice={setManualPrice}
+        showSim={showSim}
+        {...rest}
+      />
+    )}
+    ):<></>;
+    
+    // ============= similar houses ===========
+    const similarMarkers = (similarHouses)? similarHouses.map( house => {
+      const {coordinate, unitPrice, _id, ...rest} = house
+      return (
+        <Similar_House_Pin 
+          key={_id}
+          unitPrice={unitPrice}
+          lat={coordinate.lat}
+          lng={coordinate.lng}
+          {...rest}
+        />
+      )
+    }): <></>
+
+
+    if (!apiKey.length) {
+      return <></>
+    }
+
     return(
-        <div 
-          style={{ height: '84vh', maxWidth: '100%', flexDirection: 'row' }}
-        >
-          {clickMap? <Fill_in lat={ptrCoordinate.lat} lng={ptrCoordinate.lng} />: <></>}
+        <div style={{ height: '86vh', width: '100%', flexDirection: 'row' }}>
           <GoogleMapReact
-            bootstrapURLKeys={{ key: 'AIzaSyBqlTXRpx8ARKVOHZXDopkEYtsPs0WUHQ0' }}
+            bootstrapURLKeys={{ key: apiKey }}
             center={cen}
-            defaultZoom={40}
+            defaultZoom={12}
             zoom={zoom}
             onClick={onSetMark}
             onChildMouseEnter={onMarkHover}
             onChildMouseLeave={onMarkLeave}
             onChildClick={onMarkClick}
             onChange={onBoundChange}
+            {...rest}
           >
-            {/* { houseMarkers } */}
             {clusterMarkers}
-            {(ptrCoordinate)?(
+            {houseMarkers}
+            {(ptrCoordinate)? (
               <Current_Pin
                 key="myPin"
                 {...ptrCoordinate}
                 showForm={showForm}
                 hover={hoverKey==="myPin"}
                 click={clickKey==="myPin"}
+                lat={ptrCoordinate.lat} 
+                lng={ptrCoordinate.lng}
+                moveCen={moveCen}
+                showNewHouse={showNewHouse}
+                handleAddHouses={handleAddHouses}
               />
-            ):<></>}
+            ): newHouse? (
+              <New_House_pin 
+                lat={newHouse.lat}
+                lng={newHouse.lng}
+                avgPrice={newHouse.avgPrice}
+                buildingType={newHouse.buildingType}
+                floor={newHouse.floor}
+                age={newHouse.age}
+                showInfor={newHouse.showInfor}
+              />
+            ): <></>}
+            {similarMarkers}
           </GoogleMapReact>
           {(houseDetail)?
             <House_Detail detail={houseDetail} onClose={closeDetail}/>

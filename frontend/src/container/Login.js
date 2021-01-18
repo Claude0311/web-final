@@ -78,19 +78,20 @@ const Login = ({id, login, history}) => {
     // login as an Administrator
 
     useEffect(()=>{
-        if (userRef) {
+        if (userRef !== null && !id) {
             userRef.current.focus();
         }
     }, []);
     
     // render Container
     if (id) {
-        console.log("come to login.js, redirect to /")
+        console.log("has id, redirect to /")
         return <Redirect to="/" />;
     }
     return(
         <div className="loginContainer">
             <div className="login-title">
+                {/* <img src=""/> */}
                 <h1>House Price</h1>
                 <p> A system that helps you know house price </p>
             </div>
