@@ -188,9 +188,12 @@ const House_Eval_Pin = (props) => {
         <SetManualPriceForm 
             setPrice={setPrice}
         >Set Manual Price</SetManualPriceForm>
-        : <a onClick={props.updateInfo} >Update information</a>
+        : <div className="eval-pin">
+            <a onClick={props.showSim}>view similar houses</a>
+            <a onClick={props.updateInfo} >Update information</a>
+            </div>
     let style = (props.hover)?  myStyleHover: myStyle;
-
+    
     const content = (
         <div>
             <p>avg: NT${priceConvert(props.avgPrice)}</p>
@@ -198,7 +201,6 @@ const House_Eval_Pin = (props) => {
             {(props.buildingType)?<p>Type: {BuildingType[props.buildingType]}</p> :<></>}
             {(props.floor)? <p>floor: {props.floor} floor</p> :<></>}
             {(props.age)? <p>age: {props.age} years</p> :<></>}
-            <a onClick={props.showSim}>View similar houses</a>
             {authFunction}
         </div>
     );

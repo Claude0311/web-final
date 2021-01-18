@@ -24,3 +24,19 @@ export const clusterConvert = house => {
       }
     }
 };
+
+export const compareHouses = (a,b) => {
+  if ( a.unread || b.unread ) {
+    return (a.unread)? -1: 1;
+  } else {
+    return (a.processed)? -1:1;
+  }
+}
+
+export const neighborHouse = ({lat,lng},distance = 500 ) => {
+  const offset = 0.00001 * distance;
+  return house => (
+    Math.abs(lat-house.coordinate.lat) <= offset && 
+    Math.abs(lng-house.coordinate.lng) <= offset
+  )
+}

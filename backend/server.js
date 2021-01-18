@@ -9,6 +9,7 @@ import connect from 'connect-mongo'
 import env from 'dotenv'
 import craw from './util/crawler'
 import cors from 'cors'
+import history from 'connect-history-api-fallback'
 
 env.config({path:'../.env'})
 
@@ -32,7 +33,7 @@ DB.once('open',()=>{
 	// })
 	app.use(cors({
 		origin: 'http://localhost:3000',
-		methods: ['POST', 'PUT', 'GET', 'OPTIONS', 'HEAD', 'PATCH'],
+		methods: ['POST', 'PUT', 'GET', 'OPTIONS', 'HEAD', 'PATCH', 'DELETE'],
 		credentials: true
 	}))
 
@@ -50,14 +51,20 @@ DB.once('open',()=>{
 			}
 		})
 	)
-
-	app.use(api)
 	
 	if(process.env.NODE_ENV==='production'){
-		console.log('backend env',process.env.NODE_ENV)
+		app.use('/api',api)
+		app.use(history())
 		const buildPath = path.join('.', '..', 'frontend','build')
 		app.use(express.static(buildPath))
+		app.get('/', (req, res) => {
+			res.sendFile(path.join('.','..','frontend','build','index.html')) // EDIT
+		})
+	}else{
+		app.use(api)
 	}
+
+	
 
 	app.listen(process.env.PORT || 4000,  () => {
 		// craw()

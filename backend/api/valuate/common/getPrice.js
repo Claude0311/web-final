@@ -46,7 +46,7 @@ const findSimilar = async (req,res,next) => {
             return accumulator + price
         },0)/similar.length
     )
-    console.log('each',similar.map(({price})=>(price)))
+    // console.log('each',similar.map(({price})=>(price)))
     console.log('avg',avgPrice)
     //save data
     valuate.similar = similar.map(({_id})=>_id)

@@ -8,15 +8,20 @@ import {
     HomeOutlined,
     FormOutlined,
     FileSearchOutlined,
-    SettingOutlined
+    SettingOutlined,
+    ExclamationCircleOutlined,
+    CheckCircleOutlined,
+    SolutionOutlined
 } from '@ant-design/icons';
 import SubMenu from 'antd/lib/menu/SubMenu';
 import { priceConvert } from '../util/util';
 
 
 const House_Menu = (props) => {
-    const onSearch = () => {
+    const onMySearch = (e) => {
         console.log("search");
+        console.log(e);
+        props.onSearch(e.target.value)
     }
     const additionalTool = (props.isAdminMode)?
         (
@@ -37,6 +42,12 @@ const House_Menu = (props) => {
                 Check List
             </Menu.Item> */}
             <Menu.Item 
+                key="score" 
+                icon={<FileSearchOutlined />}
+                onClick={props.onScore}>
+                Score Rules
+            </Menu.Item>
+            <Menu.Item 
                 key="userMode" 
                 icon={<UserOutlined />}
                 onClick={props.onUserMode}
@@ -45,23 +56,19 @@ const House_Menu = (props) => {
             </Menu.Item>
             </>
         ):<>
-            <Menu.Item key="search" icon={<SearchOutlined />}>
-                {(props.collapsed)?
-                    "Search":
-                    <Input
-                        name="Search"
-                        placeholder="Search address"
-                        style={{ maxWidth: '80%'}}
-                        onPressEnter={onSearch}
-                    ></Input>
-                }
-            </Menu.Item>
             <Menu.Item 
                 key="all houses" 
                 icon={<UserOutlined />}
                 onClick={props.onMyHouseMode}
             >
                 My Houses
+            </Menu.Item>
+            <Menu.Item 
+                key="unread houses" 
+                icon={<ExclamationCircleOutlined />}
+                onClick={props.onUnReadMode}
+            >
+                New Houses
             </Menu.Item>
             {(props.isAuth)?
             <Menu.Item 
@@ -75,22 +82,38 @@ const House_Menu = (props) => {
 
 
         </>
-
+    const style = (processed, unRead) => {
+        if (unRead) {
+            return {
+                icon: <ExclamationCircleOutlined 
+                    style={{color: '#f50'}}/>
+            }
+        } else {
+            return ((processed)
+                ? {icon:<CheckCircleOutlined style={{color: 'gold'}}/>}
+                : {icon:<SolutionOutlined style={{color: '#aaa'}}/>}
+            )
+        }
+    }
     const houseProfiles = (props.houses && props.houses.length !== 0)
         ?<>
-            {props.houses.map((house) => 
-            <Menu.Item 
-                key={house._id}
-                onClick={()=>props.showSimilar(house._id)}
-            >
-                NT$ {priceConvert(house.avgPrice)}
-            </Menu.Item>
+            {props.houses.map((house) => {
+                return(
+                <Menu.Item 
+                    key={house._id}
+                    onClick={()=>props.showSimilar(house._id)}
+                    {...style(house.processed,house.unread)}
+                >
+                    NT$ {priceConvert(house.avgPrice)}
+                </Menu.Item>
+                );
+            }
             )}</>
         :<Menu.Item key="Not found" disabled>Not found</Menu.Item>
 
-    useEffect(()=>{
-        console.log(props.houses);
-    })
+    // useEffect(()=>{
+    //     console.log(props.houses);
+    // })
 
     return (
         <Menu theme="light" mode="inline" defaultSelectedKeys={['home']}>
@@ -100,17 +123,22 @@ const House_Menu = (props) => {
                 onClick={props.onHome}>
                 Home
             </Menu.Item>
-            {additionalTool}            
+            <Menu.Item key="search" icon={<SearchOutlined />}>
+                {(props.collapsed)?
+                    "Search":
+                    <Input
+                        name="Search"
+                        placeholder="Search address"
+                        style={{ maxWidth: '80%'}}
+                        onPressEnter={onMySearch}
+                    ></Input>
+                }
+            </Menu.Item>   
             <SubMenu key="houses" icon={<ShopOutlined />} title="House Profiles" 
                 style={{overflow: 'auto', maxHeight: '50vh', }}>
                 {houseProfiles}
             </SubMenu>
-            <Menu.Item 
-                key="score" 
-                icon={<FileSearchOutlined />}
-                onClick={props.onScore}>
-                Score Rules
-            </Menu.Item>
+            {additionalTool} 
             <Menu.Item 
                 key="logout" 
                 onClick={props.onLogout} 

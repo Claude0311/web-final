@@ -15,6 +15,9 @@
    - [register](#register)
  - [Error](#error)
    - [Error testing](#error-testing)
+ - [GeoCode](#geocode)
+   - [apiKey](#apikey)
+   - [get Coordinate](#get-coordinate)
  - [House](#house)
    - [getHouse](#gethouse)
    - [getHouses](#gethouses)
@@ -25,6 +28,7 @@
  - [Valuate](#valuate)
    - [更新房屋內容](#更新房屋內容)
    - [請求估價](#請求估價)
+   - [delete valuate](#delete-valuate)
    - [get valuations as auth](#get-valuations-as-auth)
    - [get valuations as user](#get-valuations-as-user)
    - [set manual price](#set-manual-price)
@@ -275,6 +279,57 @@ GET /error
 |----------|------------|---------------------------------------|
 | statusCode | `Number` | 404 |
 | msg | `String` | oh no! |
+
+## GeoCode
+
+### apiKey
+[Back to top](#top)
+
+return apiKey for geocode
+
+```
+GET /apiKey
+```
+
+#### Success response
+
+##### Success response - `200`
+
+| Name     | Type       | Description                           |
+|----------|------------|---------------------------------------|
+| - | `String` | apiKey |
+
+### get Coordinate
+[Back to top](#top)
+
+give address return {lat,lng}
+
+```
+GET /geoCode
+```
+
+#### Parameters - `Parameter`
+
+| Name     | Type       | Description                           |
+|----------|------------|---------------------------------------|
+| address | `String` | 地址 |
+
+#### Success response
+
+##### Success response - `200`
+
+| Name     | Type       | Description                           |
+|----------|------------|---------------------------------------|
+| lat | `Number` | 緯度 |
+| lng | `Number` | 經度 |
+
+#### Error response
+
+##### Error response - `500`
+
+| Name     | Type       | Description                           |
+|----------|------------|---------------------------------------|
+| msg | `String` | 資料庫錯誤 |
 
 ## House
 
@@ -639,6 +694,54 @@ POST /valuate
 | statusCode | `Number` | 500 |
 | msg | `String` | 資料庫發生錯誤 |
 
+### delete valuate
+[Back to top](#top)
+
+刪除valuate，注意axios.delete要加{data}
+
+```
+DELETE /valuate/user
+```
+
+#### Parameters - `Parameter`
+
+| Name     | Type       | Description                           |
+|----------|------------|---------------------------------------|
+| _id | `String` | _id from get /valuate/user |
+
+#### Parameters examples
+`js` - axios
+
+```js
+axios.delete('/houses',{data:{
+   _id
+}})
+```
+
+#### Success response
+
+##### Success response - `204`
+
+| Name     | Type       | Description                           |
+|----------|------------|---------------------------------------|
+| - | `Object[]` |  <li></li>  |
+
+#### Error response
+
+##### Error response - `Client error 404`
+
+| Name     | Type       | Description                           |
+|----------|------------|---------------------------------------|
+| statusCode | `Number` | 404 |
+| msg | `String` | _id not given |
+
+##### Error response - `Server error 500`
+
+| Name     | Type       | Description                           |
+|----------|------------|---------------------------------------|
+| statusCode | `Number` | 500 |
+| msg | `String` | 資料庫發生錯誤 |
+
 ### get valuations as auth
 [Back to top](#top)
 
@@ -697,7 +800,7 @@ GET /valuate/user
 | - | `Object[]` | array of valuate |
 | &ensp;_id | `Object` | 待估房子的_id，put時回傳 |
 | &ensp;coordinate | `Object` | {lat,lng}經緯度 |
-| &ensp;user | `String` | 捨棄，改使用存在後端的session |
+| &ensp;unread | `Boolean` | 是否已讀(true表示管理員有新的估價) |
 | &ensp;buildingType | `Number` | 0~2  <li>0: 公寓(5樓含以下無電梯)</li> <li>1: 華廈(10層含以下有電梯)</li> <li>2: 住宅大樓(11層含以上有電梯)</li>  |
 | &ensp;age | `Number` | 屋齡 |
 | &ensp;floor | `Number` | 樓層 |

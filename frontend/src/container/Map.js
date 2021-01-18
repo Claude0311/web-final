@@ -5,15 +5,12 @@ import House_Detail from '../component/House_detail';
 import { axiosGetDetail } from '../axios/axios';
 import useSupercluster from 'use-supercluster';
 
-const AnyReactComponent = ({ text }) => <div>{text}</div>;
+// const AnyReactComponent = ({ text }) => <div>{text}</div>;
 
-const Map = ({ points, houses, setManualPrice, getMyHouses, ...rest }) => { //
-    const [cen,setCen] = useState({lat: 25.017, lng: 121.537});
+const Map = ({ points, houses, setManualPrice, apiKey, getMyHouses, ...rest }) => { //
+    const [cen,setCen] = useState({lat: 25.007414, lng: 121.51505})// {lat: 25.017, lng: 121.537});
     const [zoom,setZoom] = useState(16.0);
     const [bounds, setBounds] = useState(null);
-    // const [houses, setHouses] = useState([]);
-    // const [criteria, setCriteria] = useState(null);
-    // const [points, setPoints] = useState([]);
     const [ptrCoordinate, setPtrCod] = useState(null);
     const [houseDetail, setDetail] = useState(null);
     const [hoverKey, setHoverKey] = useState(null);
@@ -200,6 +197,9 @@ const Map = ({ points, houses, setManualPrice, getMyHouses, ...rest }) => { //
 
     // ========== useEffect =============
     
+    // useEffect(()=>{
+    //   console.log("map",apiKey)
+    // },[apiKey]);
 
     
 
@@ -280,10 +280,15 @@ const Map = ({ points, houses, setManualPrice, getMyHouses, ...rest }) => { //
       )
     }): <></>
 
+
+    if (!apiKey.length) {
+      return <></>
+    }
+
     return(
         <div style={{ height: '86vh', width: '100%', flexDirection: 'row' }}>
           <GoogleMapReact
-            bootstrapURLKeys={{ key: 'AIzaSyBqlTXRpx8ARKVOHZXDopkEYtsPs0WUHQ0' }}
+            bootstrapURLKeys={{ key: apiKey }}
             center={cen}
             defaultZoom={12}
             zoom={zoom}

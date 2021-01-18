@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Layout, Menu, Avatar, Tooltip } from 'antd';
+import { Layout, message, Avatar, Tooltip } from 'antd';
 import {
     MenuUnfoldOutlined,
     MenuFoldOutlined,
@@ -16,7 +16,13 @@ import { axiosGetHouses,
         axiosGetScoreRule,
         axiosSetManualPrice
     } from '../axios/axios';
-import { clusterConvert } from '../util/util';
+
+import { clusterConvert,
+        compareHouses,
+        neighborHouse 
+    } from '../util/util';
+import { useMapApi } from '../Auth/GoogleApi';
+
 const { Header, Sider, Content } = Layout;
 
 const UserInterface = ({id,isAuth, logout, history,...rest})=> {
@@ -25,10 +31,10 @@ const UserInterface = ({id,isAuth, logout, history,...rest})=> {
     const [criteria, setCriteria] = useState(null);
     const [points, setPoints] = useState([]); // others
     const [houses, setHouses] = useState(null); // eval
-    const [newlyAddHouses, setNewlyAddHouses] = useState(0)
     const [myPoints, setMyPoints] = useState(null);
     const [isAdminMode, setAdminMode] = useState(false);
-    
+    const { apiKey, searchAddr } = useMapApi();
+
     const mapRef = useRef(null);
 
     const toggle = () => {
@@ -36,7 +42,7 @@ const UserInterface = ({id,isAuth, logout, history,...rest})=> {
     };
 
     const handleCriteria = (c) => {
-        setCriteria(c);
+        setCriteria({...criteria,...c});
     }
 
     // ================= MENU functions ===================
@@ -62,8 +68,9 @@ const UserInterface = ({id,isAuth, logout, history,...rest})=> {
         const myHouses = await axiosUserGetValuate();
         // console.log("myhouses",myHouses);
         if (myHouses !== null){
-          setHouses(myHouses);
-          setMyPoints(myHouses);
+            myHouses.sort(compareHouses)
+            setHouses(myHouses);
+            setMyPoints(myHouses);
         }        
     }
 
@@ -79,6 +86,38 @@ const UserInterface = ({id,isAuth, logout, history,...rest})=> {
       }
     }
 
+    const searchHousebyAddr = async (address) => {
+        const coor = await searchAddr(address);
+        if (coor) {
+            const newCri = {neighbor:{center:coor,distance:100} };
+            handleCriteria(newCri);
+        } else {
+            console.log("invalid address");
+        }
+        
+    }
+    const searchMyHousebyAddr = async (address) => {
+        const coor = await searchAddr(address);
+        if (coor) {
+            const search = houses.filter(neighborHouse(coor));
+            console.log("search",search);
+            setMyPoints(search);
+            if (!search.length) {
+                message.error("houses not found",[2]);
+            }
+        } else {
+            message.error("Invalid Address",[2]);
+        }
+    }
+
+    const showUnreadHouses = () => {
+        const unread = houses.filter(house => house.unread);
+        if (unread.length ) {
+            setMyPoints(unread);
+        } else {
+            message.error("Invalid Address",[2]);
+        }
+    }
     // ============= Admin Functions ========
 
     const getEvalHouses = async () => {
@@ -107,11 +146,9 @@ const UserInterface = ({id,isAuth, logout, history,...rest})=> {
 
     // check not valuated houses
     const viewUnValuate = () => {
-        setMyPoints(houses.filter(e=>!e.processed));
-    }
 
-    const viewValuate = () => {
-        setMyPoints(houses.filter(e=>e.processed));
+        setPoints([]);
+        setMyPoints(houses.filter(e=>!e.processed));
     }
 
     // set manual price
@@ -132,17 +169,19 @@ const UserInterface = ({id,isAuth, logout, history,...rest})=> {
     const getHouses = async () => {
         console.log("getting houses...")
         const req_houses = await axiosGetHouses(criteria);
-        if (req_houses !== null){
+        if (req_houses !== null && req_houses.length){
           const houses_cluster = req_houses.map(clusterConvert);
           setPoints(houses_cluster)
+        } else {
+            message.error("houses not found",[2]);
         }
     }
 
-    const searchhouses = (id) => {
-        console.log("search",id)
-        const house = houses.filter(ele=>ele._id.includes(id));
-        setMyPoints(house);
-    }
+    // const searchhouses = (id) => {
+    //     console.log("search",id)
+    //     const house = houses.filter(ele=>ele._id.includes(id));
+    //     setMyPoints(house);
+    // }
     // =============== Score ==================
     const onViewScoreRule = async() => {
         const rule = await axiosGetScoreRule();
@@ -159,9 +198,9 @@ const UserInterface = ({id,isAuth, logout, history,...rest})=> {
         }
     }
 
-    useEffect( ()=> {
-        console.log("cur", mapRef.current)
-    },[mapRef])
+    // useEffect( ()=> {
+    //     console.log("cur", mapRef.current)
+    // },[mapRef])
     
 
     useEffect( () => {
@@ -178,6 +217,9 @@ const UserInterface = ({id,isAuth, logout, history,...rest})=> {
       }
     }, [])
 
+    // useEffect( ()=> {
+    //     console.log("api",apiKey)
+    // },[apiKey]);
 
     return (
     <Layout>
@@ -205,10 +247,11 @@ const UserInterface = ({id,isAuth, logout, history,...rest})=> {
                 houses={houses}
                 onHome={onHome}
                 onMyHouseMode={setMyHouseOnly}
+                onUnReadMode={showUnreadHouses}
+                onSearch={searchMyHousebyAddr}
                 showSimilar={showSimilar}
                 collapsed={collapsed}
                 onTodoMode={viewUnValuate}
-                onCheckMode={viewValuate}
                 onScore={onViewScoreRule}
                 onAdminMode={switchToAdmin}
                 onUserMode={switchToUser}
@@ -244,7 +287,8 @@ const UserInterface = ({id,isAuth, logout, history,...rest})=> {
                   <SearchForm
                       name="Search Options"
                       setCriteria={handleCriteria}
-                      onSearch={searchhouses}
+                      //onSearch={searchhouses}
+                      onSearch={searchHousebyAddr}
                   />
               </span>
               <span>
@@ -271,6 +315,7 @@ const UserInterface = ({id,isAuth, logout, history,...rest})=> {
                 <Map 
                     // id={id} 
                     // isAuth={isAuth}
+                    apiKey={apiKey}
                     ref={mapRef}
                     points={points}
                     houses={myPoints}

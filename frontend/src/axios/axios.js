@@ -1,12 +1,34 @@
 import axios from 'axios'
 // import {useState} from 'react'
 console.log('NODE_ENV',process.env.NODE_ENV)
-const API_ROOT = (process.env.NODE_ENV==='production')?'':'http://localhost:4000'
+const API_ROOT = (process.env.NODE_ENV==='production')?'/api':'http://localhost:4000'
 const instance = axios.create({
   baseURL: API_ROOT,
   withCredentials: true
 })
+const dbCatch = e=>console.log('myError:',e?.response?.data?.msg)
 
+
+export const axiosGetApi = async () => {
+    try {
+        return await instance.get('/apiKey');
+    } catch (e) {
+        console.log("fail",e);
+        return '';
+    }
+}
+
+export const axiosGetCoor = async (address) => {
+    try {
+        console.log(address);
+        const {data: coor} = await instance.get('/geoCode',{params:{address}});
+        console.log(coor);
+        return coor;
+    } catch (e) {
+        dbCatch(e);
+        return null;
+    }
+}
 // =========== login post ============
 export const loginAsNormalUser = async ({user,password}) => {
     try {
@@ -72,6 +94,7 @@ export const sendHouseInformation = async(lat, lng, buildingType, floor, age) =>
 }
 export const axiosGetHouses = async (params) => {
     try {        
+        console.log("get houses", params)
         const {data:req_houses} = await instance.get('/houses',{params});
         return req_houses;
     } catch (e) {
@@ -157,17 +180,17 @@ export const axiosGetScoreRule = async () => {
 
 // ============ test =============
 export const init = async () => {
-    const dbCatch = e=>{console.log('myError:',e?.response?.data?.msg)}
+    const dbCatch = e=>{
+        console.log('myError:',e?.response?.data?.msg)
+        return {data:{}}
+    }
     // const {data:{user,auth}} = await instance.post('/login',{user:'b07901029',password:'123'}).catch(dbCatch)
     // console.log(user,auth)
-    // const {data} = await instance.get('/valuate/user')
-    // // data.forEach(async ({_id}) => {
-    //     const {data:{similar}} = await instance.patch('/valuate/user',{_id:data[0]._id}).catch(dbCatch)
-    //     similar.forEach(element => {
-    //         console.log('f',element)
-            
-    //     });
-    // });
+    // const {data:jif} = await instance.get('/valuate/user',{params:{neighbor:{center:{lat:25,lng:121.5},distance:800}}}).catch(dbCatch)
+    // // jif.forEach(async ({_id})=>{
+    //     const {data:col} = await instance.delete('/valuate/user',{data:{_id:jif[3]._id}}).catch(dbCatch) 
+    //     console.log(col)
+    // // })
 }
 
 export const testErr = async () => {
