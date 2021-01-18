@@ -1,5 +1,5 @@
 import {useEffect} from 'react';
-import { Input, Menu, Avatar, Tooltip, Button } from 'antd';
+import { Input, Menu,  } from 'antd';
 import {
     ExportOutlined,
     ShopOutlined,
@@ -7,8 +7,8 @@ import {
     SearchOutlined,
     HomeOutlined,
     FormOutlined,
-    FileDoneOutlined,
-    FileSearchOutlined
+    FileSearchOutlined,
+    SettingOutlined
 } from '@ant-design/icons';
 import SubMenu from 'antd/lib/menu/SubMenu';
 import { priceConvert } from '../util/util';
@@ -18,9 +18,33 @@ const House_Menu = (props) => {
     const onSearch = () => {
         console.log("search");
     }
-    const additionalTool = (props.isAuth)?
+    const additionalTool = (props.isAdminMode)?
         (
             <>
+            <Menu.Item 
+                key="todo" 
+                icon={<FormOutlined />}
+                onClick={props.onTodoMode}
+            >
+                Todo List
+            </Menu.Item>
+            {/* <Menu.Item 
+                key="done" 
+                icon={<FileDoneOutlined />}
+                onClick={props.onCheckMode}
+            >
+                
+                Check List
+            </Menu.Item> */}
+            <Menu.Item 
+                key="userMode" 
+                icon={<UserOutlined />}
+                onClick={props.onUserMode}
+            >
+                User Mode
+            </Menu.Item>
+            </>
+        ):<>
             <Menu.Item key="search" icon={<SearchOutlined />}>
                 {(props.collapsed)?
                     "Search":
@@ -33,22 +57,28 @@ const House_Menu = (props) => {
                 }
             </Menu.Item>
             <Menu.Item 
-                key="todo" 
-                icon={<FormOutlined />}
-                onClick={props.onTodoMode}
+                key="all houses" 
+                icon={<UserOutlined />}
+                onClick={props.onMyHouseMode}
             >
-                Todo List
+                My Houses
             </Menu.Item>
+            {(props.isAuth)?
             <Menu.Item 
-                key="done" 
-                icon={<FileDoneOutlined />}>
-                Check List
+                key="adminMode" 
+                icon={<SettingOutlined />}
+                onClick={props.onAdminMode}
+            >
+                Admin Mode
             </Menu.Item>
-            </>
-        ):<></>
+            :<></>}
+
+
+        </>
 
     const houseProfiles = (props.houses && props.houses.length !== 0)
-        ?<>{props.houses.map((house) => 
+        ?<>
+            {props.houses.map((house) => 
             <Menu.Item 
                 key={house._id}
                 onClick={()=>props.showSimilar(house._id)}
@@ -58,9 +88,9 @@ const House_Menu = (props) => {
             )}</>
         :<Menu.Item key="Not found" disabled>Not found</Menu.Item>
 
-    // useEffect(()=>{
-    //     console.log(props.houses);
-    // })
+    useEffect(()=>{
+        console.log(props.houses);
+    })
 
     return (
         <Menu theme="light" mode="inline" defaultSelectedKeys={['home']}>
@@ -70,15 +100,9 @@ const House_Menu = (props) => {
                 onClick={props.onHome}>
                 Home
             </Menu.Item>
-            {additionalTool}
-            <Menu.Item 
-                key="all houses" 
-                icon={<UserOutlined />}
-                onClick={props.onMyHouseMode}
-            >
-                My Houses
-            </Menu.Item>            
-            <SubMenu key="houses" icon={<ShopOutlined />} title="House Profiles">
+            {additionalTool}            
+            <SubMenu key="houses" icon={<ShopOutlined />} title="House Profiles" 
+                style={{overflow: 'auto', maxHeight: '50vh', }}>
                 {houseProfiles}
             </SubMenu>
             <Menu.Item 
@@ -87,8 +111,11 @@ const House_Menu = (props) => {
                 onClick={props.onScore}>
                 Score Rules
             </Menu.Item>
-            <Menu.Item key="logout" onClick={props.onLogout} icon={<ExportOutlined />}>
-                Log out
+            <Menu.Item 
+                key="logout" 
+                onClick={props.onLogout} 
+                icon={<ExportOutlined />}
+            > Log out
             </Menu.Item>
             
         </Menu>

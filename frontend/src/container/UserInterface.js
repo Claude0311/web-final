@@ -26,6 +26,7 @@ const UserInterface = ({id,isAuth, logout, history,...rest})=> {
     const [points, setPoints] = useState([]); // others
     const [houses, setHouses] = useState(null); // eval
     const [myPoints, setMyPoints] = useState(null);
+    const [isAdminMode, setAdminMode] = useState(false);
     
     const mapRef = useRef(null);
 
@@ -38,28 +39,24 @@ const UserInterface = ({id,isAuth, logout, history,...rest})=> {
     }
 
     // ================= MENU functions ===================
+
+    // ==== Noraml Functions =====
     const onHome = () => {
         console.log("reset...")
         setCriteria(null);
-        getHouses();
-        getMyHouses();
+        if (isAdminMode) {
+            getEvalHouses();
+        } else {
+            getMyHouses();
+        }
         // history.push('/');
     }
-
-    const getEvalHouses = async () => {
-        console.log("open admin mode...");
-        const evalHouses = await axiosAdminGetValuate();
-        if (evalHouses !== null) {
-            const evalAuth = evalHouses.map(house => (
-                { ...house,
-                    auth: true,
-                }));
-            setHouses(evalAuth);
-            setMyPoints(evalAuth);
-            // console.log("evalAuth",evalAuth);
-        }        
+    // only view houses that I have
+    const setMyHouseOnly = () => {
+        setPoints([]);
+        setMyPoints(houses);
     }
-
+    // view all houses i have
     const getMyHouses = async ()  => {
         const myHouses = await axiosUserGetValuate();
         // console.log("myhouses",myHouses);
@@ -81,33 +78,55 @@ const UserInterface = ({id,isAuth, logout, history,...rest})=> {
       }
     }
 
+    // ============= Admin Functions ========
 
-    const setMyHouseOnly = () => {
-        setPoints([]);
-        setMyPoints(houses);
+    const getEvalHouses = async () => {
+        console.log("open admin mode...");
+        const evalHouses = await axiosAdminGetValuate();
+        if (evalHouses !== null) {
+            const evalAuth = evalHouses.map(house => (
+                { ...house,
+                    auth: true,
+                }));
+            setHouses(evalAuth);
+            setMyPoints(evalAuth);
+            // console.log("evalAuth",evalAuth);
+        }        
     }
 
-    const viewUnValuate = () => {
-        setPoints([]);
+    const switchToAdmin = () => {
+        setAdminMode(true);
         getEvalHouses();
+    }
+
+    const switchToUser = () => {
+        setAdminMode(false);
+        getMyHouses();
+    }
+
+    // check not valuated houses
+    const viewUnValuate = () => {
         setMyPoints(houses.filter(e=>!e.processed));
     }
 
-    // const setCriteria = (c) => {
-    //     mapRef.current.setCriteria(c);
-    // }
+    const viewValuate = () => {
+        setMyPoints(houses.filter(e=>e.processed));
+    }
 
+    // set manual price
     const setManualPrice = async ({_id, manualPrice}) => {
         const reply = await axiosSetManualPrice({_id, manualPrice});
         console.log(reply);
         if (reply) {
             console.log("get my houses again...")
-            getMyHouses();
+            const newhouses = houses.map((house) => (
+                (house._id !== _id)? house : {...house,processed:true,manualPrice}
+            ));
+            setHouses(newhouses);
+            setMyPoints(newhouses);
         }
-        console.log(rest)
-        // console.log(mapRef);
-        
     }
+
     // ============ getHouses =============
     const getHouses = async () => {
         console.log("getting houses...")
@@ -116,7 +135,7 @@ const UserInterface = ({id,isAuth, logout, history,...rest})=> {
           const houses_cluster = req_houses.map(clusterConvert);
           setPoints(houses_cluster)
         }
-      }
+    }
 
     const searchhouses = (id) => {
         console.log("search",id)
@@ -138,6 +157,7 @@ const UserInterface = ({id,isAuth, logout, history,...rest})=> {
             console.log(result);
         }
     }
+
     useEffect( ()=> {
         console.log("cur", mapRef.current)
     },[mapRef])
@@ -175,6 +195,7 @@ const UserInterface = ({id,isAuth, logout, history,...rest})=> {
             
             <House_Menu 
                 isAuth={isAuth} 
+                isAdminMode={isAdminMode}
                 onLogout={onLogout}
                 houses={houses}
                 onHome={onHome}
@@ -182,7 +203,10 @@ const UserInterface = ({id,isAuth, logout, history,...rest})=> {
                 showSimilar={showSimilar}
                 collapsed={collapsed}
                 onTodoMode={viewUnValuate}
+                onCheckMode={viewValuate}
                 onScore={onViewScoreRule}
+                onAdminMode={switchToAdmin}
+                onUserMode={switchToUser}
                 
             />
         </Sider>

@@ -171,7 +171,7 @@ const House_Eval_Pin = (props) => {
         fontSize: '18pt',
         color: (props.auth)
             ? ((props.processed)?'#945':'#fd0')
-            : ((props.processed)?'#634':'#460')
+            : ((props.processed)?'#94c':'#8d0')
     };
     const myStyleHover = {
         ...myStyle,
@@ -189,15 +189,13 @@ const House_Eval_Pin = (props) => {
         : <a onClick={props.updateInfo} >Update information</a>
     let style = (props.hover)?  myStyleHover: myStyle;
 
-    // useEffect(()=>{
-    //     console.log("this  is eval pin");
-    //     console.log(props);
-    // })
     const content = (
         <div>
             <p>avg: NT${priceConvert(props.avgPrice)}</p>
-            {(props.age)? <p>age: {props.age} years</p> :<></>}
+            {(props.processed)? <p>manual price: NT${priceConvert(props.manualPrice)}</p>:<></>}
+            {(props.buildingType)?<p>Type: {BuildingType[props.buildingType]}</p> :<></>}
             {(props.floor)? <p>floor: {props.floor} floor</p> :<></>}
+            {(props.age)? <p>age: {props.age} years</p> :<></>}
             <p></p>
             {authFunction}
         </div>

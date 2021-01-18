@@ -157,20 +157,10 @@ export const axiosGetScoreRule = async () => {
 
 // ============ test =============
 export const init = async () => {
-    const dbCatch = e=>{console.log(e?.response?.data?.msg)}
-    // await instance.post('/login',{user:'b07901029',password:'123'}).catch(dbCatch)
-    // await instance.get('/houses',{params:{
-    //     // buildingType:'公寓'
-    // }}).catch(dbCatch)
-    // await instance.get('/valuate/user').catch(dbCatch)
-    // const {data:response} = await instance.get('/houses',{params:{
-    //     buildingType:'公寓',
-    //     neighbor:{center:{lat:'27',lng:'121'},distance:30},
-    //     unitPrice:{lb:500000,ub:600000},
-    //     hasParking:true
-    // }})
-    // console.log(response)
-    // return response
+    const dbCatch = e=>{console.log('myError:',e?.response?.data?.msg)}
+    // const {data:{user,auth}} = await instance.post('/login',{user:'b07901029',password:'123'}).catch(dbCatch)
+    // console.log(user,auth)
+    // const {data} = await instance.get('/valuate/user')
 }
 
 export const testErr = async () => {
