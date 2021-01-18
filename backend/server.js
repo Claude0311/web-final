@@ -32,7 +32,7 @@ DB.once('open',()=>{
 	// })
 	app.use(cors({
 		origin: 'http://localhost:3000',
-		methods: ['POST', 'PUT', 'GET', 'OPTIONS', 'HEAD', 'PATCH'],
+		methods: ['POST', 'PUT', 'GET', 'OPTIONS', 'HEAD', 'PATCH', 'DELETE'],
 		credentials: true
 	}))
 
