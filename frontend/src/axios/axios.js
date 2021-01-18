@@ -111,7 +111,7 @@ export const axiosUserGetValuate = async () => {
         // console.log(valuate);
         return valuate;
     } catch (e) {
-        console.log("fail");
+        console.log("fail to get /valuate/user");
         return null;
     }
 }
@@ -123,7 +123,34 @@ export const axiosAdminGetValuate = async () => {
         // console.log(valuate);
         return valuate;
     } catch (e) {
-        console.log("fail");
+        console.log("fail to get /valuate/auth");
+        return null;
+    }
+}
+
+// ============ Valuate ==========
+
+export const axiosSetManualPrice = async ({_id, manualPrice}) => {
+    try {
+        console.log("axios set manual price");
+        await instance.patch('/valuate/auth',{_id, manualPrice});
+        return true;
+    } catch (e) {
+        console.log("error when set manual price")
+        console.log(e);
+        return false;
+    }
+}
+
+// ============ score ============
+
+export const axiosGetScoreRule = async () => {
+    try {
+        console.log("axios get score");
+        const {data: rule} = await instance.get('/score');
+        return rule;
+    } catch (e) {
+        console.log("fail to get /score");
         return null;
     }
 }

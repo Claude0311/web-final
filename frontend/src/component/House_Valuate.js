@@ -15,10 +15,11 @@ import {
     Select,
     Button,
     Modal,
-    InputNumber
+    InputNumber,
+    Input
   } from 'antd';
-// import './House_Query.css'
-import { sendHouseInformation } from '../axios/axios';
+import './House_Query.css'
+import SearchNumber from './SearchInput';
 
 const { Option } = Select;
 
@@ -26,8 +27,39 @@ const formItemLayout = {
   labelCol: { span: 6 },
   wrapperCol: { span: 14 },
 };
-
-const QueryForm = ({name, showForm, lat, lng, moveCen, showNewHouse, handleAddHouses}) => {
+export const SetManualPriceForm = (props) => {
+    const [visible, setVisible] = useState(false);
+    // const [value, setValue] = useState({})
+    const handleClick = () => {
+        setVisible(true);
+    }
+    const submitPrice = (p) => {
+        if (p) {
+            console.log("good",p)
+            props.setPrice(p);
+            // submit
+        } else {
+            console.log("bad",p)
+            //
+        }
+    }
+    return (
+        <>
+        {(visible)
+            ? <SearchNumber
+                name="manualPrice"
+                placeholder="price"
+                // style={{ maxWidth: '80%'}}
+                // value={value}
+                // onChange={p => setManualPrice(p)}
+                onEnter={submitPrice}
+            ></SearchNumber>
+            : <a onClick={handleClick}> {props.children}</a>}
+        </>
+    )
+}
+/** 
+export const UpdateValuateForm = ({updateInfo,...props}) => {
     const [form] = Form.useForm()
     const [visible, setVisible] = useState(false)
     const [isLoading, setLoading] = useState(false)
@@ -39,13 +71,13 @@ const QueryForm = ({name, showForm, lat, lng, moveCen, showNewHouse, handleAddHo
 		const MaxAge = 50
 		
 		// get value of requirement 
-		const onFinish = async({
+		const onFinish = ({
 			buildingType,
 			numOfFloor,
 			houseAge
 			}) => {
-      const {similar, avgPrice} = await sendHouseInformation(lat, lng, parseInt(buildingType), numOfFloor, houseAge)
-      showNewHouse(similar, avgPrice, buildingType, numOfFloor, houseAge)
+			sendHouseInformation(lat, lng, parseInt(buildingType), numOfFloor, houseAge)
+			// setCriteria(criteria)
 		}
 
     const showQueryForm = () => {
@@ -56,12 +88,11 @@ const QueryForm = ({name, showForm, lat, lng, moveCen, showNewHouse, handleAddHo
 			form.resetFields();
 		}
 		const handleOK = async () => {
-      setLoading(true);
-      // handleAddHouses()
-      await form.submit();
+			setLoading(true);
+			await form.submit();
 			setLoading(false);
       setVisible(false);
-      moveCen(lat, lng)     
+      moveCen(lat, lng)
 		}
 		const handleCancel = () => {
 			setVisible(false);
@@ -141,5 +172,5 @@ const QueryForm = ({name, showForm, lat, lng, moveCen, showNewHouse, handleAddHo
     </>
   )
 }
+*/
 
-export default QueryForm

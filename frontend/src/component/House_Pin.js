@@ -5,6 +5,7 @@ import {useEffect, useState} from 'react'
 import './House_Pin.css';
 import QueryForm from './House_Query';
 import { priceConvert } from '../util/util';
+import { SetManualPriceForm } from './House_Valuate';
 
 const House_Pin = ({id,buildingType,click,unitPrice,hover,getDetail}) => {
     const [visible, setvisible] = useState(false); // control Popover
@@ -59,7 +60,6 @@ const House_Pin = ({id,buildingType,click,unitPrice,hover,getDetail}) => {
 
 const House_Cluster = ({sum, size, pointSize, hover, click, ...props }) => {
     const [points, setPoints] = useState([]);
-    const [visible, setvisible] = useState(false);
     const overflowCount = (size) => (size <= 99)? String(size): "99+";
 
     const handleClick = () => {
@@ -68,7 +68,6 @@ const House_Cluster = ({sum, size, pointSize, hover, click, ...props }) => {
         if (leaves){
             setPoints(leaves);
         }
-        setvisible(true);
     }
 
     let ratio = (hover)? 8:0;
@@ -76,14 +75,17 @@ const House_Cluster = ({sum, size, pointSize, hover, click, ...props }) => {
     const content = (
         <div className="cluster">
             <p>Average: NT${priceConvert(Math.round(sum/size))}</p>
-            {(points && points.length > 0)?<p>Type: {BuildingType[points[0].buildingType]}</p>:<></>}
+            {(points && points.length > 0)
+                ?<p>Type: {BuildingType[points[0].buildingType]}</p>
+                :<a onClick={handleClick}>get more</a>
+            }
             {(points && points.length > 0)
                 ?points.map((l,ind) => (
                     <>
                         <Divider plain>house {ind+1}</Divider>
                         <p>Unit Price: NT${priceConvert(l.unitPrice)}</p>
                         <a onClick={async()=>{
-                            await setvisible(false);
+                            // await setvisible(false);
                             props.getDetail(l.id);
                         }}>more details</a>                    
                     </>
@@ -96,7 +98,7 @@ const House_Cluster = ({sum, size, pointSize, hover, click, ...props }) => {
         <Popover 
             placement='right'
             title={`Cluster with ${size} houses`}
-            visible={click && visible}
+            visible={click}
             content={content}
             trigger="click"
         >
@@ -109,7 +111,6 @@ const House_Cluster = ({sum, size, pointSize, hover, click, ...props }) => {
                     bottom: `-${markSize/2}px`,
                     left: `-${markSize/2}px`
                 }}
-                onClick={handleClick}
                 size={markSize}
             >{overflowCount(size)}</Avatar>
         </Popover>
@@ -117,7 +118,7 @@ const House_Cluster = ({sum, size, pointSize, hover, click, ...props }) => {
     )
 }
 
-const Current_Pin = ({hover, showForm, click, lat, lng, moveCen, handleAddHouses})=>{
+const Current_Pin = ({hover, showForm, click, lat, lng, moveCen, handleAddHouses, showNewHouse})=>{
     const myStyle = {
         position: 'absolute',
         bottom: '0',
@@ -131,14 +132,7 @@ const Current_Pin = ({hover, showForm, click, lat, lng, moveCen, handleAddHouses
         fontSize: '20pt'
     }
     let style = (hover)?  myStyleHover: myStyle;
-    // const [visible, setvisible] = useState(false);
-    // const handleVisible = (v) => {
-    //     setvisible(v);
-    // }
-    // const onShowForm = async() => {
-    //     // await handleVisible(false);
-    //     showForm();
-    // }
+
     const content = (
         <div>
             <QueryForm 
@@ -148,6 +142,7 @@ const Current_Pin = ({hover, showForm, click, lat, lng, moveCen, handleAddHouses
                 lng={lng}
                 moveCen={moveCen}
                 handleAddHouses={handleAddHouses}
+                showNewHouse={showNewHouse}
             />
         </div>
     );
@@ -159,6 +154,7 @@ const Current_Pin = ({hover, showForm, click, lat, lng, moveCen, handleAddHouses
             trigger="click"
             visible={click}
             content={content}
+            
         >
             <EnvironmentFilled style={style}/>
         </Popover>
@@ -168,29 +164,42 @@ const Current_Pin = ({hover, showForm, click, lat, lng, moveCen, handleAddHouses
 
 // ====== the pin for user when it complete the query
 const House_Eval_Pin = (props) => {
+    // processed or not
+    // admin or not
     const myStyle = {
         position: 'absolute',
         bottom: '0',
         left: '-9pt',
         fontSize: '18pt',
-        color: (props.processed)? '#934':'#de5'
+        color: (props.auth)
+            ? ((props.processed)?'#945':'#fd0')
+            : ((props.processed)?'#94c':'#8d0')
     };
     const myStyleHover = {
         ...myStyle,
         left: '-10pt',
         fontSize: '20pt'
     }
+    const setPrice = (p) => {
+        props.setManualPrice({_id:props.id, manualPrice:p});
+    }
+    const authFunction = (props.auth)
+        ?
+        <SetManualPriceForm 
+            setPrice={setPrice}
+        >Set Manual Price</SetManualPriceForm>
+        : <a onClick={props.updateInfo} >Update information</a>
     let style = (props.hover)?  myStyleHover: myStyle;
-    // const onCheckSim = () => {
-    //     props.checkSimilar(id);
-    // }
+
     const content = (
         <div>
             <p>avg: NT${priceConvert(props.avgPrice)}</p>
-            <p>age: {props.age} years</p>
-            <p>floor: {props.floor} floor</p>
-            
-            {/* <a onClick={onCheckSim}>view similar</a> */}
+            {(props.processed)? <p>manual price: NT${priceConvert(props.manualPrice)}</p>:<></>}
+            {(props.buildingType)?<p>Type: {BuildingType[props.buildingType]}</p> :<></>}
+            {(props.floor)? <p>floor: {props.floor} floor</p> :<></>}
+            {(props.age)? <p>age: {props.age} years</p> :<></>}
+            <a onClick={props.showSim}>view similar houses</a>
+            {authFunction}
         </div>
     );
     return(
@@ -198,9 +207,9 @@ const House_Eval_Pin = (props) => {
         <Popover 
             placement='right'
             title={`${props.user}'s house`}
+            trigger="click"
             visible={props.click}
             content={content}
-            trigger="click"
         >
             <EnvironmentFilled style={style}/>
         </Popover>
@@ -208,14 +217,14 @@ const House_Eval_Pin = (props) => {
     );
 };
 
-// ====== the pin for user when it just complete the query
+// ====== the pin for similar houses
 const Similar_House_Pin = (props) => {
     const style = {
         position: 'absolute',
         bottom: '0',
         left: '-9pt',
         fontSize: '18pt',
-        color: 'rgb(209, 7, 209)'
+        color: 'rgb(240, 102, 11)'
     }
     // const onCheckSim = () => {
     //     props.checkSimilar(id);
@@ -229,7 +238,7 @@ const Similar_House_Pin = (props) => {
         <div className="house-pin">
         <Popover 
             placement='top'
-            title="similar house"
+            title="Similar house"
             visible={true}
             content={content}
             trigger="hover"
@@ -240,4 +249,39 @@ const Similar_House_Pin = (props) => {
     );
 };
 
-export {House_Pin, House_Cluster, Current_Pin, House_Eval_Pin, Similar_House_Pin};
+// ============ the pin for user when it just complete the query
+const New_House_pin = (props) => {
+    const style = {
+        position: 'absolute',
+        bottom: '0',
+        left: '-9pt',
+        fontSize: '18pt',
+        color: 'red'
+    }
+    // const onCheckSim = () => {
+    //     props.checkSimilar(id);
+    // }
+    const content = (
+        <div>
+            <p>avg: NT${priceConvert(props.avgPrice)}</p>
+            {(props.buildingType)?<p>Type: {BuildingType[props.buildingType]}</p> :<></>}
+            {(props.floor)? <p>floor: {props.floor} floor</p> :<></>}
+            {(props.age)? <p>age: {props.age} years</p> :<></>}
+        </div>
+    );
+    return(
+        <div className="house-pin">
+        <Popover 
+            placement='top'
+            title="Your house"
+            visible={props.showInfor}
+            content={content}
+            trigger="hover"
+        >
+            <EnvironmentFilled style={style}/>
+        </Popover>
+        </div>
+    )
+}
+
+export {House_Pin, House_Cluster, Current_Pin, House_Eval_Pin, Similar_House_Pin, New_House_pin};

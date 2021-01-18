@@ -1,55 +1,50 @@
 import {useEffect} from 'react';
-import { Input, Menu, Avatar, Tooltip, Button } from 'antd';
+import { Input, Menu,  } from 'antd';
 import {
-    LogoutOutlined,
+    ExportOutlined,
     ShopOutlined,
-    UploadOutlined,
     UserOutlined,
     SearchOutlined,
     HomeOutlined,
+    FormOutlined,
+    FileSearchOutlined,
+    SettingOutlined
 } from '@ant-design/icons';
 import SubMenu from 'antd/lib/menu/SubMenu';
+import { priceConvert } from '../util/util';
 
-const House_item = (props) => {
-    return (
-        <Menu.Item 
-            key={props.id}
-            // onClick={props.showSimilar}
-        >
-            MY house{props.id}
-        </Menu.Item>
-    )
-}
+
 const House_Menu = (props) => {
-
-    const additionalTool = (props.isAuth)?
+    const onSearch = () => {
+        console.log("search");
+    }
+    const additionalTool = (props.isAdminMode)?
         (
             <>
-            <Menu.Item key="profile" icon={<UserOutlined />}>
-                Your profile
+            <Menu.Item 
+                key="todo" 
+                icon={<FormOutlined />}
+                onClick={props.onTodoMode}
+            >
+                Todo List
             </Menu.Item>
-            <Menu.Item key="n1" icon={<UploadOutlined />}>
-            not done yet
-            </Menu.Item>
-            <Menu.Item key="n2" icon={<UploadOutlined />}>
-            not done yet
+            {/* <Menu.Item 
+                key="done" 
+                icon={<FileDoneOutlined />}
+                onClick={props.onCheckMode}
+            >
+                
+                Check List
+            </Menu.Item> */}
+            <Menu.Item 
+                key="userMode" 
+                icon={<UserOutlined />}
+                onClick={props.onUserMode}
+            >
+                User Mode
             </Menu.Item>
             </>
-        ):<></>
-    // const houseProfiles = (props.houses && props.houses.length !== 0)
-    //     ?props.houses.map((house) => 
-    //         <House_item {...house} />
-    //         )
-    //     :<Menu.Item key="Not found" disabled>Not found</Menu.Item>
-
-    useEffect(()=>{
-        console.log(props.houses);
-    })
-    return (
-        <Menu theme="light" mode="inline" defaultSelectedKeys={['home']}>
-            <Menu.Item key="home" icon={<HomeOutlined />}>
-                Home
-            </Menu.Item>
+        ):<>
             <Menu.Item key="search" icon={<SearchOutlined />}>
                 {(props.collapsed)?
                     "Search":
@@ -57,6 +52,7 @@ const House_Menu = (props) => {
                         name="Search"
                         placeholder="Search address"
                         style={{ maxWidth: '80%'}}
+                        onPressEnter={onSearch}
                     ></Input>
                 }
             </Menu.Item>
@@ -65,14 +61,61 @@ const House_Menu = (props) => {
                 icon={<UserOutlined />}
                 onClick={props.onMyHouseMode}
             >
-                show my houses only
-            </Menu.Item>            
-            <SubMenu key="houses" icon={<ShopOutlined />} title="House Profile">
-                {/* {houseProfiles} */}
+                My Houses
+            </Menu.Item>
+            {(props.isAuth)?
+            <Menu.Item 
+                key="adminMode" 
+                icon={<SettingOutlined />}
+                onClick={props.onAdminMode}
+            >
+                Admin Mode
+            </Menu.Item>
+            :<></>}
+
+
+        </>
+
+    const houseProfiles = (props.houses && props.houses.length !== 0)
+        ?<>
+            {props.houses.map((house) => 
+            <Menu.Item 
+                key={house._id}
+                onClick={()=>props.showSimilar(house._id)}
+            >
+                NT$ {priceConvert(house.avgPrice)}
+            </Menu.Item>
+            )}</>
+        :<Menu.Item key="Not found" disabled>Not found</Menu.Item>
+
+    useEffect(()=>{
+        console.log(props.houses);
+    })
+
+    return (
+        <Menu theme="light" mode="inline" defaultSelectedKeys={['home']}>
+            <Menu.Item 
+                key="home" 
+                icon={<HomeOutlined />}
+                onClick={props.onHome}>
+                Home
+            </Menu.Item>
+            {additionalTool}            
+            <SubMenu key="houses" icon={<ShopOutlined />} title="House Profiles" 
+                style={{overflow: 'auto', maxHeight: '50vh', }}>
+                {houseProfiles}
             </SubMenu>
-            {additionalTool}
-            <Menu.Item key="logout" onClick={props.onLogout} icon={<LogoutOutlined />}>
-                Log out
+            <Menu.Item 
+                key="score" 
+                icon={<FileSearchOutlined />}
+                onClick={props.onScore}>
+                Score Rules
+            </Menu.Item>
+            <Menu.Item 
+                key="logout" 
+                onClick={props.onLogout} 
+                icon={<ExportOutlined />}
+            > Log out
             </Menu.Item>
             
         </Menu>

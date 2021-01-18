@@ -2,7 +2,9 @@ import { useEffect, useState } from 'react';
 import { InputNumber, Select } from 'antd';
 import { priceConvert } from '../util/util';
 const { Option } = Select;
-const SearchNumber = ({value={}, onChange, unit, min, max, useDomination=true}) => {
+const SearchNumber = ({
+    value={}, onChange, unit, min, max, useDomination=true, ...rest
+  }) => {
     const [number, setNumber] = useState(null);
     const [domination, setDomination] = useState(10000);
     const triggerChange = (changedValue) => {
@@ -19,6 +21,12 @@ const SearchNumber = ({value={}, onChange, unit, min, max, useDomination=true}) 
       triggerChange({
         number: value
       });
+    }
+    const submit = () => {
+      if (rest.onEnter) {
+        const mul = number * domination;
+        rest.onEnter(mul);
+      }
     }
   
     const onDominationChange = (newDomin) => {
@@ -45,6 +53,8 @@ const SearchNumber = ({value={}, onChange, unit, min, max, useDomination=true}) 
           parser={value => value.replace(/\$\s?|(,*)/g, '')}
           style={{width: "100px"}}
           onChange={onNumberChange}
+          onPressEnter={submit}
+          {...rest}
         />
         {(useDomination)?
         <Select 
