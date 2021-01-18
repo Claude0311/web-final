@@ -58,7 +58,10 @@ DB.once('open',()=>{
 		app.use(history())
 		const buildPath = path.join('.', '..', 'frontend','build')
 		app.use(express.static(buildPath))
-		app.use(favicon(path.join('.','..','frontend','build','favicon.ico')))
+		// app.use(favicon(path.join('.','..','frontend','build','favicon.ico')))
+		app.get('/', (req, res) => {
+			res.sendFile(path.join('.','..','frontend','build','index.html')) // EDIT
+		})
 	}else{
 		app.use(api)
 	}
