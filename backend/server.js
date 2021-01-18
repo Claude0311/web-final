@@ -9,8 +9,8 @@ import connect from 'connect-mongo'
 import env from 'dotenv'
 import craw from './util/crawler'
 import cors from 'cors'
-import favicon from 'serve-favicon'
 import history from 'connect-history-api-fallback'
+import wakeUp from './util/wakeUp'
 
 env.config({path:'../.env'})
 
@@ -66,10 +66,8 @@ DB.once('open',()=>{
 		app.use(api)
 	}
 
-	
-
 	app.listen(process.env.PORT || 4000,  () => {
-		// craw()
+		wakeUp('https://houses-valuation.herokuapp.com/')
 		console.log('server connect')
 		console.log(`port name: ${process.env.PORT || 4000}`)
 	})
