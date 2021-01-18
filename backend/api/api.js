@@ -4,6 +4,7 @@ import house from './house/main'
 import valuate,{valuate_auth} from './valuate/main'
 import auth,{auth_auth,isAuth,isUser} from './auth'
 import score from './score/main'
+import apiKey from './geoCode'
 
 const router = express.Router()
 
@@ -25,6 +26,7 @@ router.use(auth)
 router.use(isUser)
 router.use(valuate)
 router.use(house)
+router.use(apiKey)
 
 router.use(isAuth)
 router.use(score)
