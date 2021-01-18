@@ -7,7 +7,7 @@ const options = {
   apiKey: 'AIzaSyBqlTXRpx8ARKVOHZXDopkEYtsPs0WUHQ0', // for Mapquest, OpenCage, Google Premier
   formatter: null // 'gpx', 'string', ...
 }
- 
+
 const geocoder = NodeGeocoder(options)
 
 const middleAdd = (address)=>{
