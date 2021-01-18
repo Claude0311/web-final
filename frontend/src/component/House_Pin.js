@@ -1,10 +1,10 @@
-import { Tooltip, Avatar, Popover, Divider } from 'antd';
+import { Tooltip, Avatar, Popover, Divider, Button } from 'antd';
 import {EnvironmentFilled, HomeFilled} from '@ant-design/icons';
 import BuildingType from '../axios/buildingType';
 import {useEffect, useState} from 'react'
 import './House_Pin.css';
-import { priceConvert } from '../util/util';
 import QueryForm from './House_Query';
+import { priceConvert } from '../util/util';
 import { SetManualPriceForm } from './House_Valuate';
 
 const House_Pin = ({id,buildingType,click,unitPrice,hover,getDetail}) => {
@@ -118,7 +118,7 @@ const House_Cluster = ({sum, size, pointSize, hover, click, ...props }) => {
     )
 }
 
-const Current_Pin = ({hover, showForm, click, lat, lng, moveCen})=>{
+const Current_Pin = ({hover, showForm, click, lat, lng, moveCen, handleAddHouses, showNewHouse})=>{
     const myStyle = {
         position: 'absolute',
         bottom: '0',
@@ -141,6 +141,8 @@ const Current_Pin = ({hover, showForm, click, lat, lng, moveCen})=>{
                 lat={lat} 
                 lng={lng}
                 moveCen={moveCen}
+                handleAddHouses={handleAddHouses}
+                showNewHouse={showNewHouse}
             />
         </div>
     );
@@ -186,9 +188,12 @@ const House_Eval_Pin = (props) => {
         <SetManualPriceForm 
             setPrice={setPrice}
         >Set Manual Price</SetManualPriceForm>
-        : <a onClick={props.updateInfo} >Update information</a>
+        : <div className="eval-pin">
+            <a onClick={props.showSim}>view similar houses</a>
+            <a onClick={props.updateInfo} >Update information</a>
+            </div>
     let style = (props.hover)?  myStyleHover: myStyle;
-
+    
     const content = (
         <div>
             <p>avg: NT${priceConvert(props.avgPrice)}</p>
@@ -196,7 +201,6 @@ const House_Eval_Pin = (props) => {
             {(props.buildingType)?<p>Type: {BuildingType[props.buildingType]}</p> :<></>}
             {(props.floor)? <p>floor: {props.floor} floor</p> :<></>}
             {(props.age)? <p>age: {props.age} years</p> :<></>}
-            <p></p>
             {authFunction}
         </div>
     );
@@ -215,4 +219,71 @@ const House_Eval_Pin = (props) => {
     );
 };
 
-export {House_Pin, House_Cluster, Current_Pin, House_Eval_Pin};
+// ====== the pin for similar houses
+const Similar_House_Pin = (props) => {
+    const style = {
+        position: 'absolute',
+        bottom: '0',
+        left: '-9pt',
+        fontSize: '18pt',
+        color: 'rgb(240, 102, 11)'
+    }
+    // const onCheckSim = () => {
+    //     props.checkSimilar(id);
+    // }
+    const content = (
+        <div>
+            <p>price: NT${priceConvert(props.unitPrice)}</p>
+        </div>
+    );
+    return(
+        <div className="house-pin">
+        <Popover 
+            placement='top'
+            title="Similar house"
+            visible={true}
+            content={content}
+            trigger="hover"
+        >
+            <EnvironmentFilled style={style}/>
+        </Popover>
+        </div>
+    );
+};
+
+// ============ the pin for user when it just complete the query
+const New_House_pin = (props) => {
+    const style = {
+        position: 'absolute',
+        bottom: '0',
+        left: '-9pt',
+        fontSize: '18pt',
+        color: 'red'
+    }
+    // const onCheckSim = () => {
+    //     props.checkSimilar(id);
+    // }
+    const content = (
+        <div>
+            <p>avg: NT${priceConvert(props.avgPrice)}</p>
+            {(props.buildingType)?<p>Type: {BuildingType[props.buildingType]}</p> :<></>}
+            {(props.floor)? <p>floor: {props.floor} floor</p> :<></>}
+            {(props.age)? <p>age: {props.age} years</p> :<></>}
+        </div>
+    );
+    return(
+        <div className="house-pin">
+        <Popover 
+            placement='top'
+            title="Your house"
+            visible={props.showInfor}
+            content={content}
+            trigger="hover"
+        >
+            <EnvironmentFilled style={style}/>
+        </Popover>
+        </div>
+    )
+}
+
+export {House_Pin, House_Cluster, Current_Pin, House_Eval_Pin, Similar_House_Pin, New_House_pin};

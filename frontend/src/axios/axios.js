@@ -94,7 +94,7 @@ export const sendHouseInformation = async(lat, lng, buildingType, floor, age) =>
 }
 export const axiosGetHouses = async (params) => {
     try {        
-        console.log(params)
+        console.log("get houses", params)
         const {data:req_houses} = await instance.get('/houses',{params});
         return req_houses;
     } catch (e) {
@@ -183,7 +183,7 @@ export const init = async () => {
     const dbCatch = e=>{console.log('myError:',e?.response?.data?.msg)}
     // const {data:{user,auth}} = await instance.post('/login',{user:'b07901029',password:'123'}).catch(dbCatch)
     // console.log(user,auth)
-    // const {data} = await instance.get('/geoCode',{params:{address:''}}).catch(dbCatch)
+    // const {data} = await instance.get('/houses',{params:{neighbor:{center:{lat:25,lng:121.5},distance:800}}}).catch(dbCatch)
     // console.log(data)
 }
 

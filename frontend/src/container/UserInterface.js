@@ -146,11 +146,9 @@ const UserInterface = ({id,isAuth, logout, history,...rest})=> {
 
     // check not valuated houses
     const viewUnValuate = () => {
-        setMyPoints(houses.filter(e=>!e.processed));
-    }
 
-    const viewValuate = () => {
-        setMyPoints(houses.filter(e=>e.processed));
+        setPoints([]);
+        setMyPoints(houses.filter(e=>!e.processed));
     }
 
     // set manual price
@@ -211,7 +209,11 @@ const UserInterface = ({id,isAuth, logout, history,...rest})=> {
 
     useEffect( () => {
       if (!houses) {
-        getMyHouses()
+        if (isAuth) {
+          getEvalHouses();
+        } else {
+          getMyHouses();
+        }
       }
     }, [])
 
@@ -250,7 +252,6 @@ const UserInterface = ({id,isAuth, logout, history,...rest})=> {
                 showSimilar={showSimilar}
                 collapsed={collapsed}
                 onTodoMode={viewUnValuate}
-                onCheckMode={viewValuate}
                 onScore={onViewScoreRule}
                 onAdminMode={switchToAdmin}
                 onUserMode={switchToUser}
@@ -301,9 +302,9 @@ const UserInterface = ({id,isAuth, logout, history,...rest})=> {
                         icon={<UserOutlined />} 
                     />
                 </Tooltip>
-              </span>
-            </Header>
-            <Content
+            </span>
+        </Header>
+         <Content
                 className="site-layout-background"
                 style={{
                 margin: '20px 24px',
@@ -318,13 +319,13 @@ const UserInterface = ({id,isAuth, logout, history,...rest})=> {
                     ref={mapRef}
                     points={points}
                     houses={myPoints}
-                    criteria={criteria}
                     setManualPrice={setManualPrice}
+                    getMyHouses={getMyHouses}
                 />
             </Content>       
         </Layout>
     </Layout>
     );
+}                
 
-}
-export default UserInterface;
+export default UserInterface

@@ -18,7 +18,7 @@ export const useMapApi = () => {
 
     const getApiKey = async() => {
         const {data} = await axiosGetApi();
-        console.log("get key" ,data)
+        // console.log("get key" ,data)
         setApiKey(data);
     }
 

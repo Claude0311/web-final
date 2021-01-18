@@ -42,6 +42,12 @@ const House_Menu = (props) => {
                 Check List
             </Menu.Item> */}
             <Menu.Item 
+                key="score" 
+                icon={<FileSearchOutlined />}
+                onClick={props.onScore}>
+                Score Rules
+            </Menu.Item>
+            <Menu.Item 
                 key="userMode" 
                 icon={<UserOutlined />}
                 onClick={props.onUserMode}
@@ -50,17 +56,6 @@ const House_Menu = (props) => {
             </Menu.Item>
             </>
         ):<>
-            <Menu.Item key="search" icon={<SearchOutlined />}>
-                {(props.collapsed)?
-                    "Search":
-                    <Input
-                        name="Search"
-                        placeholder="Search address"
-                        style={{ maxWidth: '80%'}}
-                        onPressEnter={onMySearch}
-                    ></Input>
-                }
-            </Menu.Item>
             <Menu.Item 
                 key="all houses" 
                 icon={<UserOutlined />}
@@ -128,17 +123,22 @@ const House_Menu = (props) => {
                 onClick={props.onHome}>
                 Home
             </Menu.Item>
-            {additionalTool}            
+            <Menu.Item key="search" icon={<SearchOutlined />}>
+                {(props.collapsed)?
+                    "Search":
+                    <Input
+                        name="Search"
+                        placeholder="Search address"
+                        style={{ maxWidth: '80%'}}
+                        onPressEnter={onMySearch}
+                    ></Input>
+                }
+            </Menu.Item>   
             <SubMenu key="houses" icon={<ShopOutlined />} title="House Profiles" 
                 style={{overflow: 'auto', maxHeight: '50vh', }}>
                 {houseProfiles}
             </SubMenu>
-            <Menu.Item 
-                key="score" 
-                icon={<FileSearchOutlined />}
-                onClick={props.onScore}>
-                Score Rules
-            </Menu.Item>
+            {additionalTool} 
             <Menu.Item 
                 key="logout" 
                 onClick={props.onLogout} 
