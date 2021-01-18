@@ -18,8 +18,10 @@ import { priceConvert } from '../util/util';
 
 
 const House_Menu = (props) => {
-    const onSearch = () => {
+    const onMySearch = (e) => {
         console.log("search");
+        console.log(e);
+        props.onSearch(e.target.value)
     }
     const additionalTool = (props.isAdminMode)?
         (
@@ -55,7 +57,7 @@ const House_Menu = (props) => {
                         name="Search"
                         placeholder="Search address"
                         style={{ maxWidth: '80%'}}
-                        onPressEnter={onSearch}
+                        onPressEnter={onMySearch}
                     ></Input>
                 }
             </Menu.Item>
@@ -114,9 +116,9 @@ const House_Menu = (props) => {
             )}</>
         :<Menu.Item key="Not found" disabled>Not found</Menu.Item>
 
-    useEffect(()=>{
-        console.log(props.houses);
-    })
+    // useEffect(()=>{
+    //     console.log(props.houses);
+    // })
 
     return (
         <Menu theme="light" mode="inline" defaultSelectedKeys={['home']}>

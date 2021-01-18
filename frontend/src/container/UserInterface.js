@@ -16,7 +16,11 @@ import { axiosGetHouses,
         axiosGetScoreRule,
         axiosSetManualPrice
     } from '../axios/axios';
-import { clusterConvert, compareHouses } from '../util/util';
+
+import { clusterConvert,
+        compareHouses,
+        neighborHouse 
+    } from '../util/util';
 import { useMapApi } from '../Auth/GoogleApi';
 
 const { Header, Sider, Content } = Layout;
@@ -38,7 +42,7 @@ const UserInterface = ({id,isAuth, logout, history,...rest})=> {
     };
 
     const handleCriteria = (c) => {
-        setCriteria(c);
+        setCriteria({...criteria,...c});
     }
 
     // ================= MENU functions ===================
@@ -85,20 +89,24 @@ const UserInterface = ({id,isAuth, logout, history,...rest})=> {
     const searchHousebyAddr = async (address) => {
         const coor = await searchAddr(address);
         if (coor) {
-            const newCri = {...criteria, neighbot:{center:coor,distance:500} };
-            setCriteria(newCri);
+            const newCri = {neighbor:{center:coor,distance:100} };
+            handleCriteria(newCri);
         } else {
-            message.error("No houses found",[2]);
+            console.log("invalid address");
         }
         
     }
     const searchMyHousebyAddr = async (address) => {
         const coor = await searchAddr(address);
         if (coor) {
-            const search = houses.filter(house=>house.coordinate === coor);
+            const search = houses.filter(neighborHouse(coor));
+            console.log("search",search);
             setMyPoints(search);
+            if (!search.length) {
+                message.error("houses not found",[2]);
+            }
         } else {
-            message.error("No houses found",[2]);
+            message.error("Invalid Address",[2]);
         }
     }
 
@@ -107,7 +115,7 @@ const UserInterface = ({id,isAuth, logout, history,...rest})=> {
         if (unread.length ) {
             setMyPoints(unread);
         } else {
-            message.info("No new houses", [2])
+            message.error("Invalid Address",[2]);
         }
     }
     // ============= Admin Functions ========
@@ -163,9 +171,11 @@ const UserInterface = ({id,isAuth, logout, history,...rest})=> {
     const getHouses = async () => {
         console.log("getting houses...")
         const req_houses = await axiosGetHouses(criteria);
-        if (req_houses !== null){
+        if (req_houses !== null && req_houses.length){
           const houses_cluster = req_houses.map(clusterConvert);
           setPoints(houses_cluster)
+        } else {
+            message.error("houses not found",[2]);
         }
     }
 
@@ -236,6 +246,7 @@ const UserInterface = ({id,isAuth, logout, history,...rest})=> {
                 onHome={onHome}
                 onMyHouseMode={setMyHouseOnly}
                 onUnReadMode={showUnreadHouses}
+                onSearch={searchMyHousebyAddr}
                 showSimilar={showSimilar}
                 collapsed={collapsed}
                 onTodoMode={viewUnValuate}

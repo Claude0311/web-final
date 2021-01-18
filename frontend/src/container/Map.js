@@ -8,7 +8,7 @@ import useSupercluster from 'use-supercluster';
 const AnyReactComponent = ({ text }) => <div>{text}</div>;
 
 const Map = ({ points, houses, setManualPrice, apiKey, ...rest }) => { //
-    const [cen,setCen] = useState({lat: 25.017, lng: 121.537});
+    const [cen,setCen] = useState({lat: 25.007414, lng: 121.51505})// {lat: 25.017, lng: 121.537});
     const [zoom,setZoom] = useState(16.0);
     const [bounds, setBounds] = useState(null);
     // const [houses, setHouses] = useState([]);
