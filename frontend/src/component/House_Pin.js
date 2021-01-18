@@ -198,7 +198,7 @@ const House_Eval_Pin = (props) => {
             {(props.buildingType)?<p>Type: {BuildingType[props.buildingType]}</p> :<></>}
             {(props.floor)? <p>floor: {props.floor} floor</p> :<></>}
             {(props.age)? <p>age: {props.age} years</p> :<></>}
-            <a onClick={props.showSim}>view similar houses</a>
+            <a onClick={props.showSim}>View similar houses</a>
             {authFunction}
         </div>
     );

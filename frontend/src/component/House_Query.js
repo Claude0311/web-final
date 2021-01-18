@@ -27,7 +27,7 @@ const formItemLayout = {
   wrapperCol: { span: 14 },
 };
 
-const QueryForm = ({name, showForm, lat, lng, moveCen, showNewHouse, handleAddHouses}) => {
+const QueryForm = ({name, showForm, lat, lng, moveCen, showNewHouse}) => {
     const [form] = Form.useForm()
     const [visible, setVisible] = useState(false)
     const [isLoading, setLoading] = useState(false)
@@ -57,7 +57,6 @@ const QueryForm = ({name, showForm, lat, lng, moveCen, showNewHouse, handleAddHo
 		}
 		const handleOK = async () => {
       setLoading(true);
-      // handleAddHouses()
       await form.submit();
 			setLoading(false);
       setVisible(false);

@@ -183,11 +183,6 @@ const Map = ({ points, houses, setManualPrice, getMyHouses, ...rest }) => { //
       setSimilarHouses(similar)
     }
 
-    const handleAddHouses = () => {
-      if(newHouse) setNewHouse(null)
-      getMyHouses()
-    }
-
     // ========== set Boundaries ========
     
     const onBoundChange = ({zoom, bounds}) => {
@@ -312,7 +307,6 @@ const Map = ({ points, houses, setManualPrice, getMyHouses, ...rest }) => { //
                 lng={ptrCoordinate.lng}
                 moveCen={moveCen}
                 showNewHouse={showNewHouse}
-                handleAddHouses={handleAddHouses}
               />
             ): newHouse? (
               <New_House_pin 
