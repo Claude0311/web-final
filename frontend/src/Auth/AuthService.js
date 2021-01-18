@@ -2,41 +2,33 @@
 // handle login logout
 // uses sessionStorage, localStorage
 
+import { fitBounds } from "google-map-react";
 import { useState } from "react";
 import { loginAsNormalUser, logoutUser } from "../axios/axios";
 
-export const setAccount = ({user, password}) => {    
+export const setAccount = ({user, auth}) => {    
         window.sessionStorage.setItem("username", user);
-        window.sessionStorage.setItem("password", password);  
+        window.sessionStorage.setItem("isAuth", auth);  
 }
 
 export const getLocalAccount = () => {
     const user = window.sessionStorage.getItem("username")
-    const password = window.sessionStorage.getItem("password")
-    if (user && password) {
-        return {user, password};
+    const auth = window.sessionStorage.getItem("isAuth");
+    if (user && auth) {
+        return {user, isAuth:(auth === 'true')};
     } else {
         return null;
     }
 }
 
-// export const isAuthenticated = () => {
-//     if (window.sessionStorage.getItem("auth") === null) {
-//         return false;
-//     } else {
-//         return true;
-//     }
-// }
-
 export  const removeAccount = () => {
     if (window.sessionStorage.getItem("username")) {
         window.sessionStorage.removeItem("username");
     }
-    if (window.sessionStorage.getItem("password")) {
-        window.sessionStorage.removeItem("password");
+    if (window.sessionStorage.getItem("isAuth")) {
+        window.sessionStorage.removeItem("isAuth");
     }
 }
-
 
 export const useAuth = () =>  {
     const [username, setUser] = useState(null);
@@ -46,15 +38,27 @@ export const useAuth = () =>  {
         // axios, setAccount
         // return success,
         try {
-            const {data} = await loginAsNormalUser({user, password});
-            setUser(data.user);
-            setAuth(data.auth);
-            setAccount({user, password});
+            const {data:{user:U,auth:A}} = await loginAsNormalUser({user, password});
+            setUser(U);
+            setAuth(A);
+            setAccount({user:U, auth:A});
             return 'success';
         } catch(e) {
             return e?.response?.data?.msg;
         }
         
+    }
+    const autoLogin = () => {
+        const storage = getLocalAccount();
+        console.log(storage)
+        if (!storage) {
+            return;
+        } else {
+            setUser(storage.user);
+            setAuth(storage.isAuth);
+            return;
+        }
+
     }
     const logout = async () => {
         try {
@@ -68,5 +72,5 @@ export const useAuth = () =>  {
             return 'error';
         }
     }
-    return { username, isAuth,  login, logout };
+    return { username, isAuth,  login, logout, autoLogin };
 }

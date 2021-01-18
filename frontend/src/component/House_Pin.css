@@ -4,3 +4,8 @@
     align-items: center;
     justify-content: flex-start;
 }
+
+.cluster {
+    max-height: 360px;
+    overflow: scroll;
+}

@@ -1,5 +1,6 @@
 import { Button, Drawer, Divider, Col, Row } from 'antd';
 import BuildingType from '../axios/buildingType';
+import { dateConvert, priceConvert } from '../util/util';
 import "./House_detail.css"
 /**
  * when click on the house, more info will show on the right side of the map
@@ -35,12 +36,6 @@ const DescriptionItem = ({ title, content, before, after }) => (
 
 function House_Detail({detail, onClose}) { 
 
-    const priceConvert = value => (
-      `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-    )
-    const dateConvert = date => (
-      `${date}`.replace(/\B(?=(\d{2})(?!\d))/g, '/')
-    )
     return (
         <Drawer
           width={480}

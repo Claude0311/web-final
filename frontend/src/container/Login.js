@@ -78,14 +78,14 @@ const Login = ({id, login, history}) => {
     // login as an Administrator
 
     useEffect(()=>{
-        if (userRef) {
+        if (userRef !== null && !id) {
             userRef.current.focus();
         }
     }, []);
     
     // render Container
     if (id) {
-        console.log("come to login.js, redirect to /")
+        console.log("has id, redirect to /")
         return <Redirect to="/" />;
     }
     return(
