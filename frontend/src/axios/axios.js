@@ -161,6 +161,13 @@ export const init = async () => {
     // const {data:{user,auth}} = await instance.post('/login',{user:'b07901029',password:'123'}).catch(dbCatch)
     // console.log(user,auth)
     // const {data} = await instance.get('/valuate/user')
+    // // data.forEach(async ({_id}) => {
+    //     const {data:{similar}} = await instance.patch('/valuate/user',{_id:data[0]._id}).catch(dbCatch)
+    //     similar.forEach(element => {
+    //         console.log('f',element)
+            
+    //     });
+    // });
 }
 
 export const testErr = async () => {
