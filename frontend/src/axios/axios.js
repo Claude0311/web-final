@@ -65,6 +65,7 @@ export const registerUser = async ({user,password}) => {
 // ============ houses =============
 export const axiosGetHouses = async (params) => {
     try {        
+        console.log(params)
         const {data:req_houses} = await instance.get('/houses',{params});
         return req_houses;
     } catch (e) {
@@ -102,6 +103,8 @@ export const init = async () => {
     const dbCatch = e=>{console.log('myError:',e?.response?.data?.msg)}
     // const {data:{user,auth}} = await instance.post('/login',{user:'b07901029',password:'123'}).catch(dbCatch)
     // console.log(user,auth)
+    // const {data} = await instance.get('/geoCode',{params:{address:''}}).catch(dbCatch)
+    // console.log(data)
 }
 
 export const testErr = async () => {
