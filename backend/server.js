@@ -57,9 +57,11 @@ DB.once('open',()=>{
 		const buildPath = path.join('.', '..', 'frontend','build')
 		app.use(express.static(buildPath))
 		app.use(favicon(path.join('.','..','frontend','build','favicon.ico')))
+		app.use('/api',api)
+	}else{
+		app.use(api)
 	}
 
-	app.use(api)
 	
 
 	app.listen(process.env.PORT || 4000,  () => {
