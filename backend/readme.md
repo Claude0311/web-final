@@ -17,6 +17,7 @@
    - [Error testing](#error-testing)
  - [GeoCode](#geocode)
    - [apiKey](#apikey)
+   - [get Coordinate](#get-coordinate)
  - [House](#house)
    - [getHouse](#gethouse)
    - [getHouses](#gethouses)
@@ -296,6 +297,38 @@ GET /apiKey
 | Name     | Type       | Description                           |
 |----------|------------|---------------------------------------|
 | - | `String` | apiKey |
+
+### get Coordinate
+[Back to top](#top)
+
+give address return {lat,lng}
+
+```
+GET /geoCode
+```
+
+#### Parameters - `Parameter`
+
+| Name     | Type       | Description                           |
+|----------|------------|---------------------------------------|
+| address | `String` | 地址 |
+
+#### Success response
+
+##### Success response - `200`
+
+| Name     | Type       | Description                           |
+|----------|------------|---------------------------------------|
+| lat | `Number` | 緯度 |
+| lng | `Number` | 經度 |
+
+#### Error response
+
+##### Error response - `500`
+
+| Name     | Type       | Description                           |
+|----------|------------|---------------------------------------|
+| msg | `String` | 資料庫錯誤 |
 
 ## House
 

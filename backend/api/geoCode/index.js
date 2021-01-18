@@ -1,4 +1,5 @@
 import express, { Router } from 'express'
+import getCor from './getCor'
 
 const router = express.Router()
 
@@ -13,5 +14,7 @@ const router = express.Router()
 router.get('/apiKey',(req,res,next)=>{
     res.send('AIzaSyBqlTXRpx8ARKVOHZXDopkEYtsPs0WUHQ0')
 })
+
+router.get('/geoCode',getCor)
 
 export default router
