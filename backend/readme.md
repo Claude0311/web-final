@@ -15,6 +15,8 @@
    - [register](#register)
  - [Error](#error)
    - [Error testing](#error-testing)
+ - [GeoCode](#geocode)
+   - [apiKey](#apikey)
  - [House](#house)
    - [getHouse](#gethouse)
    - [getHouses](#gethouses)
@@ -275,6 +277,25 @@ GET /error
 |----------|------------|---------------------------------------|
 | statusCode | `Number` | 404 |
 | msg | `String` | oh no! |
+
+## GeoCode
+
+### apiKey
+[Back to top](#top)
+
+return apiKey for geocode
+
+```
+GET /apiKey
+```
+
+#### Success response
+
+##### Success response - `200`
+
+| Name     | Type       | Description                           |
+|----------|------------|---------------------------------------|
+| - | `String` | apiKey |
 
 ## House
 
