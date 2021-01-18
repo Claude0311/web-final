@@ -9,6 +9,7 @@ import connect from 'connect-mongo'
 import env from 'dotenv'
 import craw from './util/crawler'
 import cors from 'cors'
+import favicon from 'serve-favicon'
 
 env.config({path:'../.env'})
 
@@ -55,6 +56,7 @@ DB.once('open',()=>{
 		console.log('backend env',process.env.NODE_ENV)
 		const buildPath = path.join('.', '..', 'frontend','build')
 		app.use(express.static(buildPath))
+		app.use(favicon(path.join('.','..','frontend','build','favicon.ico')))
 	}
 
 	app.use(api)

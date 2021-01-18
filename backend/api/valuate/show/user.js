@@ -36,7 +36,7 @@ import { dbCatch } from "../../error"
  */
 const show_user = async (req,res,next) => {
     let {user} = req.session
-    console.log({user})
+    // console.log({user})
     // if(user===undefined) user='b07901029'
     const valuates = await Valuate
         .find({user})
