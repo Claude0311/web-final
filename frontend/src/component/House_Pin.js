@@ -1,4 +1,4 @@
-import { Tooltip, Avatar, Popover, Divider } from 'antd';
+import { Tooltip, Avatar, Popover, Divider, Button } from 'antd';
 import {EnvironmentFilled, HomeFilled} from '@ant-design/icons';
 import BuildingType from '../axios/buildingType';
 import {useEffect, useState} from 'react'
@@ -189,7 +189,7 @@ const House_Eval_Pin = (props) => {
             <p>avg: NT${priceConvert(props.avgPrice)}</p>
             <p>age: {props.age} years</p>
             <p>floor: {props.floor} floor</p>
-            <p></p>
+            
             {/* <a onClick={onCheckSim}>view similar</a> */}
         </div>
     );
@@ -228,7 +228,7 @@ const Similar_House_Pin = (props) => {
     return(
         <div className="house-pin">
         <Popover 
-            placement='right'
+            placement='top'
             title="similar house"
             visible={true}
             content={content}

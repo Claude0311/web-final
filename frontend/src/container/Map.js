@@ -7,7 +7,7 @@ import useSupercluster from 'use-supercluster';
 
 const AnyReactComponent = ({ text }) => <div>{text}</div>;
 
-const Map = ({points, houses, onAddNewHouses, similarHouses, cleanSimilarHouses}) => { //
+const Map = ({points, houses, onAddNewHouses}) => { //
     const [cen,setCen] = useState({lat: 25.017, lng: 121.537});
     const [zoom,setZoom] = useState(16.0);
     const [bounds, setBounds] = useState(null);
@@ -18,6 +18,7 @@ const Map = ({points, houses, onAddNewHouses, similarHouses, cleanSimilarHouses}
     const [houseDetail, setDetail] = useState(null);
     const [hoverKey, setHoverKey] = useState(null);
     const [clickKey, setClickKey] = useState(null);
+    const [similarHouses, setSimilarHouses] = useState(null)
 
     const { clusters, supercluster } = useSupercluster({
       points,
@@ -116,7 +117,7 @@ const Map = ({points, houses, onAddNewHouses, similarHouses, cleanSimilarHouses}
         return;
       }
       if(similarHouses) {
-        cleanSimilarHouses()
+        setSimilarHouses(null)
         return
       }
       const {lat, lng} = point;
@@ -168,9 +169,10 @@ const Map = ({points, houses, onAddNewHouses, similarHouses, cleanSimilarHouses}
       setCen({lat, lng})
     }
 
-    const handleAddHouses = () => {
+    const handleAddHouses = (similar) => {
       onAddNewHouses()
       setPtrCod(null)
+      setSimilarHouses(similar)
     }
 
     // ========== set Boundaries ========

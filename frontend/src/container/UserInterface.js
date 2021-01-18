@@ -20,7 +20,6 @@ const UserInterface = ({id,isAuth, logout, history})=> {
     const [criteria, setCriteria] = useState(null);
     const [points, setPoints] = useState([]); // others
     const [houses, setHouses] = useState(null); // eval
-    const [similarHouses, setSimilarHouses] = useState(null)
     const [newlyAddHouses, setNewlyAddHouses] = useState(0)
     
     const mapRef = useRef(null);
@@ -55,13 +54,8 @@ const UserInterface = ({id,isAuth, logout, history})=> {
           // console.log("eval",evalPoints);
           // setHouses(evalPoints);
           setHouses(myHouses);
-          setSimilarHouses(myHouses[myHouses.length-1].similar)
         }   
         // setPoints([]);   
-    }
-
-    const cleanSimilarHouses = () => {
-        setSimilarHouses(null)
     }
 
     const onAddNewHouses = () => {
@@ -127,7 +121,6 @@ const UserInterface = ({id,isAuth, logout, history})=> {
         } else {
           getMyHouses();
         }
-        console.log(newlyAddHouses)
       // }
     }, [newlyAddHouses])
 
@@ -215,8 +208,6 @@ const UserInterface = ({id,isAuth, logout, history})=> {
                     // isAuth={isAuth}
                     points={points}
                     houses={houses}
-                    similarHouses={similarHouses}
-                    cleanSimilarHouses={cleanSimilarHouses}
                     onAddNewHouses={onAddNewHouses}
                 />
             </Content>       
