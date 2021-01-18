@@ -1,0 +1,17 @@
+.form {
+    flex-direction: column;
+    text-align: left;
+}
+
+.question {
+    font-size: larger;
+}
+
+.position {
+    font-size: medium;
+}
+
+#title {
+    font-size: larger;
+}
+

@@ -1,5 +1,4 @@
 import axios from 'axios'
-import buildingType from './buildingType'
 // import {useState} from 'react'
 console.log('NODE_ENV',process.env.NODE_ENV)
 const API_ROOT = (process.env.NODE_ENV==='production')?'':'http://localhost:4000'
@@ -7,7 +6,29 @@ const instance = axios.create({
   baseURL: API_ROOT,
   withCredentials: true
 })
+const dbCatch = e=>console.log('myError:',e?.response?.data?.msg)
 
+
+export const axiosGetApi = async () => {
+    try {
+        return await instance.get('/apiKey');
+    } catch (e) {
+        console.log("fail",e);
+        return '';
+    }
+}
+
+export const axiosGetCoor = async (address) => {
+    try {
+        console.log(address);
+        const {data: coor} = await instance.get('/geoCode',{params:{address}});
+        console.log(coor);
+        return coor;
+    } catch (e) {
+        dbCatch(e);
+        return null;
+    }
+}
 // =========== login post ============
 export const loginAsNormalUser = async ({user,password}) => {
     try {
@@ -29,13 +50,12 @@ export const loginAsAuth = async () => {
 }
 
 export const addAuth = async (user,isAuth) => {
-    await instance.post('/addAuth', {params: {user,isAuth}})
-        .then((res) => {
-            console.log("successfully");
-        })
-        .catch((err) => {
-            throw err;
-        })
+    try {
+        const {data} = await instance.post('/addAuth', {params: {user,isAuth}});
+        return {user:data.user, isAuth: isAuth};
+    } catch (err) {
+        return null;
+    }
 }
 
 export const logoutUser = async () => {
@@ -63,6 +83,15 @@ export const registerUser = async ({user,password}) => {
 }
 
 // ============ houses =============
+export const sendHouseInformation = async(lat, lng, buildingType, floor, age) => {
+    try {
+        const {data: {similar, avgPrice}} = await instance.post('/valuate', {lat, lng, buildingType, floor, age})
+        return {similar, avgPrice}
+    } catch(err)  {
+        console.log("fail to send houseImformation")
+        return null;
+    }
+}
 export const axiosGetHouses = async (params) => {
     try {        
         console.log(params)
@@ -70,7 +99,7 @@ export const axiosGetHouses = async (params) => {
         return req_houses;
     } catch (e) {
         console.log("fail to get houses")
-        throw e;
+        return null;
     }
     
 }
@@ -86,7 +115,7 @@ export const axiosGetHouses = async (params) => {
 // }
 export const axiosGetDetail = async (id) => {
     try {
-        console.log("axios get", id);
+        // console.log("axios get", id);
         const { data: {
             buildingType,
             unitPrice,
@@ -95,6 +124,57 @@ export const axiosGetDetail = async (id) => {
     } catch (e) {
         console.log("fail to get detail");
         throw e;
+    }
+}
+
+export const axiosUserGetValuate = async () => {
+    try {
+        // console.log("axios get valuate");
+        const { data : valuate } = await instance.get('/valuate/user');
+        // console.log(valuate);
+        return valuate;
+    } catch (e) {
+        console.log("fail to get /valuate/user");
+        return null;
+    }
+}
+
+export const axiosAdminGetValuate = async () => {
+    try {
+        console.log("axios get valuate");
+        const { data : valuate } = await instance.get('/valuate/auth');
+        // console.log(valuate);
+        return valuate;
+    } catch (e) {
+        console.log("fail to get /valuate/auth");
+        return null;
+    }
+}
+
+// ============ Valuate ==========
+
+export const axiosSetManualPrice = async ({_id, manualPrice}) => {
+    try {
+        console.log("axios set manual price");
+        await instance.patch('/valuate/auth',{_id, manualPrice});
+        return true;
+    } catch (e) {
+        console.log("error when set manual price")
+        console.log(e);
+        return false;
+    }
+}
+
+// ============ score ============
+
+export const axiosGetScoreRule = async () => {
+    try {
+        console.log("axios get score");
+        const {data: rule} = await instance.get('/score');
+        return rule;
+    } catch (e) {
+        console.log("fail to get /score");
+        return null;
     }
 }
 

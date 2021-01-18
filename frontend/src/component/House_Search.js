@@ -20,13 +20,15 @@
 6. hasParking	Boolean	有無車位(optional)
  */
 import { useState } from 'react';
-import { BarsOutlined } from '@ant-design/icons';
+import { CaretDownOutlined} from '@ant-design/icons';
 import {
+    Input,
     Form,
     Select,
     Radio,
     Button,
-    Modal
+    Modal,
+    Tooltip
   } from 'antd';
 import SearchNumber from './SearchInput';
 // import { UploadOutlined, InboxOutlined } from '@ant-design/icons';
@@ -40,7 +42,7 @@ const formItemLayout = {
 
 
 
-const SearchForm = ({name,setCriteria}) => {
+const SearchForm = ({name,setCriteria,onSearch}) => {
   const [form] = Form.useForm();
   const [visible, setVisible] = useState(false);
   const [isLoading, setLoading] = useState(false);
@@ -93,7 +95,7 @@ const SearchForm = ({name,setCriteria}) => {
         lb: unitPrice_lb
       }
     }
-    console.log(criteria);
+    // console.log(criteria);
     setCriteria(criteria);
   };
   const showSearchForm = ()=> {
@@ -113,12 +115,24 @@ const SearchForm = ({name,setCriteria}) => {
   }
   return (
     <>
-      <Button 
-        type="primary" 
-        icon={<BarsOutlined />}
-        onClick={showSearchForm}>
-        {name}
-      </Button>
+      <Input.Search
+                    placeholder="Search in my houses"
+                    style={{ width: 500, margin: '0 20px' }}
+                    addonBefore={
+                      <Tooltip title="Search Option" placement="bottom">
+                        <Button 
+                        type="text" 
+                        size="small"
+                        shape="circle"
+                        icon={<CaretDownOutlined style={{ color: 'rgba(0,0,0,.45)' }}/>}
+                        onClick={showSearchForm}>
+                        
+                      </Button>
+                    </Tooltip>}
+                    onPressEnter={e=>onSearch(e.target.value)}
+                    onSearch={onSearch}
+                    allowClear
+                />
       <Modal
         visible={visible}
         title="Search with Condition"
@@ -133,7 +147,7 @@ const SearchForm = ({name,setCriteria}) => {
           </Button>,
           <Button key="submit" type="primary" loading={isLoading} onClick={handleOK}>
             Submit
-          </Button>,
+          </Button>
         ]}
       >
       <Form
@@ -153,9 +167,9 @@ const SearchForm = ({name,setCriteria}) => {
         >
           <Select placeholder="Please select building type">
             <Option value={undefined}>不限</Option>
-            <Option value="公寓">公寓(無電梯)</Option>
-            <Option value="電梯大樓">電梯大樓(10樓以下有電梯)</Option>
-            <Option value="華夏">華夏(11樓以上有電梯)</Option>
+            <Option value={0}>公寓(無電梯)</Option>
+            <Option value={1}>電梯大樓(10樓以下有電梯)</Option>
+            <Option value={2}>華夏(11樓以上有電梯)</Option>
           </Select>
         </Form.Item>
   
@@ -226,6 +240,7 @@ const SearchForm = ({name,setCriteria}) => {
         </Form.Item>
       </Form>
       </Modal>
+      
     </>
     );
   };
