@@ -56,6 +56,7 @@ import { meter2Lat, meter2Lng } from '../../util/unitTrans'
 const getHouses = async (req,res,next) => {
     const {buildingType,unitPrice,totalPrice,hasParking,space,neighbor} = req.query
     let query = {}
+    console.log(req.query)
     if(buildingType!==undefined) query = {...query,buildingType}
     if(unitPrice!==undefined){
         const {lb,ub} = unitPrice
@@ -72,10 +73,11 @@ const getHouses = async (req,res,next) => {
         }
     }
     let houses
+    
     if(
-        totalPrice===undefined && 
+        (totalPrice===undefined || Object.entries(totalPrice).length===0) && 
         hasParking===undefined && 
-        space===undefined
+        (space===undefined || Object.entries(space).length===0)
     ){
         houses = await House
             .find(query,{_id:0,id:1,buildingType:1,coordinate:1,unitPrice:1})
@@ -99,11 +101,11 @@ const getHouses = async (req,res,next) => {
                 if(lb!==undefined && lb>ts) return false
                 if(ub!==undefined && ub<ts) return false
             }
-            if(hasParking!==undefined) return hasParking!==hp
+            if(hasParking!==undefined && hasParking!==hp) return false
             return true
         })
     }
-
+    // console.log(houses)
     res.status(200).send(houses)
 }
 
@@ -116,7 +118,7 @@ const template = (myKey='') => ({
     customSanitizer: {options:validErr(myKey)},
     custom: {
         options:(value)=>{
-            console.log(value)
+            // console.log(value)
             const {lb,ub} = value
             if(lb!==undefined && isNaN(lb)
             || ub!==undefined && isNaN(ub)
@@ -144,6 +146,12 @@ const valid = [
         'totalPrice':template('totalPrice'),
         'space':template('space')
     }),
-    query('hasParking').optional().isBoolean().withMessage('hasParking should be boolean')
+    query('hasParking').optional()
+        .customSanitizer(val=>{
+            if(val==='true') return true
+            if(val==='false') return false
+            return val
+        })
+        .isBoolean().withMessage('hasParking should be boolean')
 ]
 export {valid}
