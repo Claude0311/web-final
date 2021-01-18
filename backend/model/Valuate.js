@@ -6,6 +6,7 @@ const Valuate = new Schema({
     user: {type:String,default:'b07901029'},
     //{ type: Schema.Types.ObjectId, ref: 'user' },
     processed: {type:Boolean, default:false},
+    unread: {type:Boolean, default:false},
     //house related
     coordinate: {lat:Number,lng:Number},
     buildingType: Number,
