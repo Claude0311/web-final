@@ -10,6 +10,7 @@ import env from 'dotenv'
 import craw from './util/crawler'
 import cors from 'cors'
 import favicon from 'serve-favicon'
+import history from 'connect-history-api-fallback'
 
 env.config({path:'../.env'})
 
@@ -53,11 +54,11 @@ DB.once('open',()=>{
 	)
 	
 	if(process.env.NODE_ENV==='production'){
-		console.log('backend env',process.env.NODE_ENV)
+		app.use('/api',api)
+		app.use(history())
 		const buildPath = path.join('.', '..', 'frontend','build')
 		app.use(express.static(buildPath))
 		app.use(favicon(path.join('.','..','frontend','build','favicon.ico')))
-		app.use('/api',api)
 	}else{
 		app.use(api)
 	}
