@@ -7,7 +7,7 @@ import parse from './parse'
  * @api {post} /valuate 請求估價
  * @apiName AskPrice
  * @apiGroup Valuate
- * @apiDescription 給定座標和房屋資訊，提供附近相似房子以及預估價錢
+ * @apiDescription 給定座標和房屋資訊，提供附近相似房子以及預估價錢，最多60棟
  *
  * @apiHeader {String} content-type
  *  axios預設'application/x-www-form-urlencoded'，不用特別修改。<br/>

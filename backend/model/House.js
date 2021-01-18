@@ -16,7 +16,6 @@ const House = new Schema({
 
 House.methods.score = function(user,rules){
   const db = this
-  console.log(db)
   const scoreStr = rules.reduce((accu,rule)=>{
     const numOfTrue = rule.reduce((accu,current)=>{
       const isTrue = current(user,db)?1:0

@@ -16,10 +16,10 @@ import { meter2Lat, meter2Lng } from '../../util/unitTrans'
  *      neighbot:{center:{lat:27,lng:125},distance:500}
  *   }})
  * 
- * @apiparam {String} buildingType (optional)
- *   - 公寓(無電梯)
- *   - 大樓(10樓以下有電梯)
- *   - 華夏(11樓以上有電梯)
+ * @apiparam {Number} buildingType 0~2(optional)
+ *  - 0: 公寓(5樓含以下無電梯)
+ *  - 1: 華廈(10層含以下有電梯)
+ *  - 2: 住宅大樓(11層含以上有電梯)
  * @apiparam {Object} neighbor 搜索附近(optional)
  * @apiparam {Object} neighbor.center 中心
  * @apiparam {Object} neighbor.center.lat 中心緯度
@@ -38,10 +38,10 @@ import { meter2Lat, meter2Lng } from '../../util/unitTrans'
  *
  * @apiSuccess {Object[]} - array of Houses
  * @apiSuccess {String} -.id id from 永慶房屋
- * @apiSuccess {String} -.buildingType 房屋型態
- *   - 公寓(無電梯)
- *   - 電梯大樓(10樓以下有電梯)
- *   - 華夏(11樓以上有電梯)
+ * @apiSuccess {Number} buildingType 0~2
+ *  - 0: 公寓(5樓含以下無電梯)
+ *  - 1: 華廈(10層含以下有電梯)
+ *  - 2: 住宅大樓(11層含以上有電梯)
  * @apiSuccess {Object} -.coordinate 經緯度
  * @apiSuccess {Number} -.coordinate.lat 緯度
  * @apiSuccess {Number} -.coordinate.lng 經度
@@ -56,6 +56,7 @@ import { meter2Lat, meter2Lng } from '../../util/unitTrans'
 const getHouses = async (req,res,next) => {
     const {buildingType,unitPrice,totalPrice,hasParking,space,neighbor} = req.query
     let query = {}
+    console.log('ne',neighbor)
     if(buildingType!==undefined) query = {...query,buildingType}
     if(unitPrice!==undefined){
         const {lb,ub} = unitPrice
@@ -72,10 +73,11 @@ const getHouses = async (req,res,next) => {
         }
     }
     let houses
+    
     if(
-        totalPrice===undefined && 
+        (totalPrice===undefined || Object.entries(totalPrice).length===0) && 
         hasParking===undefined && 
-        space===undefined
+        (space===undefined || Object.entries(space).length===0)
     ){
         houses = await House
             .find(query,{_id:0,id:1,buildingType:1,coordinate:1,unitPrice:1})
@@ -99,11 +101,10 @@ const getHouses = async (req,res,next) => {
                 if(lb!==undefined && lb>ts) return false
                 if(ub!==undefined && ub<ts) return false
             }
-            if(hasParking!==undefined) return hasParking!==hp
+            if(hasParking!==undefined && hasParking!==hp) return false
             return true
         })
     }
-
     res.status(200).send(houses)
 }
 
@@ -116,7 +117,7 @@ const template = (myKey='') => ({
     customSanitizer: {options:validErr(myKey)},
     custom: {
         options:(value)=>{
-            console.log(value)
+            // console.log(value)
             const {lb,ub} = value
             if(lb!==undefined && isNaN(lb)
             || ub!==undefined && isNaN(ub)
@@ -129,7 +130,7 @@ const template = (myKey='') => ({
 const valid = [
     query('buildingType')
         .optional()
-        .isIn(['公寓','電梯大樓','華夏']).withMessage('building type 應是 [公寓,電梯大樓,華夏]'),
+        .isIn([0,1,2]).withMessage('building type 應是 0~2'),
     query('neighbor').optional()
         .customSanitizer(validErr('neighbor'))
         .custom(value=>{
@@ -144,6 +145,12 @@ const valid = [
         'totalPrice':template('totalPrice'),
         'space':template('space')
     }),
-    query('hasParking').optional().isBoolean().withMessage('hasParking should be boolean')
+    query('hasParking').optional()
+        .customSanitizer(val=>{
+            if(val==='true') return true
+            if(val==='false') return false
+            return val
+        })
+        .isBoolean().withMessage('hasParking should be boolean')
 ]
 export {valid}

@@ -12,8 +12,8 @@ import { dbCatch } from "../../error"
  * @apiSuccess {Object[]} - array of valuate
  * @apiSuccess {Object} -._id 待估房子的_id，put時回傳
  * @apiSuccess {Object} -.coordinate {lat,lng}經緯度
- * @apiSuccess {String} -.user 捨棄，改使用存在後端的session
- * @apiSuccess {String} -.buildingType 0~2
+ * @apiSuccess {Boolean} -.unread 是否已讀(true表示管理員有新的估價)
+ * @apiSuccess {Number} -.buildingType 0~2
  *  - 0: 公寓(5樓含以下無電梯)
  *  - 1: 華廈(10層含以下有電梯)
  *  - 2: 住宅大樓(11層含以上有電梯)
@@ -22,7 +22,7 @@ import { dbCatch } from "../../error"
  * @apiSuccess {Number} -.avgPrice 系統算出來的$
  * @apiSuccess {Object[]} -.similar 附近相似的房子
  * @apiSuccess {String} -.similar.id id from 永慶房屋
- * @apiSuccess {String} -.similar.buildingType 房屋型態 0~2
+ * @apiSuccess {Number} -.similar.buildingType 房屋型態 0~2
  *  - 0: 公寓(5樓含以下無電梯)
  *  - 1: 華廈(10層含以下有電梯)
  *  - 2: 住宅大樓(11層含以上有電梯)
@@ -36,12 +36,15 @@ import { dbCatch } from "../../error"
  */
 const show_auth = async (req,res,next) => {
     let {user} = req.session
-    if(user===undefined) user='b07901029'
+    console.log({user})
+    // if(user===undefined) user='b07901029'
     const valuates = await Valuate
         .find({user})
         .populate('similar')
         .catch(dbCatch)
     res.status(200).send(valuates)
+    await Valuate.update({user},{unread:false}).catch(e=>{console.log(e)})
+    console.log('user read')
 }
 
 export default asyncHandler(show_auth)

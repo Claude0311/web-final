@@ -15,7 +15,7 @@ import getPrice from '../common/getPrice'
  * @apiparam {String} _id 待估房子的_id
  * @apiparam {Number} lat 緯度(optional)
  * @apiparam {Number} lng 經度(optional)
- * @apiparam {String} buildingType(optional) 0~2
+ * @apiparam {Number} buildingType 0~2(optional)
  *  - 0: 公寓(5樓含以下無電梯)
  *  - 1: 華廈(10層含以下有電梯)
  *  - 2: 住宅大樓(11層含以上有電梯)

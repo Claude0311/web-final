@@ -7,7 +7,7 @@ const options = {
   apiKey: 'AIzaSyBqlTXRpx8ARKVOHZXDopkEYtsPs0WUHQ0', // for Mapquest, OpenCage, Google Premier
   formatter: null // 'gpx', 'string', ...
 }
- 
+
 const geocoder = NodeGeocoder(options)
 
 const middleAdd = (address)=>{
@@ -23,18 +23,21 @@ const middleAdd = (address)=>{
  * @param {String} address 地址
  * @return {Object} {lat,lng} 
  */
-const getCor = async (address)=>{
+const getCor = async (address,withDB=true)=>{
+  if(withDB){
     const doc = await Cor.findOne({address})
     // console.log(doc)
     if(doc) return doc.coordinate
-    const [{latitude:lat,longitude:lng},..._] = await geocoder.geocode(middleAdd(address))
+  }
+  const [{latitude:lat,longitude:lng},..._] = await geocoder.geocode(middleAdd(address))
+  if(withDB){
+    console.log('saveing')
     await new Cor({
       address,
       coordinate:{lat,lng}
     }).save()
-    // console.log({lat,lng})
-    return {lat,lng}
-    // console.log(middleAdd(address))
+  }
+  return {lat,lng}
 }
 
 // getCor('永和區雙和街7巷1~30號')

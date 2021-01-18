@@ -44,7 +44,7 @@ Score.statics.myRule = async function myRule(){
         }
     }
     const rules = (await this.find().sort({priority:1})).reduce(reduce,[])
-    console.log({rules})
+    // console.log({rules})
     return rules
 }
 

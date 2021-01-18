@@ -16,7 +16,7 @@ const Post = () => {
     },[])
     return(
         <div>
-            {response}
+            {/* {response} */}
         </div>
     )
 }
