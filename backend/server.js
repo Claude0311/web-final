@@ -10,7 +10,7 @@ import env from 'dotenv'
 import craw from './util/crawler'
 import cors from 'cors'
 import history from 'connect-history-api-fallback'
-import wakeUp from './util/wakeUp'
+import {wakeDyno} from 'heroku-keep-awake'
 
 env.config({path:'../.env'})
 
@@ -67,7 +67,10 @@ DB.once('open',()=>{
 	}
 
 	app.listen(process.env.PORT || 4000,  () => {
-		wakeUp('https://houses-valuation.herokuapp.com/')
+		wakeDyno('https://houses-valuation.herokuapp.com/',{
+			logging: false,
+			stopTimes: { start: '00:00', end: '08:00' }
+		})
 		console.log('server connect')
 		console.log(`port name: ${process.env.PORT || 4000}`)
 	})
