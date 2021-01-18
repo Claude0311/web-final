@@ -50,14 +50,15 @@ DB.once('open',()=>{
 			}
 		})
 	)
-
-	app.use(api)
 	
 	if(process.env.NODE_ENV==='production'){
 		console.log('backend env',process.env.NODE_ENV)
 		const buildPath = path.join('.', '..', 'frontend','build')
 		app.use(express.static(buildPath))
 	}
+
+	app.use(api)
+	
 
 	app.listen(process.env.PORT || 4000,  () => {
 		// craw()
