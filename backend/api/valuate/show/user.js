@@ -12,7 +12,7 @@ import { dbCatch } from "../../error"
  * @apiSuccess {Object[]} - array of valuate
  * @apiSuccess {Object} -._id 待估房子的_id，put時回傳
  * @apiSuccess {Object} -.coordinate {lat,lng}經緯度
- * @apiSuccess {String} -.user 捨棄，改使用存在後端的session
+ * @apiSuccess {Boolean} -.unread 是否已讀(true表示管理員有新的估價)
  * @apiSuccess {Number} -.buildingType 0~2
  *  - 0: 公寓(5樓含以下無電梯)
  *  - 1: 華廈(10層含以下有電梯)
@@ -43,6 +43,8 @@ const show_auth = async (req,res,next) => {
         .populate('similar')
         .catch(dbCatch)
     res.status(200).send(valuates)
+    await Valuate.update({user},{unread:false}).catch(e=>{console.log(e)})
+    console.log('user read')
 }
 
 export default asyncHandler(show_auth)

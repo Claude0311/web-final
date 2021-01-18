@@ -718,7 +718,7 @@ GET /valuate/user
 | - | `Object[]` | array of valuate |
 | &ensp;_id | `Object` | 待估房子的_id，put時回傳 |
 | &ensp;coordinate | `Object` | {lat,lng}經緯度 |
-| &ensp;user | `String` | 捨棄，改使用存在後端的session |
+| &ensp;unread | `Boolean` | 是否已讀(true表示管理員有新的估價) |
 | &ensp;buildingType | `Number` | 0~2  <li>0: 公寓(5樓含以下無電梯)</li> <li>1: 華廈(10層含以下有電梯)</li> <li>2: 住宅大樓(11層含以上有電梯)</li>  |
 | &ensp;age | `Number` | 屋齡 |
 | &ensp;floor | `Number` | 樓層 |
