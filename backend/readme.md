@@ -28,6 +28,7 @@
  - [Valuate](#valuate)
    - [更新房屋內容](#更新房屋內容)
    - [請求估價](#請求估價)
+   - [delete valuate](#delete-valuate)
    - [get valuations as auth](#get-valuations-as-auth)
    - [get valuations as user](#get-valuations-as-user)
    - [set manual price](#set-manual-price)
@@ -685,6 +686,54 @@ POST /valuate
 | avgPrice | `Number` | suggested price of the selected house |
 
 #### Error response
+
+##### Error response - `Server error 500`
+
+| Name     | Type       | Description                           |
+|----------|------------|---------------------------------------|
+| statusCode | `Number` | 500 |
+| msg | `String` | 資料庫發生錯誤 |
+
+### delete valuate
+[Back to top](#top)
+
+刪除valuate，注意axios.delete要加{data}
+
+```
+DELETE /valuate/user
+```
+
+#### Parameters - `Parameter`
+
+| Name     | Type       | Description                           |
+|----------|------------|---------------------------------------|
+| _id | `String` | _id from get /valuate/user |
+
+#### Parameters examples
+`js` - axios
+
+```js
+axios.delete('/houses',{data:{
+   _id
+}})
+```
+
+#### Success response
+
+##### Success response - `204`
+
+| Name     | Type       | Description                           |
+|----------|------------|---------------------------------------|
+| - | `Object[]` |  <li></li>  |
+
+#### Error response
+
+##### Error response - `Client error 404`
+
+| Name     | Type       | Description                           |
+|----------|------------|---------------------------------------|
+| statusCode | `Number` | 404 |
+| msg | `String` | _id not given |
 
 ##### Error response - `Server error 500`
 

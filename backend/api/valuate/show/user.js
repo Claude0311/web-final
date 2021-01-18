@@ -34,7 +34,7 @@ import { dbCatch } from "../../error"
  * @apiError (Server error 500) {Number} statusCode 500
  * @apiError (Server error 500) {String} msg 資料庫發生錯誤
  */
-const show_auth = async (req,res,next) => {
+const show_user = async (req,res,next) => {
     let {user} = req.session
     console.log({user})
     // if(user===undefined) user='b07901029'
@@ -47,4 +47,4 @@ const show_auth = async (req,res,next) => {
     console.log('user read')
 }
 
-export default asyncHandler(show_auth)
+export default asyncHandler(show_user)
