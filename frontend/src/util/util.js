@@ -24,3 +24,11 @@ export const clusterConvert = house => {
       }
     }
 };
+
+export const compareHouses = (a,b) => {
+  if ( a.unread || b.unread ) {
+    return (a.unread)? -1: 1;
+  } else {
+    return (a.processed)? -1:1;
+  }
+}

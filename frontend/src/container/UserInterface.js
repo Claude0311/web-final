@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Layout, Menu, Avatar, Tooltip } from 'antd';
+import { Layout, message, Avatar, Tooltip } from 'antd';
 import {
     MenuUnfoldOutlined,
     MenuFoldOutlined,
@@ -16,7 +16,9 @@ import { axiosGetHouses,
         axiosGetScoreRule,
         axiosSetManualPrice
     } from '../axios/axios';
-import { clusterConvert } from '../util/util';
+import { clusterConvert, compareHouses } from '../util/util';
+import { useMapApi } from '../Auth/GoogleApi';
+
 const { Header, Sider, Content } = Layout;
 
 const UserInterface = ({id,isAuth, logout, history,...rest})=> {
@@ -27,7 +29,8 @@ const UserInterface = ({id,isAuth, logout, history,...rest})=> {
     const [houses, setHouses] = useState(null); // eval
     const [myPoints, setMyPoints] = useState(null);
     const [isAdminMode, setAdminMode] = useState(false);
-    
+    const { apiKey, searchAddr } = useMapApi();
+
     const mapRef = useRef(null);
 
     const toggle = () => {
@@ -61,8 +64,9 @@ const UserInterface = ({id,isAuth, logout, history,...rest})=> {
         const myHouses = await axiosUserGetValuate();
         // console.log("myhouses",myHouses);
         if (myHouses !== null){
-          setHouses(myHouses);
-          setMyPoints(myHouses);
+            myHouses.sort(compareHouses)
+            setHouses(myHouses);
+            setMyPoints(myHouses);
         }        
     }
 
@@ -78,6 +82,34 @@ const UserInterface = ({id,isAuth, logout, history,...rest})=> {
       }
     }
 
+    const searchHousebyAddr = async (address) => {
+        const coor = await searchAddr(address);
+        if (coor) {
+            const newCri = {...criteria, neighbot:{center:coor,distance:500} };
+            setCriteria(newCri);
+        } else {
+            message.error("No houses found",[2]);
+        }
+        
+    }
+    const searchMyHousebyAddr = async (address) => {
+        const coor = await searchAddr(address);
+        if (coor) {
+            const search = houses.filter(house=>house.coordinate === coor);
+            setMyPoints(search);
+        } else {
+            message.error("No houses found",[2]);
+        }
+    }
+
+    const showUnreadHouses = () => {
+        const unread = houses.filter(house => house.unread);
+        if (unread.length ) {
+            setMyPoints(unread);
+        } else {
+            message.info("No new houses", [2])
+        }
+    }
     // ============= Admin Functions ========
 
     const getEvalHouses = async () => {
@@ -137,11 +169,11 @@ const UserInterface = ({id,isAuth, logout, history,...rest})=> {
         }
     }
 
-    const searchhouses = (id) => {
-        console.log("search",id)
-        const house = houses.filter(ele=>ele._id.includes(id));
-        setMyPoints(house);
-    }
+    // const searchhouses = (id) => {
+    //     console.log("search",id)
+    //     const house = houses.filter(ele=>ele._id.includes(id));
+    //     setMyPoints(house);
+    // }
     // =============== Score ==================
     const onViewScoreRule = async() => {
         const rule = await axiosGetScoreRule();
@@ -158,9 +190,9 @@ const UserInterface = ({id,isAuth, logout, history,...rest})=> {
         }
     }
 
-    useEffect( ()=> {
-        console.log("cur", mapRef.current)
-    },[mapRef])
+    // useEffect( ()=> {
+    //     console.log("cur", mapRef.current)
+    // },[mapRef])
     
 
     useEffect( () => {
@@ -173,6 +205,9 @@ const UserInterface = ({id,isAuth, logout, history,...rest})=> {
       }
     }, [])
 
+    // useEffect( ()=> {
+    //     console.log("api",apiKey)
+    // },[apiKey]);
 
     return (
     <Layout>
@@ -200,6 +235,7 @@ const UserInterface = ({id,isAuth, logout, history,...rest})=> {
                 houses={houses}
                 onHome={onHome}
                 onMyHouseMode={setMyHouseOnly}
+                onUnReadMode={showUnreadHouses}
                 showSimilar={showSimilar}
                 collapsed={collapsed}
                 onTodoMode={viewUnValuate}
@@ -239,7 +275,8 @@ const UserInterface = ({id,isAuth, logout, history,...rest})=> {
                   <SearchForm
                       name="Search Options"
                       setCriteria={handleCriteria}
-                      onSearch={searchhouses}
+                      //onSearch={searchhouses}
+                      onSearch={searchHousebyAddr}
                   />
               </span>
               <span>
@@ -266,6 +303,7 @@ const UserInterface = ({id,isAuth, logout, history,...rest})=> {
                 <Map 
                     // id={id} 
                     // isAuth={isAuth}
+                    apiKey={apiKey}
                     ref={mapRef}
                     points={points}
                     houses={myPoints}

@@ -1,11 +1,7 @@
 import NodeGeocoder from 'node-geocoder'
 // import Cor from '../model/Coordinate.js'
 
-const options = {
-  provider: 'google',
-  apiKey: 'AIzaSyBqlTXRpx8ARKVOHZXDopkEYtsPs0WUHQ0', // for Mapquest, OpenCage, Google Premier
-  formatter: null // 'gpx', 'string', ...
-}
+
  
 const geocoder = NodeGeocoder(options)
 

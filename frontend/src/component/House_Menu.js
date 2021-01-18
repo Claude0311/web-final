@@ -8,7 +8,10 @@ import {
     HomeOutlined,
     FormOutlined,
     FileSearchOutlined,
-    SettingOutlined
+    SettingOutlined,
+    ExclamationCircleOutlined,
+    CheckCircleOutlined,
+    SolutionOutlined
 } from '@ant-design/icons';
 import SubMenu from 'antd/lib/menu/SubMenu';
 import { priceConvert } from '../util/util';
@@ -63,6 +66,13 @@ const House_Menu = (props) => {
             >
                 My Houses
             </Menu.Item>
+            <Menu.Item 
+                key="unread houses" 
+                icon={<ExclamationCircleOutlined />}
+                onClick={props.onUnReadMode}
+            >
+                New Houses
+            </Menu.Item>
             {(props.isAuth)?
             <Menu.Item 
                 key="adminMode" 
@@ -75,16 +85,32 @@ const House_Menu = (props) => {
 
 
         </>
-
+    const style = (processed, unRead) => {
+        if (unRead) {
+            return {
+                icon: <ExclamationCircleOutlined 
+                    style={{color: '#f50'}}/>
+            }
+        } else {
+            return ((processed)
+                ? {icon:<CheckCircleOutlined style={{color: 'gold'}}/>}
+                : {icon:<SolutionOutlined style={{color: '#aaa'}}/>}
+            )
+        }
+    }
     const houseProfiles = (props.houses && props.houses.length !== 0)
         ?<>
-            {props.houses.map((house) => 
-            <Menu.Item 
-                key={house._id}
-                onClick={()=>props.showSimilar(house._id)}
-            >
-                NT$ {priceConvert(house.avgPrice)}
-            </Menu.Item>
+            {props.houses.map((house) => {
+                return(
+                <Menu.Item 
+                    key={house._id}
+                    onClick={()=>props.showSimilar(house._id)}
+                    {...style(house.processed,house.unread)}
+                >
+                    NT$ {priceConvert(house.avgPrice)}
+                </Menu.Item>
+                );
+            }
             )}</>
         :<Menu.Item key="Not found" disabled>Not found</Menu.Item>
 

@@ -7,7 +7,7 @@ import useSupercluster from 'use-supercluster';
 
 const AnyReactComponent = ({ text }) => <div>{text}</div>;
 
-const Map = ({ points, houses, setManualPrice, ...rest }) => { //
+const Map = ({ points, houses, setManualPrice, apiKey, ...rest }) => { //
     const [cen,setCen] = useState({lat: 25.017, lng: 121.537});
     const [zoom,setZoom] = useState(16.0);
     const [bounds, setBounds] = useState(null);
@@ -169,6 +169,9 @@ const Map = ({ points, houses, setManualPrice, ...rest }) => { //
 
     // ========== useEffect =============
     
+    // useEffect(()=>{
+    //   console.log("map",apiKey)
+    // },[apiKey]);
 
     
 
@@ -231,10 +234,15 @@ const Map = ({ points, houses, setManualPrice, ...rest }) => { //
     )}
     ):<></>;
 
+
+    if (!apiKey.length) {
+      return <></>
+    }
+
     return(
         <div style={{ height: '86vh', width: '100%', flexDirection: 'row' }}>
           <GoogleMapReact
-            bootstrapURLKeys={{ key: 'AIzaSyBqlTXRpx8ARKVOHZXDopkEYtsPs0WUHQ0' }}
+            bootstrapURLKeys={{ key: apiKey }}
             center={cen}
             defaultZoom={12}
             zoom={zoom}

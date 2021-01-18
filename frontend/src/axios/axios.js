@@ -6,7 +6,29 @@ const instance = axios.create({
   baseURL: API_ROOT,
   withCredentials: true
 })
+const dbCatch = e=>console.log('myError:',e?.response?.data?.msg)
 
+
+export const axiosGetApi = async () => {
+    try {
+        return await instance.get('/apiKey');
+    } catch (e) {
+        console.log("fail",e);
+        return '';
+    }
+}
+
+export const axiosGetCoor = async (address) => {
+    try {
+        console.log(address);
+        const {data: coor} = await instance.get('/geoCode',{params:{address}});
+        console.log(coor);
+        return coor;
+    } catch (e) {
+        dbCatch(e);
+        return null;
+    }
+}
 // =========== login post ============
 export const loginAsNormalUser = async ({user,password}) => {
     try {
