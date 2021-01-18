@@ -184,13 +184,13 @@ export const init = async () => {
         console.log('myError:',e?.response?.data?.msg)
         return {data:{}}
     }
-    const {data:{user,auth}} = await instance.post('/login',{user:'b07901029',password:'123'}).catch(dbCatch)
-    console.log(user,auth)
-    const {data:jif} = await instance.get('/valuate/user',{params:{neighbor:{center:{lat:25,lng:121.5},distance:800}}}).catch(dbCatch)
-    // jif.forEach(async ({_id})=>{
-        const {data:col} = await instance.delete('/valuate/user',{data:{_id:jif[3]._id}}).catch(dbCatch) 
-        console.log(col)
-    // })
+    // const {data:{user,auth}} = await instance.post('/login',{user:'b07901029',password:'123'}).catch(dbCatch)
+    // console.log(user,auth)
+    // const {data:jif} = await instance.get('/valuate/user',{params:{neighbor:{center:{lat:25,lng:121.5},distance:800}}}).catch(dbCatch)
+    // // jif.forEach(async ({_id})=>{
+    //     const {data:col} = await instance.delete('/valuate/user',{data:{_id:jif[3]._id}}).catch(dbCatch) 
+    //     console.log(col)
+    // // })
 }
 
 export const testErr = async () => {
