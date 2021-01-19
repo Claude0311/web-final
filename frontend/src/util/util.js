@@ -40,3 +40,13 @@ export const neighborHouse = ({lat,lng},distance = 500 ) => {
     Math.abs(lng-house.coordinate.lng) <= offset
   )
 }
+
+export const reorderPriority = (rules) => {
+  let i = 1;
+  return rules.map(rule => (
+    rule.description.postfix
+      ? {...rule, priority: i++}
+      : {...rule, priority: i}
+    
+  ));
+}

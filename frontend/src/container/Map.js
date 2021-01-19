@@ -7,9 +7,9 @@ import useSupercluster from 'use-supercluster';
 
 // const AnyReactComponent = ({ text }) => <div>{text}</div>;
 
-const Map = ({ points, houses, setManualPrice, apiKey, getMyHouses, ...rest }) => { //
-    const [cen,setCen] = useState({lat: 25.007414, lng: 121.51505})// {lat: 25.017, lng: 121.537});
-    const [zoom,setZoom] = useState(16.0);
+const Map = ({ points, houses, setManualPrice, apiKey, 
+    getMyHouses, isAdminMode, cen, setCen, ...rest }) => { //
+    const [zoom,setZoom] = useState(14.0);
     const [bounds, setBounds] = useState(null);
     const [ptrCoordinate, setPtrCod] = useState(null);
     const [houseDetail, setDetail] = useState(null);
@@ -40,12 +40,12 @@ const Map = ({ points, houses, setManualPrice, apiKey, getMyHouses, ...rest }) =
     const getHouseDetail = async (id) => {
       // console.log(id);
       setClickKey(null);
-      console.log("getting detail...",id);
+      // console.log("getting detail...",id);
       try {
         const detail = await axiosGetDetail(id);
         setDetail({...detail});
       } catch (e) {
-        console.log(e?.response?.data?.msg);
+        // console.log(e?.response?.data?.msg);
       } 
     } 
 
@@ -81,7 +81,7 @@ const Map = ({ points, houses, setManualPrice, apiKey, getMyHouses, ...rest }) =
     const getClusterClick = (key) => { // key: Number
       setHoverKey(null);
       const zoomInratio = supercluster.getClusterExpansionZoom(key)
-      console.log(zoomInratio)
+      // console.log(zoomInratio)
       if (zoomInratio >= 20 ) {
         // show all the info
         const leaves = supercluster.getLeaves(key);
@@ -115,7 +115,7 @@ const Map = ({ points, houses, setManualPrice, apiKey, getMyHouses, ...rest }) =
       if(similarHouses) {
         setSimilarHouses(null)
       }
-      if (clickKey) {
+      if (clickKey || isAdminMode) {
         setClickKey(null);
         return;
       }
@@ -187,9 +187,9 @@ const Map = ({ points, houses, setManualPrice, apiKey, getMyHouses, ...rest }) =
 
     // ========== set Boundaries ========
     
-    const onBoundChange = ({zoom, bounds}) => {
+    const onBoundChange = ({zoom, bounds,center}) => {
       // console.log("zoom",zoom);
-      // console.log("bound",bounds);
+      setCen(center)
       setZoom(zoom);
       setBounds([
         bounds.nw.lng,
@@ -203,9 +203,12 @@ const Map = ({ points, houses, setManualPrice, apiKey, getMyHouses, ...rest }) =
     // ========== useEffect =============
     
     // useEffect(()=>{
-    //   console.log("map",apiKey)
-    // },[apiKey]);
-
+    //   setCen(cen);
+    // },[]);
+    
+    // useEffect(()=>{
+    //   console.log("center:",cen)
+    // },[cen]);
     
 
     // ========== render element ===========
@@ -295,7 +298,7 @@ const Map = ({ points, houses, setManualPrice, apiKey, getMyHouses, ...rest }) =
           <GoogleMapReact
             bootstrapURLKeys={{ key: apiKey }}
             center={cen}
-            defaultZoom={12}
+            // defaultZoom={zoom}
             zoom={zoom}
             onClick={onSetMark}
             onChildMouseEnter={onMarkHover}

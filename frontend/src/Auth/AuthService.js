@@ -50,7 +50,7 @@ export const useAuth = () =>  {
     }
     const autoLogin = () => {
         const storage = getLocalAccount();
-        console.log(storage)
+        // console.log(storage)
         if (!storage) {
             return;
         } else {

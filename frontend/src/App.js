@@ -39,8 +39,8 @@ function App() {
   useEffect(() => {
     // do read cache here
     if (!username) {
-      console.log("this is App");
-      console.log("try login automatically");
+      console.log("Welcome to House Evaluation App");
+      console.log("try login automatically...");
       autoLogin();
     }
     
@@ -55,13 +55,13 @@ function App() {
       <Post/>
       <Router>
         <Switch>
-          <PrivateRoute 
-            path="/" exact component={UserInterface} 
-            id={username} isAuth={isAuth} logout={logout}/>
           <Route path="/login" exact render={ (props) => 
             (<Login {...props} id={username} login={login}/> )} />
           <Route path="/register" exact render={ (props) => 
             (<SignUp {...props} logout={logout}/> )} />
+          <PrivateRoute 
+            path="/" component={UserInterface} 
+            id={username} isAuth={isAuth} logout={logout}/>
         </Switch>
       </Router>
     </div>

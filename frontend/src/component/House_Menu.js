@@ -15,12 +15,13 @@ import {
 } from '@ant-design/icons';
 import SubMenu from 'antd/lib/menu/SubMenu';
 import { priceConvert } from '../util/util';
+import { Link } from 'react-router-dom';
 
 
 const House_Menu = (props) => {
     const onMySearch = (e) => {
-        console.log("search");
-        console.log(e);
+        // console.log("search");
+        // console.log(e);
         props.onSearch(e.target.value)
     }
     const additionalTool = (props.isAdminMode)?
@@ -30,22 +31,15 @@ const House_Menu = (props) => {
                 key="todo" 
                 icon={<FormOutlined />}
                 onClick={props.onTodoMode}
-            >
+            ><Link to='/'>
                 Todo List
+            </Link>
             </Menu.Item>
-            {/* <Menu.Item 
-                key="done" 
-                icon={<FileDoneOutlined />}
-                onClick={props.onCheckMode}
-            >
-                
-                Check List
-            </Menu.Item> */}
             <Menu.Item 
                 key="score" 
                 icon={<FileSearchOutlined />}
-                onClick={props.onScore}>
-                Score Rules
+                >
+                <Link to="/score" >Score Rules</Link>
             </Menu.Item>
             <Menu.Item 
                 key="userMode" 
@@ -68,7 +62,7 @@ const House_Menu = (props) => {
                 icon={<ExclamationCircleOutlined />}
                 onClick={props.onUnReadMode}
             >
-                New Houses
+                Unread Houses
             </Menu.Item>
             {(props.isAuth)?
             <Menu.Item 
@@ -120,8 +114,10 @@ const House_Menu = (props) => {
             <Menu.Item 
                 key="home" 
                 icon={<HomeOutlined />}
-                onClick={props.onHome}>
-                Home
+                onClick={props.onHome}
+            >
+                {/* Home */}
+                <Link to='/'>Home</Link>
             </Menu.Item>
             <Menu.Item key="search" icon={<SearchOutlined />}>
                 {(props.collapsed)?
@@ -134,7 +130,7 @@ const House_Menu = (props) => {
                     ></Input>
                 }
             </Menu.Item>   
-            <SubMenu key="houses" icon={<ShopOutlined />} title="House Profiles" 
+            <SubMenu key="houses" icon={<ShopOutlined />} title={<Link to='/'>House Profiles</Link>}
                 style={{overflow: 'auto', maxHeight: '50vh', }}>
                 {houseProfiles}
             </SubMenu>

@@ -22,6 +22,8 @@ import { clusterConvert,
         neighborHouse 
     } from '../util/util';
 import { useMapApi } from '../Auth/GoogleApi';
+import ScoreRule from '../component/House_Score';
+import { Route } from 'react-router-dom';
 
 const { Header, Sider, Content } = Layout;
 
@@ -34,6 +36,9 @@ const UserInterface = ({id,isAuth, logout, history,...rest})=> {
     const [myPoints, setMyPoints] = useState(null);
     const [isAdminMode, setAdminMode] = useState(false);
     const { apiKey, searchAddr } = useMapApi();
+
+    // thoses from Map.js
+    const [cen,setCen] = useState({lat: 25.007414, lng: 121.51505})
 
     const mapRef = useRef(null);
 
@@ -49,13 +54,14 @@ const UserInterface = ({id,isAuth, logout, history,...rest})=> {
 
     // ==== Noraml Functions =====
     const onHome = () => {
-        console.log("reset...")
+        // console.log("reset...")
         setCriteria(null);
         if (isAdminMode) {
             getEvalHouses();
         } else {
             getMyHouses();
         }
+        getHouses();
         // history.push('/');
     }
     // only view houses that I have
@@ -91,8 +97,9 @@ const UserInterface = ({id,isAuth, logout, history,...rest})=> {
         if (coor) {
             const newCri = {neighbor:{center:coor,distance:100} };
             handleCriteria(newCri);
+            setCen(coor)
         } else {
-            console.log("invalid address");
+            message.error("Invalid address",[1]);
         }
         
     }
@@ -100,13 +107,14 @@ const UserInterface = ({id,isAuth, logout, history,...rest})=> {
         const coor = await searchAddr(address);
         if (coor) {
             const search = houses.filter(neighborHouse(coor));
-            console.log("search",search);
+            // console.log("search",search);
+            setCen(coor)
             setMyPoints(search);
             if (!search.length) {
-                message.error("houses not found",[2]);
+                message.error("houses not found",[1]);
             }
         } else {
-            message.error("Invalid Address",[2]);
+            message.error("Invalid Address",[1]);
         }
     }
 
@@ -115,13 +123,13 @@ const UserInterface = ({id,isAuth, logout, history,...rest})=> {
         if (unread.length ) {
             setMyPoints(unread);
         } else {
-            message.error("Invalid Address",[2]);
+            message.error("All houses are read",[1]);
         }
     }
     // ============= Admin Functions ========
 
     const getEvalHouses = async () => {
-        console.log("open admin mode...");
+        // console.log("open admin mode...");
         const evalHouses = await axiosAdminGetValuate();
         if (evalHouses !== null) {
             const evalAuth = evalHouses.map(house => (
@@ -136,11 +144,15 @@ const UserInterface = ({id,isAuth, logout, history,...rest})=> {
 
     const switchToAdmin = () => {
         setAdminMode(true);
+        message.info("switch to Admin Mode!!",[1]);
         getEvalHouses();
+        setPoints([]);
     }
 
     const switchToUser = () => {
         setAdminMode(false);
+        message.info("switch to User Mode!!",[1]);
+        getHouses();
         getMyHouses();
     }
 
@@ -154,12 +166,13 @@ const UserInterface = ({id,isAuth, logout, history,...rest})=> {
     // set manual price
     const setManualPrice = async ({_id, manualPrice}) => {
         const reply = await axiosSetManualPrice({_id, manualPrice});
-        console.log(reply);
         if (reply) {
-            console.log("get my houses again...")
+            // console.log("get my houses again...")
+            message.success(`set price NT$${manualPrice} successfully`,[1])
             const newhouses = houses.map((house) => (
                 (house._id !== _id)? house : {...house,processed:true,manualPrice}
             ));
+            newhouses.sort(compareHouses);
             setHouses(newhouses);
             setMyPoints(newhouses);
         }
@@ -167,13 +180,14 @@ const UserInterface = ({id,isAuth, logout, history,...rest})=> {
 
     // ============ getHouses =============
     const getHouses = async () => {
-        console.log("getting houses...")
+        // console.log("getting houses...")
         const req_houses = await axiosGetHouses(criteria);
         if (req_houses !== null && req_houses.length){
+            message.success("loading houses successfully",[1]);
           const houses_cluster = req_houses.map(clusterConvert);
           setPoints(houses_cluster)
         } else {
-            message.error("houses not found",[2]);
+            message.error("houses not found",[1]);
         }
     }
 
@@ -185,16 +199,19 @@ const UserInterface = ({id,isAuth, logout, history,...rest})=> {
     // =============== Score ==================
     const onViewScoreRule = async() => {
         const rule = await axiosGetScoreRule();
-        console.log("rule",rule);
+        // console.log("rule",rule);
     }
     
     const onLogout = async() => {
         const result = await logout();
         if (result === 'success') {
-            console.log("log out...");
+            // console.log("log out...");
+            message.info("See you next time!!",[1])
             history.push('/login');
         } else {
-            console.log(result);
+            // console.log(result);
+            message.error("fail to log out",[1])
+
         }
     }
 
@@ -309,10 +326,27 @@ const UserInterface = ({id,isAuth, logout, history,...rest})=> {
                 style={{
                 margin: '20px 24px',
                 padding: 0,
-                overflow: 'hidden'
+                overflow: 'hidden',
                 }}
             >
-                <Map 
+                <Route path="/" exact render={ (props) => 
+                    (<Map {...props} 
+                        apiKey={apiKey}
+                        ref={mapRef}
+                        points={points}
+                        houses={myPoints}
+                        isAdminMode={isAdminMode}
+                        setManualPrice={setManualPrice}
+                        getMyHouses={getMyHouses}
+                        cen={cen}
+                        setCen={setCen}
+                    /> )}
+                />
+                <Route path='/score' render={ (props) => 
+                    (<ScoreRule {...props} 
+                    /> )}
+                />
+                {/* <Map 
                     // id={id} 
                     // isAuth={isAuth}
                     apiKey={apiKey}
@@ -321,7 +355,8 @@ const UserInterface = ({id,isAuth, logout, history,...rest})=> {
                     houses={myPoints}
                     setManualPrice={setManualPrice}
                     getMyHouses={getMyHouses}
-                />
+                /> */}
+                {/* <ScoreRule /> */}
             </Content>       
         </Layout>
     </Layout>

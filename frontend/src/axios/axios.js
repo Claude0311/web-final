@@ -178,6 +178,30 @@ export const axiosGetScoreRule = async () => {
     }
 }
 
+export const axiosResetScore = async () => {
+    try {
+        console.log("axios reset score");
+        const {data: rule} = await instance.post('/score');
+        return rule;
+    } catch (e) {
+        dbCatch(e);
+        console.log("fail to post /score");
+        return null;
+    }
+}
+
+export const axiosSetScore = async (myRules) => {
+    try {
+        console.log("axios set score",myRules);
+        await instance.put('/score',{myRules});
+        return true;
+    } catch (e) {
+        dbCatch(e);
+        console.log("fail to put /score");
+        return false;
+    }
+}
+
 // ============ test =============
 export const init = async () => {
     const dbCatch = e=>{console.log('myError:',e?.response?.data?.msg)}
