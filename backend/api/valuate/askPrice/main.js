@@ -34,8 +34,8 @@ const valid = [
     body('lat').isNumeric().withMessage('lat should be Number'),
     body('lng').isNumeric().withMessage('lng should be NUmber'),
     body('buildingType').isIn([0,1,2]).withMessage('buildingType should be one of 0~2，stands for 公寓(5樓含以下無電梯)、華廈(10層含以下有電梯)、住宅大樓(11層含以上有電梯)'),
-    body('floor').optional().isNumeric().withMessage('floor should be Number(optional)'),
-    body('age').optional().isNumeric().withMessage('age should be Number(optinoal)')
+    body('floor').default(undefined).optional().isNumeric().withMessage('floor should be Number(optional)'),
+    body('age').default(undefined).optional().isNumeric().withMessage('age should be Number(optinoal)')
 ]
 
 export default [validator(valid),parse,findNear, findSimilar, getPrice]
