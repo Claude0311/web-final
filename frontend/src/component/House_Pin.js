@@ -6,6 +6,7 @@ import './House_Pin.css';
 import QueryForm from './House_Query';
 import { priceConvert } from '../util/util';
 import { SetManualPriceForm } from './House_Valuate';
+import UpdateQueryForm from './Update_Query';
 
 const House_Pin = ({id,buildingType,click,unitPrice,hover,getDetail}) => {
     const [visible, setvisible] = useState(false); // control Popover
@@ -136,7 +137,7 @@ const Current_Pin = ({hover, showForm, click, lat, lng, moveCen, handleAddHouses
     const content = (
         <div>
             <QueryForm 
-                name="inquire house price" 
+                name="Inquire house price" 
                 showForm={showForm} 
                 lat={lat} 
                 lng={lng}
@@ -191,7 +192,18 @@ const House_Eval_Pin = (props) => {
         : <div className="eval-pin">
             <a onClick={props.showSim}>view similar houses</a>
             <a onClick={props.updateInfo} >Update information</a>
-            </div>
+            <UpdateQueryForm
+                name="Update information"
+                id={props.id}
+                ori_lat={props.lat}
+                ori_lng={props.lng}
+                ori_buildingType={props.buildingType}
+                ori_floor={props.floor}
+                ori_age={props.age}
+                getMyHouses={props.getMyHouses}
+                showForm={props.showForm}
+            />
+        </div>
     let style = (props.hover)?  myStyleHover: myStyle;
     
     const content = (

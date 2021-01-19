@@ -1,4 +1,5 @@
 import axios from 'axios'
+import buildingType from './buildingType'
 // import {useState} from 'react'
 console.log('NODE_ENV',process.env.NODE_ENV)
 const API_ROOT = (process.env.NODE_ENV==='production')?'/api':'http://localhost:4000'
@@ -88,10 +89,21 @@ export const sendHouseInformation = async(lat, lng, buildingType, floor, age) =>
         const {data: {similar, avgPrice}} = await instance.post('/valuate', {lat, lng, buildingType, floor, age})
         return {similar, avgPrice}
     } catch(err)  {
-        console.log("fail to send houseImformation")
+        console.log("fail to send house information")
         return null;
     }
 }
+
+export const updateHouseInformation = async(id, lat, lng, buildingType, floor, age) => {
+    try {
+        const {data: {similar, avgPrice}} = await instance.patch('/valuate/user', {_id: id, lat, lng, buildingType, floor, age})
+        return {similar, avgPrice}
+    } catch(e) {
+        console.log("fail to update house information")
+        return null
+    }
+}
+
 export const axiosGetHouses = async (params) => {
     try {        
         console.log("get houses", params)

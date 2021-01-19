@@ -261,6 +261,8 @@ const Map = ({ points, houses, setManualPrice, apiKey, getMyHouses, ...rest }) =
         click={clickKey === _id}
         setManualPrice={setManualPrice}
         showSim={showSim}
+        getMyHouses={getMyHouses}
+        showForm={showForm}
         {...rest}
       />
     )}
