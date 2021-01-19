@@ -69,7 +69,7 @@ DB.once('open',()=>{
 	app.listen(process.env.PORT || 4000,  () => {
 		wakeDyno('https://houses-valuation.herokuapp.com/',{
 			logging: false,
-			stopTimes: { start: '00:00', end: '08:00' }
+			stopTimes: { start: '16:00', end: '00:00' }//time zone +0，so -8hr
 		})
 		console.log('server connect')
 		console.log(`port name: ${process.env.PORT || 4000}`)
