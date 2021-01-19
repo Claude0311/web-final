@@ -7,7 +7,7 @@
  
 - [功能介紹](#prepend)
  - [Account](#account)
-   - [新增/移除管理員](#新增/移除管理員)
+   - [新增、移除管理員](#新增、移除管理員)
    - [login](#login)
    - [loginAuth](#loginauth)
    - [logout](#logout)
@@ -82,10 +82,10 @@ ___
 
 ## Account
 
-### 新增/移除管理員
+### 新增、移除管理員
 [Back to top](#top)
 
-新增/移除管理員
+新增、移除管理員
 
 ```
 POST /addAuth
