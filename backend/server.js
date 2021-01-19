@@ -18,7 +18,7 @@ const app = express()
 DB.once('open',()=>{
 	console.log('mongoDB connected')
 
-	cron.schedule('0 0 0 1 * *', () => {//每月的1號0時0分0秒執行
+	cron.schedule('0 0 23 1 * *', () => {//每月的1號23時0分0秒執行
 		console.log('first')
 		craw()
 	})

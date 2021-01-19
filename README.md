@@ -21,11 +21,23 @@ $ yarn start-build
 ```
 
 ### 使用與參考之框架/模組/原始碼
+* 後端框架：express.js
 ### 專題製作心得
 ### 使用之第三方套件、框架、程式碼
-
+* 全端
+    1. 開發：nodemon, npm-run-all
+    2. 發布：node, heroku-keep-awake, connect-history-api-fallback
+* 後端
+    1. 基本框架：express
+    2. 資料庫：mongoose, connect-mongo, express-session
+    3. 爬蟲：axios, csv-string, node-cron
+    4. 安全性：cors, bcrypt
+    5. 地圖：node-geocoder
+    6. api輔助：apidoc, apidoc-markdown
+    7. 除錯：express-validator, express-async-handler
 ### 組員貢獻
 * b07901029陳君輔
+後端(全) + deploy
 * b07901028黃靖傑
 * b07901089俞建琁
 
