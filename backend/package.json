@@ -17,8 +17,10 @@
     "express-async-handler": "^1.1.4",
     "express-session": "^1.17.1",
     "express-validator": "^6.9.0",
+    "heroku-keep-awake": "^1.1.2",
     "mongoose": "^5.10.16",
     "node-cron": "^2.0.3",
+    "node-fetch": "^2.6.1",
     "node-geocoder": "^3.27.0",
     "nodemon": "^2.0.6"
   },
