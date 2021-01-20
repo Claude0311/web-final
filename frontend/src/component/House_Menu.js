@@ -1,26 +1,34 @@
-import {useEffect} from 'react';
+// import {useEffect} from 'react';
 import { Input, Menu,  } from 'antd';
 import {
     ExportOutlined,
     ShopOutlined,
     UserOutlined,
     SearchOutlined,
-    HomeOutlined,
     FormOutlined,
     FileSearchOutlined,
     SettingOutlined,
     ExclamationCircleOutlined,
     CheckCircleOutlined,
-    SolutionOutlined
+    SolutionOutlined,
+    TableOutlined,
+    LoadingOutlined
 } from '@ant-design/icons';
 import SubMenu from 'antd/lib/menu/SubMenu';
-import { priceConvert } from '../util/util';
+import { timeConvert } from '../util/util';
+import { Link } from 'react-router-dom';
 
+const LoadingIcon = (props) => {
+    const {isLoading, icon:Icon, ...rest} = props;
+    return (isLoading)
+        ? <LoadingOutlined {...rest}/>
+        : <Icon {...rest} />
+}
 
 const House_Menu = (props) => {
     const onMySearch = (e) => {
-        console.log("search");
-        console.log(e);
+        // console.log("search");
+        // console.log(e);
         props.onSearch(e.target.value)
     }
     const additionalTool = (props.isAdminMode)?
@@ -30,26 +38,19 @@ const House_Menu = (props) => {
                 key="todo" 
                 icon={<FormOutlined />}
                 onClick={props.onTodoMode}
-            >
+            ><Link to='/'>
                 Todo List
+            </Link>
             </Menu.Item>
-            {/* <Menu.Item 
-                key="done" 
-                icon={<FileDoneOutlined />}
-                onClick={props.onCheckMode}
-            >
-                
-                Check List
-            </Menu.Item> */}
             <Menu.Item 
                 key="score" 
                 icon={<FileSearchOutlined />}
-                onClick={props.onScore}>
-                Score Rules
+                >
+                <Link to="/score" >Score Rules</Link>
             </Menu.Item>
             <Menu.Item 
                 key="userMode" 
-                icon={<UserOutlined />}
+                icon={<LoadingIcon isLoading={props.isLoading} icon={SettingOutlined} />}
                 onClick={props.onUserMode}
             >
                 User Mode
@@ -68,12 +69,12 @@ const House_Menu = (props) => {
                 icon={<ExclamationCircleOutlined />}
                 onClick={props.onUnReadMode}
             >
-                New Houses
+                Unread Houses
             </Menu.Item>
             {(props.isAuth)?
             <Menu.Item 
                 key="adminMode" 
-                icon={<SettingOutlined />}
+                icon={<LoadingIcon isLoading={props.isLoading} icon={SettingOutlined} />}
                 onClick={props.onAdminMode}
             >
                 Admin Mode
@@ -104,7 +105,7 @@ const House_Menu = (props) => {
                     onClick={()=>props.showSimilar(house._id)}
                     {...style(house.processed,house.unread)}
                 >
-                    NT$ {priceConvert(house.avgPrice)}
+                    {timeConvert(house.updatedAt)}
                 </Menu.Item>
                 );
             }
@@ -119,9 +120,10 @@ const House_Menu = (props) => {
         <Menu theme="light" mode="inline" defaultSelectedKeys={['home']}>
             <Menu.Item 
                 key="home" 
-                icon={<HomeOutlined />}
-                onClick={props.onHome}>
-                Home
+                icon={<TableOutlined />}
+                onClick={props.onMap}
+            >
+                <Link to='/'>Overview</Link>
             </Menu.Item>
             <Menu.Item key="search" icon={<SearchOutlined />}>
                 {(props.collapsed)?
@@ -133,8 +135,8 @@ const House_Menu = (props) => {
                         onPressEnter={onMySearch}
                     ></Input>
                 }
-            </Menu.Item>   
-            <SubMenu key="houses" icon={<ShopOutlined />} title="House Profiles" 
+            </Menu.Item> 
+            <SubMenu key="houses" icon={<ShopOutlined />} title={<Link to='/'>House Profiles</Link>}
                 style={{overflow: 'auto', maxHeight: '50vh', }}>
                 {houseProfiles}
             </SubMenu>

@@ -1,5 +1,5 @@
-import { Tooltip, Avatar, Popover, Divider, Button } from 'antd';
-import {EnvironmentFilled, HomeFilled} from '@ant-design/icons';
+import {  Avatar, Popover, Divider } from 'antd';
+import {EnvironmentFilled} from '@ant-design/icons';
 import BuildingType from '../axios/buildingType';
 import {useEffect, useState} from 'react'
 import './House_Pin.css';

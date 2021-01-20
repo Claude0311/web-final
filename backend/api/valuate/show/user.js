@@ -43,7 +43,6 @@ const show_user = async (req,res,next) => {
         .find({user})
         .populate('similar')
         .catch(dbCatch)
-        console.log(valuates)
     res.status(200).send(valuates)
     await Valuate.updateMany({user},{$set:{unread:false}}).catch(e=>{console.log(e)})
     console.log('user read')

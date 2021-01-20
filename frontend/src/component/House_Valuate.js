@@ -16,7 +16,8 @@ import {
     Button,
     Modal,
     InputNumber,
-    Input
+    Input,
+    message
   } from 'antd';
 import './House_Query.css'
 import SearchNumber from './SearchInput';
@@ -29,18 +30,16 @@ const formItemLayout = {
 };
 export const SetManualPriceForm = (props) => {
     const [visible, setVisible] = useState(false);
-    // const [value, setValue] = useState({})
     const handleClick = () => {
         setVisible(true);
     }
     const submitPrice = (p) => {
         if (p) {
-            console.log("good",p)
             props.setPrice(p);
             // submit
         } else {
-            console.log("bad",p)
-            //
+            // don't submit
+            message.error("Price should be Number",[1]);
         }
     }
     return (
@@ -49,128 +48,9 @@ export const SetManualPriceForm = (props) => {
             ? <SearchNumber
                 name="manualPrice"
                 placeholder="price"
-                // style={{ maxWidth: '80%'}}
-                // value={value}
-                // onChange={p => setManualPrice(p)}
                 onEnter={submitPrice}
             ></SearchNumber>
             : <a onClick={handleClick}> {props.children}</a>}
         </>
     )
 }
-/** 
-export const UpdateValuateForm = ({updateInfo,...props}) => {
-    const [form] = Form.useForm()
-    const [visible, setVisible] = useState(false)
-    const [isLoading, setLoading] = useState(false)
-
-    // self defined var
-    const MinFloor = 1
-    const MaxFloor = 100
-    const MinAge = 0
-		const MaxAge = 50
-		
-		// get value of requirement 
-		const onFinish = ({
-			buildingType,
-			numOfFloor,
-			houseAge
-			}) => {
-			sendHouseInformation(lat, lng, parseInt(buildingType), numOfFloor, houseAge)
-			// setCriteria(criteria)
-		}
-
-    const showQueryForm = () => {
-      setVisible(true)
-      showForm()
-    }
-		const resetForm = () => {
-			form.resetFields();
-		}
-		const handleOK = async () => {
-			setLoading(true);
-			await form.submit();
-			setLoading(false);
-      setVisible(false);
-      moveCen(lat, lng)
-		}
-		const handleCancel = () => {
-			setVisible(false);
-		}
-
-  return (
-    <>
-      <Button 
-        type="primary" 
-        onClick={showQueryForm}>
-        {name}
-      </Button>
-      <Modal
-        visible={visible}
-        title="House Condition"
-        onOk={handleOK}
-        onCancel={handleCancel}
-        footer={[
-          <Button key="reset" onClick={resetForm}>
-            Reset
-          </Button>,
-          <Button key="back" onClick={handleCancel}>
-            Return
-          </Button>,
-          <Button key="submit" type="primary" loading={isLoading} onClick={handleOK}>
-            Submit
-          </Button>,
-        ]}
-      >
-      <Form
-        form={form}
-        name="qurey_form"
-        {...formItemLayout}
-        onFinish={onFinish}
-        initialValues={{
-          buildingType: undefined,
-        }}
-      > 
-        <Form.Item name="lat" label="緯度">
-          {lat}
-        </Form.Item>
-
-        <Form.Item name="lng" label="經度">
-          {lng}
-        </Form.Item>
-
-        <Form.Item name="buildingType" label="房屋類型">
-          <Select placeholder="Please select building type">
-            <Option value={undefined}>不限</Option>
-            <Option value="0">公寓(無電梯)</Option>
-            <Option value="1">電梯大樓(10樓以下有電梯)</Option>
-            <Option value="2">華夏(11樓以上有電梯)</Option>
-          </Select>
-        </Form.Item>
-
-        <Form.Item name="numOfFloor" label="樓層">
-          <span>
-            <InputNumber 
-              min={MinFloor}
-              max={MaxFloor}
-            /> 
-            <span className="ant-form-text">樓 (optional)</span>
-          </span>
-        </Form.Item>
-
-        <Form.Item name="houseAge" label="屋齡">
-          <span>
-            <InputNumber 
-              min={MinAge}
-              max={MaxAge}
-            /> 
-            <span className="ant-form-text">年 (optional)</span>
-          </span>
-        </Form.Item>
-      </Form>
-      </Modal>
-    </>
-  )
-}
-*/
-
