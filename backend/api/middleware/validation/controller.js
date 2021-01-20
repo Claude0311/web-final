@@ -7,7 +7,7 @@ export default  (req,res,next)=>{
 		console.log("validation Errors:",errors.array())
 		throw new ErrorHandler(400,errors.array()[0].msg)
 	}else{
-		console.log("validation pass")
+		// console.log("validation pass")
 		return next()
 	}
 }
