@@ -4,7 +4,7 @@ import BuildingType from '../axios/buildingType';
 import {useEffect, useState} from 'react'
 import './House_Pin.css';
 import QueryForm from './House_Query';
-import { priceConvert } from '../util/util';
+import { priceConvert, timeConvert } from '../util/util';
 import { SetManualPriceForm } from './House_Valuate';
 
 const House_Pin = ({id,buildingType,click,unitPrice,hover,getDetail}) => {
@@ -196,9 +196,10 @@ const House_Eval_Pin = (props) => {
     
     const content = (
         <div>
-            <p>avg: NT${priceConvert(props.avgPrice)}</p>
+            <p>avg price: NT${priceConvert(props.avgPrice)}</p>
+            <p>time: {timeConvert(props.updatedAt)}</p>
             {(props.processed)? <p>manual price: NT${priceConvert(props.manualPrice)}</p>:<></>}
-            {(props.buildingType)?<p>Type: {BuildingType[props.buildingType]}</p> :<></>}
+            {!isNaN(props.buildingType)?<p>type: {BuildingType[props.buildingType]}</p> :<></>}
             {(props.floor)? <p>floor: {props.floor} floor</p> :<></>}
             {(props.age)? <p>age: {props.age} years</p> :<></>}
             {authFunction}
@@ -208,7 +209,7 @@ const House_Eval_Pin = (props) => {
         <div className="house-pin">
         <Popover 
             placement='right'
-            title={`${props.user}'s house`}
+            title={`${props.user}'s Query`}
             trigger="click"
             visible={props.click}
             content={content}
@@ -266,7 +267,7 @@ const New_House_pin = (props) => {
     const content = (
         <div>
             <p>avg: NT${priceConvert(props.avgPrice)}</p>
-            {(props.buildingType)?<p>Type: {BuildingType[props.buildingType]}</p> :<></>}
+            {!isNaN(props.buildingType)?<p>Type: {BuildingType[props.buildingType]}</p> :<></>}
             {(props.floor)? <p>floor: {props.floor} floor</p> :<></>}
             {(props.age)? <p>age: {props.age} years</p> :<></>}
         </div>

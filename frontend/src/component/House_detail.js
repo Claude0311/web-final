@@ -161,7 +161,7 @@ function House_Detail({detail, onClose}) {
               <DescriptionItem
                 title="parking space"
                 content={detail.space?.parkingSpace}
-                after="平方公尺"
+                after="坪"
               />
             </Col>
           </Row>: <></>}
