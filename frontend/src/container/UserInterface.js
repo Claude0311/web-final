@@ -85,17 +85,29 @@ const UserInterface = ({id,isAuth, logout, history,...rest})=> {
             setMyPoints(myHouses);
         }        
     }
-
+    const setHouseRead = (id) => {
+        const housesinfo = houses.map( 
+            house => house._id === id
+                ?{...house, unread: false}
+                :house
+        )
+        setHouses(housesinfo);
+    }
     // show similar houses given an id
     const showSimilar = (id) => {
-      const h = houses.find(ele=>ele._id === id);
-      if (h) {
+        const h = houses.find(ele=>ele._id === id);
+        if (!h) {
+            return
+        }
         // console.log(h.similar);
         const similarPoints = h.similar.map(clusterConvert);
         setPoints(similarPoints);
         setMyPoints([h]);
-        // move to center
-      }
+        if (h.unread) {
+            setHouseRead(id);
+        }
+        setCen(h.coordinate);
+      
     }
 
     const searchHousebyAddr = async (address) => {

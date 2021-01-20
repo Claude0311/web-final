@@ -1,8 +1,6 @@
 // AuthService.js
 // handle login logout
 // uses sessionStorage, localStorage
-
-// import { fitBounds } from "google-map-react";
 import { useState } from "react";
 import { loginAsNormalUser, logoutUser } from "../axios/axios";
 
@@ -50,7 +48,7 @@ export const useAuth = () =>  {
     }
     const autoLogin = () => {
         const storage = getLocalAccount();
-        // console.log(storage)
+        console.log(storage)
         if (!storage) {
             return;
         } else {

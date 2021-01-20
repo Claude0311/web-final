@@ -2,9 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import {Form,Input,Button} from 'antd'
 import { UserOutlined, LockOutlined, EyeTwoTone, EyeInvisibleOutlined } from '@ant-design/icons';
 import './Login.css'
-import { loginAsAuth, loginAsNormalUser } from '../axios/axios';
-import { Redirect, NavLink } from 'react-router-dom';
-// import { getLocalAccount, setAccount } from '../Auth/AuthService';
+import { Redirect } from 'react-router-dom';
 
 const Login = ({id, login, history}) => {
     const [form] = Form.useForm();
@@ -85,6 +83,7 @@ const Login = ({id, login, history}) => {
     
     // render Container
     if (id) {
+        // approach 1
         console.log("has id, redirect to /")
         return <Redirect to="/" />;
     }

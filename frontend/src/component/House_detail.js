@@ -117,7 +117,7 @@ function House_Detail({detail, onClose}) {
             <Col span={12}>
               <DescriptionItem
                 title="unitPrice"
-                content={dateConvert(detail.unitPrice)}
+                content={priceConvert(detail.unitPrice)}
                 before="NT$"
               />
             </Col>
