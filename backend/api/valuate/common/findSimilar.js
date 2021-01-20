@@ -11,7 +11,6 @@ const findSimilar = async (req,res,next) => {
         const rules = await Score.myRule().catch(dbCatch)
         const scores = nears.map((near,index)=>({score:near.score(scoreInput,rules),index}))
         scores.sort((a,b)=>b.score-a.score)
-        // console.log(scores)
         scores.forEach(({score,index},ind)=>{
             if(score<scores[4].score) return
             similar.push(nears[index])
