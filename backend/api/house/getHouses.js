@@ -56,7 +56,6 @@ import { meter2Lat, meter2Lng } from '../../util/unitTrans'
 const getHouses = async (req,res,next) => {
     const {buildingType,unitPrice,totalPrice,hasParking,space,neighbor} = req.query
     let query = {}
-    console.log('ne',neighbor)
     if(buildingType!==undefined) query = {...query,buildingType}
     if(unitPrice!==undefined){
         const {lb,ub} = unitPrice

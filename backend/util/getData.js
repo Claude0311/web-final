@@ -38,7 +38,8 @@ const crawHouses = async ()=>{
         arr[27]!=='' &&
         parseInt(arr[7])>1070000
       )).map(async (arr)=>{
-        const coordinate = await getCor( arr[2].includes(arr[0])? arr[2]: arr[0]+arr[2] )
+        const address = arr[2].includes(arr[0])? arr[2]: arr[0]+arr[2]
+        const coordinate = await getCor( address )
         const totalPrice = parseFloat(arr[21])
         const parkingPrice = parseFloat(arr[25])
         const totalSpace = parseFloat((arr[15]/3.305785).toFixed(2))
@@ -67,7 +68,7 @@ const crawHouses = async ()=>{
           },
           detail:{
             soldTime:soldTime.year*100+soldTime.month,
-            address:arr[2],
+            address,
             price:{
               totalPrice,
               parkingPrice
