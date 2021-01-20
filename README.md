@@ -35,10 +35,15 @@ $ yarn start-build
     5. 地圖：node-geocoder
     6. api輔助：apidoc, apidoc-markdown
     7. 除錯：express-validator, express-async-handler
+* 前端
+    1. routing: react-route-dom
+    2. cluster: supercluster, useSupercluster
+    3. 可拖曳物件: react-beautiful-dnd
 ### 組員貢獻
 * b07901029陳君輔
 後端(全) + deploy
 * b07901028黃靖傑
+前端： UI設計 + 登入系統 + 地圖 + 評分系統
 * b07901089俞建琁
 
 ### 對於此課程的建議
