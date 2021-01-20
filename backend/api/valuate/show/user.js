@@ -45,7 +45,6 @@ const show_user = async (req,res,next) => {
         .catch(dbCatch)
     res.status(200).send(valuates)
     await Valuate.updateMany({user},{$set:{unread:false}}).catch(e=>{console.log(e)})
-    console.log('user read')
 }
 
 export default asyncHandler(show_user)
