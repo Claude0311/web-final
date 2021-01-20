@@ -1,6 +1,7 @@
 import axios from 'axios'
-// console.log('NODE_ENV',process.env.NODE_ENV)
-const API_ROOT = (process.env.NODE_ENV==='production')?'':'http://localhost:4000'
+// import {useState} from 'react'
+console.log('NODE_ENV',process.env.NODE_ENV)
+const API_ROOT = (process.env.NODE_ENV==='production')?'/api':'http://localhost:4000'
 const instance = axios.create({
   baseURL: API_ROOT,
   withCredentials: true
@@ -203,11 +204,18 @@ export const axiosSetScore = async (myRules) => {
 
 // ============ test =============
 export const init = async () => {
-    const dbCatch = e=>{console.log('myError:',e?.response?.data?.msg)}
+    const dbCatch = e=>{
+        console.log('myError:',e?.response?.data?.msg)
+        return {data:{}}
+    }
     // const {data:{user,auth}} = await instance.post('/login',{user:'b07901029',password:'123'}).catch(dbCatch)
-    // // console.log(user,auth)
-    // const {data} = await instance.get('/houses',{params:{neighbor:{center:{lat:25,lng:121.5},distance:800}}}).catch(dbCatch)
-    // // console.log(data)
+    // console.log(user,auth)
+    // const {data:jif} = await instance.get('/valuate/user',{params:{neighbor:{center:{lat:25,lng:121.5},distance:800}}}).catch(dbCatch)
+    // await instance.patch('/valuate/user',{_id:jif[0]._id,buildingType:null}).catch(dbCatch)
+    // // jif.forEach(async ({_id})=>{
+    //     const {data:col} = await instance.delete('/valuate/user',{data:{_id:jif[3]._id}}).catch(dbCatch) 
+    //     console.log(col)
+    // // })
 }
 
 export const testErr = async () => {

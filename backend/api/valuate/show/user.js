@@ -34,17 +34,17 @@ import { dbCatch } from "../../error"
  * @apiError (Server error 500) {Number} statusCode 500
  * @apiError (Server error 500) {String} msg 資料庫發生錯誤
  */
-const show_auth = async (req,res,next) => {
+const show_user = async (req,res,next) => {
     let {user} = req.session
-    console.log({user})
+    // console.log({user})
     // if(user===undefined) user='b07901029'
     const valuates = await Valuate
         .find({user})
         .populate('similar')
         .catch(dbCatch)
     res.status(200).send(valuates)
-    await Valuate.update({user},{unread:false}).catch(e=>{console.log(e)})
+    await Valuate.updateMany({user},{$set:{unread:false}}).catch(e=>{console.log(e)})
     console.log('user read')
 }
 
-export default asyncHandler(show_auth)
+export default asyncHandler(show_user)

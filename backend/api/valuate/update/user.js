@@ -34,9 +34,10 @@ import getPrice from '../common/getPrice'
  */
 const parse = async (req,res,next) => {
     let {_id,lat,lng,buildingType,floor,age} = req.body
+    console.log('bod',req.body)
     const valuate = await Valuate.findById(_id).catch(dbCatch)
     if(!valuate) throw new ErrorHandler(404,'查無此房')
-    if(valuate.user!==req.session.user && false) throw new ErrorHandler(404,'user not match')
+    if(valuate.user!==req.session.user) throw new ErrorHandler(404,'user not match')
     if(lat!==undefined) valuate.coordinate.lat = parseFloat(lat)
     if(lng!==undefined) valuate.coordinate.lng = parseFloat(lng)
     if(buildingType!==undefined) valuate.buildingType = buildingType
@@ -49,13 +50,19 @@ const parse = async (req,res,next) => {
 
 import validator from '../../middleware/validation'
 import {body} from 'express-validator'
+const nulla = (val)=>(val===null)?undefined:val
 const valid = [
     body('_id').exists().withMessage('_id is required'),
-    body('lat').optional().isNumeric().withMessage('lat should be Number'),
-    body('lng').optional().isNumeric().withMessage('lng should be NUmber'),
-    body('buildingType').optional().isIn([0,1,2]).withMessage('buildingType should be one of 0~2，stands for 公寓(5樓含以下無電梯)、華廈(10層含以下有電梯)、住宅大樓(11層含以上有電梯)'),
-    body('floor').optional().isNumeric().withMessage('floor should be Number(optional)'),
-    body('age').optional().isNumeric().withMessage('age should be Number(optinoal)')
+    body('lat').default(undefined).optional()
+        .isNumeric().withMessage('lat should be Number'),
+    body('lng').default(undefined).optional()
+        .isNumeric().withMessage('lng should be NUmber'),
+    body('buildingType').default(undefined).optional()
+        .isIn([0,1,2]).withMessage('buildingType should be one of 0~2，stands for 公寓(5樓含以下無電梯)、華廈(10層含以下有電梯)、住宅大樓(11層含以上有電梯)'),
+    body('floor').default(undefined).optional()
+        .isNumeric().withMessage('floor should be Number(optional)'),
+    body('age').default(undefined).optional()
+        .isNumeric().withMessage('age should be Number(optinoal)')
 ]
 
 export default [validator(valid),asyncHandler(parse),findNear,findSimilar,getPrice]
