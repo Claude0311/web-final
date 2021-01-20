@@ -43,7 +43,7 @@ const show_user = async (req,res,next) => {
         .populate('similar')
         .catch(dbCatch)
     res.status(200).send(valuates)
-    await Valuate.update({user},{unread:false}).catch(e=>{console.log(e)})
+    await Valuate.updateMany({user},{$set:{unread:false}}).catch(e=>{console.log(e)})
     console.log('user read')
 }
 
