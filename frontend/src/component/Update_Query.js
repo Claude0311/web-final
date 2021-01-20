@@ -15,10 +15,12 @@ import {
     Select,
     Button,
     Modal,
-    InputNumber
+    InputNumber,
+    Input
   } from 'antd';
 // import './House_Query.css'
 import { updateHouseInformation } from '../axios/axios';
+import buildingType from '../axios/buildingType';
 
 const { Option } = Select;
 
@@ -27,7 +29,7 @@ const formItemLayout = {
   wrapperCol: { span: 14 },
 };
 
-const UpdateQueryForm = ({name, id, ori_buildingType, ori_floor, ori_age, showForm, ori_lat, ori_lng, moveCen, getMyHouses}) => {
+const UpdateQueryForm = ({name, id, ori_buildingType, ori_floor, ori_age, showForm, ori_lat, ori_lng, getMyHouses, moveCen}) => {
     const [form] = Form.useForm()
     const [visible, setVisible] = useState(false)
     const [isLoading, setLoading] = useState(false)
@@ -46,10 +48,10 @@ const UpdateQueryForm = ({name, id, ori_buildingType, ori_floor, ori_age, showFo
 			numOfFloor,
 			houseAge
 			}) => {
-      await updateHouseInformation(id, lat, lng, parseInt(buildingType), numOfFloor, houseAge)
+      await updateHouseInformation(id, parseFloat(lat), parseFloat(lng), parseInt(buildingType), numOfFloor, houseAge)
       getMyHouses()
       setVisible(false)
-      moveCen(lat,lng)
+      moveCen(lat, lng)
 		}
 
     const showUpdateForm = () => {
@@ -97,25 +99,29 @@ const UpdateQueryForm = ({name, id, ori_buildingType, ori_floor, ori_age, showFo
         {...formItemLayout}
         onFinish={onFinish}
         initialValues={{
-          buildingType: {ori_buildingType},
+          buildingType: undefined,
         }}
       > 
         <Form.Item name="lat" label="緯度">
-          <InputNumber 
-            defaultValue={ori_lat}
-            placeholder={ori_lat}
-          />
+          <span>
+            <Input 
+              placeholder={ori_lat}
+            />
+            <span className="ant-form-text">(optional)</span>
+          </span>
         </Form.Item>
 
         <Form.Item name="lng" label="經度">
-          <InputNumber 
-            defaultValue={ori_lng}
-            placeholder={ori_lng}
-          />
+          <span>
+            <Input 
+              placeholder={ori_lng}
+            />
+            <span className="ant-form-text">(optional)</span>
+          </span>  
         </Form.Item>
 
         <Form.Item name="buildingType" label="房屋類型">
-          <Select placeholder="Please select building type">
+          <Select placeholder={buildingType[ori_buildingType]}>
             <Option value={undefined}>不限</Option>
             <Option value="0">公寓(無電梯)</Option>
             <Option value="1">電梯大樓(10樓以下有電梯)</Option>
@@ -126,7 +132,7 @@ const UpdateQueryForm = ({name, id, ori_buildingType, ori_floor, ori_age, showFo
         <Form.Item name="numOfFloor" label="樓層">
           <span>
             <InputNumber 
-              defaultValue={ori_floor}
+              placeholder={ori_floor}
               min={MinFloor}
               max={MaxFloor}
             /> 
@@ -137,7 +143,7 @@ const UpdateQueryForm = ({name, id, ori_buildingType, ori_floor, ori_age, showFo
         <Form.Item name="houseAge" label="屋齡">
           <span>
             <InputNumber 
-              defaultValue={ori_age}
+              placeholder={ori_age}
               min={MinAge}
               max={MaxAge}
             /> 

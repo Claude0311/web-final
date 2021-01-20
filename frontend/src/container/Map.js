@@ -263,6 +263,7 @@ const Map = ({ points, houses, setManualPrice, apiKey, getMyHouses, ...rest }) =
         showSim={showSim}
         getMyHouses={getMyHouses}
         showForm={showForm}
+        moveCen={moveCen}
         {...rest}
       />
     )}
@@ -277,6 +278,8 @@ const Map = ({ points, houses, setManualPrice, apiKey, getMyHouses, ...rest }) =
           unitPrice={unitPrice}
           lat={coordinate.lat}
           lng={coordinate.lng}
+          hover={hoverKey === _id}
+          click={clickKey === _id}
           {...rest}
         />
       )

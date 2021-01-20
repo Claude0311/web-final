@@ -188,10 +188,9 @@ const House_Eval_Pin = (props) => {
         ?
         <SetManualPriceForm 
             setPrice={setPrice}
-        >Set Manual Price</SetManualPriceForm>
+        >Set manual price</SetManualPriceForm>
         : <div className="eval-pin">
-            <a onClick={props.showSim}>view similar houses</a>
-            <a onClick={props.updateInfo} >Update information</a>
+            <a onClick={props.showSim}>View similar houses</a>
             <UpdateQueryForm
                 name="Update information"
                 id={props.id}
@@ -202,6 +201,7 @@ const House_Eval_Pin = (props) => {
                 ori_age={props.age}
                 getMyHouses={props.getMyHouses}
                 showForm={props.showForm}
+                moveCen={props.moveCen}
             />
         </div>
     let style = (props.hover)?  myStyleHover: myStyle;
@@ -233,16 +233,19 @@ const House_Eval_Pin = (props) => {
 
 // ====== the pin for similar houses
 const Similar_House_Pin = (props) => {
-    const style = {
+    const myStyle = {
         position: 'absolute',
         bottom: '0',
         left: '-9pt',
         fontSize: '18pt',
         color: 'rgb(240, 102, 11)'
     }
-    // const onCheckSim = () => {
-    //     props.checkSimilar(id);
-    // }
+    const myStyleHover = {
+        ...myStyle,
+        left: '-10pt',
+        fontSize: '20pt'
+    }
+    let style = (props.hover)?  myStyleHover: myStyle;
     const content = (
         <div>
             <p>price: NT${priceConvert(props.unitPrice)}</p>
@@ -253,7 +256,7 @@ const Similar_House_Pin = (props) => {
         <Popover 
             placement='top'
             title="Similar house"
-            visible={true}
+            visible={props.click || props.hover}
             content={content}
             trigger="hover"
         >

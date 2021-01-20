@@ -53,7 +53,10 @@ const valid = [
     body('_id').exists().withMessage('_id is required'),
     body('lat').optional().isNumeric().withMessage('lat should be Number'),
     body('lng').optional().isNumeric().withMessage('lng should be NUmber'),
-    body('buildingType').optional().isIn([0,1,2]).withMessage('buildingType should be one of 0~2，stands for 公寓(5樓含以下無電梯)、華廈(10層含以下有電梯)、住宅大樓(11層含以上有電梯)'),
+    body('buildingType').optional().custom(val=>{
+        console.log(val)
+        return true
+    }).isIn([0,1,2]).withMessage('buildingType should be one of 0~2，stands for 公寓(5樓含以下無電梯)、華廈(10層含以下有電梯)、住宅大樓(11層含以上有電梯)'),
     body('floor').optional().isNumeric().withMessage('floor should be Number(optional)'),
     body('age').optional().isNumeric().withMessage('age should be Number(optinoal)')
 ]
