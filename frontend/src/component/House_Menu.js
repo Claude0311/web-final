@@ -5,7 +5,6 @@ import {
     ShopOutlined,
     UserOutlined,
     SearchOutlined,
-    HomeOutlined,
     FormOutlined,
     FileSearchOutlined,
     SettingOutlined,

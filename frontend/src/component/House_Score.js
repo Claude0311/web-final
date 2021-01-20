@@ -4,6 +4,7 @@ import { Row, Col, Typography, List, Button, Avatar, InputNumber, message } from
 import { useEffect, useState } from "react";
 import {axiosGetScoreRule, axiosResetScore, axiosSetScore} from '../axios/axios';
 import {reorderPriority} from '../util/util'
+import { Redirect } from 'react-router-dom';
 const { Title } = Typography;
 
 const classes = {
@@ -116,7 +117,7 @@ const TemplateRule = (props) => {
     );
 };
 
-const ScoreRule = () => {
+const ScoreRule = ({isAuth}) => {
     const [rules, setRules] = useState(null);
     const [templates, setTemplates] = useState(null);
     const [isLoading, setLoading] = useState(false);
@@ -163,11 +164,6 @@ const ScoreRule = () => {
         onViewScoreRule();
     }, []);
 
-    // useEffect(() => {
-    //     console.log("rule change",rules);
-    //     // console.log("temp change",templates);
-    // }, [rules]);
-
     const onDragEnd = (result) => {
         // drag end move, reorder the state and update state
         const { source, destination } = result;
@@ -198,6 +194,10 @@ const ScoreRule = () => {
         setTemplates(newSelection.templates);
 
     };
+
+    if (!isAuth) {
+        return <Redirect to='/' />
+    }
     return (
         <div>
         

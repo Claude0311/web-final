@@ -372,7 +372,7 @@ const UserInterface = ({id,isAuth, logout, history,...rest})=> {
                     /> )}
                 />
                 <Route path='/score' render={ (props) => 
-                    (<ScoreRule {...props} 
+                    (<ScoreRule {...props} isAuth={isAuth}
                     /> )}
                 />
             </Content>       
