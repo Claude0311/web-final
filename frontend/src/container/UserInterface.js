@@ -23,7 +23,7 @@ import { clusterConvert,
     } from '../util/util';
 import { useMapApi } from '../Auth/GoogleApi';
 import ScoreRule from '../component/House_Score';
-import { Route } from 'react-router-dom';
+import { Route, Link } from 'react-router-dom';
 
 const { Header, Sider, Content } = Layout;
 
@@ -36,6 +36,7 @@ const UserInterface = ({id,isAuth, logout, history,...rest})=> {
     const [myPoints, setMyPoints] = useState(null);
     const [isAdminMode, setAdminMode] = useState(false);
     const { apiKey, searchAddr } = useMapApi();
+    const [isModeChanging, setModeLoading] = useState(false);
 
     // thoses from Map.js
     const [cen,setCen] = useState({lat: 25.007414, lng: 121.51505})
@@ -64,7 +65,12 @@ const UserInterface = ({id,isAuth, logout, history,...rest})=> {
         getHouses();
         // history.push('/');
     }
-    // only view houses that I have
+    // ======= show houses only
+    const onMap = () => {
+        setMyPoints([]);
+        getHouses();
+    }
+
     const setMyHouseOnly = () => {
         setPoints([]);
         setMyPoints(houses);
@@ -138,22 +144,27 @@ const UserInterface = ({id,isAuth, logout, history,...rest})=> {
                 }));
             setHouses(evalAuth);
             setMyPoints(evalAuth);
-            // console.log("evalAuth",evalAuth);
         }        
     }
 
-    const switchToAdmin = () => {
+    const switchToAdmin = async() => {
+        setModeLoading(true);
         setAdminMode(true);
-        message.info("switch to Admin Mode!!",[1]);
-        getEvalHouses();
         setPoints([]);
+        await getEvalHouses();
+        message.info("switch to Admin Mode!!",[1]);
+        setModeLoading(false);
+        
+        
     }
 
-    const switchToUser = () => {
+    const switchToUser = async () => {
+        setModeLoading(true);
         setAdminMode(false);
+        await getHouses();
+        await getMyHouses();
         message.info("switch to User Mode!!",[1]);
-        getHouses();
-        getMyHouses();
+        setModeLoading(false);
     }
 
     // check not valuated houses
@@ -247,22 +258,29 @@ const UserInterface = ({id,isAuth, logout, history,...rest})=> {
             theme="light"
 
             >
-            <div className="logo" >
+            <Link to='/'>
+            <div className="logo"
+                onClick={onHome} >
+                
                 <HomeFilled style={{
-                    fontSize: "20px"
+                    fontSize: "24px"
                 }} />
-                <div className="text">
-                    <span>House</span>
-                    <span>Evaluation</span>
-                </div>
+                {collapsed
+                    ? null
+                    :<div className="text">
+                        <span>House</span>
+                        <span>Evaluation</span>
+                    </div>
+                }
             </div>
-            
+            </Link>
+
             <House_Menu 
                 isAuth={isAuth} 
                 isAdminMode={isAdminMode}
                 onLogout={onLogout}
                 houses={houses}
-                onHome={onHome}
+                onMap={onMap}
                 onMyHouseMode={setMyHouseOnly}
                 onUnReadMode={showUnreadHouses}
                 onSearch={searchMyHousebyAddr}
@@ -272,6 +290,7 @@ const UserInterface = ({id,isAuth, logout, history,...rest})=> {
                 onScore={onViewScoreRule}
                 onAdminMode={switchToAdmin}
                 onUserMode={switchToUser}
+                isLoading={isModeChanging}
                 
             />
         </Sider>
@@ -299,12 +318,10 @@ const UserInterface = ({id,isAuth, logout, history,...rest})=> {
                   style={{
                       display: "flex",
                       alignItems: "center",
-                      // justifySelf: "center"
                   }}>
                   <SearchForm
                       name="Search Options"
                       setCriteria={handleCriteria}
-                      //onSearch={searchhouses}
                       onSearch={searchHousebyAddr}
                   />
               </span>
@@ -346,17 +363,6 @@ const UserInterface = ({id,isAuth, logout, history,...rest})=> {
                     (<ScoreRule {...props} 
                     /> )}
                 />
-                {/* <Map 
-                    // id={id} 
-                    // isAuth={isAuth}
-                    apiKey={apiKey}
-                    ref={mapRef}
-                    points={points}
-                    houses={myPoints}
-                    setManualPrice={setManualPrice}
-                    getMyHouses={getMyHouses}
-                /> */}
-                {/* <ScoreRule /> */}
             </Content>       
         </Layout>
     </Layout>

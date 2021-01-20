@@ -11,12 +11,20 @@ import {
     SettingOutlined,
     ExclamationCircleOutlined,
     CheckCircleOutlined,
-    SolutionOutlined
+    SolutionOutlined,
+    TableOutlined,
+    LoadingOutlined
 } from '@ant-design/icons';
 import SubMenu from 'antd/lib/menu/SubMenu';
 import { priceConvert } from '../util/util';
 import { Link } from 'react-router-dom';
 
+const LoadingIcon = (props) => {
+    const {isLoading, icon:Icon, ...rest} = props;
+    return (isLoading)
+        ? <LoadingOutlined {...rest}/>
+        : <Icon {...rest} />
+}
 
 const House_Menu = (props) => {
     const onMySearch = (e) => {
@@ -43,7 +51,7 @@ const House_Menu = (props) => {
             </Menu.Item>
             <Menu.Item 
                 key="userMode" 
-                icon={<UserOutlined />}
+                icon={<LoadingIcon isLoading={props.isLoading} icon={SettingOutlined} />}
                 onClick={props.onUserMode}
             >
                 User Mode
@@ -67,7 +75,7 @@ const House_Menu = (props) => {
             {(props.isAuth)?
             <Menu.Item 
                 key="adminMode" 
-                icon={<SettingOutlined />}
+                icon={<LoadingIcon isLoading={props.isLoading} icon={SettingOutlined} />}
                 onClick={props.onAdminMode}
             >
                 Admin Mode
@@ -113,11 +121,10 @@ const House_Menu = (props) => {
         <Menu theme="light" mode="inline" defaultSelectedKeys={['home']}>
             <Menu.Item 
                 key="home" 
-                icon={<HomeOutlined />}
-                onClick={props.onHome}
+                icon={<TableOutlined />}
+                onClick={props.onMap}
             >
-                {/* Home */}
-                <Link to='/'>Home</Link>
+                <Link to='/'>Overview</Link>
             </Menu.Item>
             <Menu.Item key="search" icon={<SearchOutlined />}>
                 {(props.collapsed)?
@@ -129,7 +136,7 @@ const House_Menu = (props) => {
                         onPressEnter={onMySearch}
                     ></Input>
                 }
-            </Menu.Item>   
+            </Menu.Item> 
             <SubMenu key="houses" icon={<ShopOutlined />} title={<Link to='/'>House Profiles</Link>}
                 style={{overflow: 'auto', maxHeight: '50vh', }}>
                 {houseProfiles}

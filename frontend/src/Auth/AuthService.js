@@ -2,7 +2,7 @@
 // handle login logout
 // uses sessionStorage, localStorage
 
-import { fitBounds } from "google-map-react";
+// import { fitBounds } from "google-map-react";
 import { useState } from "react";
 import { loginAsNormalUser, logoutUser } from "../axios/axios";
 
@@ -68,7 +68,7 @@ export const useAuth = () =>  {
             removeAccount();
             return 'success';
         } catch(e) {
-            console.log(e);
+            // console.log(e);
             return 'error';
         }
     }
