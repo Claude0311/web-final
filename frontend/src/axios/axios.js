@@ -210,13 +210,13 @@ export const init = async () => {
     }
     // const {data:{user,auth}} = await instance.post('/login',{user:'b07901029',password:'123'}).catch(dbCatch)
     // console.log(user,auth)
-    // const {data:jif} = await instance.get('/valuate/user',{params:{neighbor:{center:{lat:25,lng:121.5},distance:800}}}).catch(dbCatch)
-    // await instance.patch('/valuate/user',{_id:jif[0]._id,buildingType:null}).catch(dbCatch)
-    // jif.forEach(async ({_id})=>{
+    // // const {data:jif} = await instance.get('/valuate/user',{params:{neighbor:{center:{lat:25,lng:121.5},distance:800}}}).catch(dbCatch)
+    // // await instance.patch('/valuate/user',{_id:jif[0]._id,buildingType:null}).catch(dbCatch)
+    // // jif.forEach(async ({_id})=>{
     //     // const {data:col} = await instance.delete('/valuate/user',{data:{_id:jif[3]._id}}).catch(dbCatch) 
-    //     const {data:col} = await instance.patch('/valuate/user',{_id}).catch(dbCatch)
+    //     const {data:col} = await instance.patch('/valuate/user',{_id:"6007a8c848a21c1f1cc66e32"}).catch(dbCatch)
     //     console.log(col)
-    // })
+    // // })
 }
 
 export const testErr = async () => {
