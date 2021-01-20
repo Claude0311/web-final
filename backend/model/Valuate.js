@@ -13,9 +13,9 @@ const Valuate = new Schema({
     age:Number,
     floor: Number,
     //valuate related
-    similar: [{ type: Schema.Types.ObjectId, ref: 'House_fake' }],
+    similar: [{ type: Schema.Types.ObjectId, ref: 'House_fake2' }],
     avgPrice: Number,
     manualPrice: Number
-})
+}, { timestamps: { createdAt: 'created_at' }})
 
-export default mongoose.model('Valuate_fake', Valuate)
+export default mongoose.model('Valuate_fake2', Valuate)

@@ -41,12 +41,83 @@ const crawHouses = async ()=>{
         const address = arr[2].includes(arr[0])? arr[2]: arr[0]+arr[2]
         const coordinate = await getCor( address )
         const totalPrice = parseFloat(arr[21])
-        const parkingPrice = parseFloat(arr[25])
+        let parkingPrice = parseFloat(arr[25])
         const totalSpace = parseFloat((arr[15]/3.305785).toFixed(2))
-        const parkingSpace = parseFloat((arr[24]/3.305785).toFixed(2))
-        const unitPrice = Math.round((parkingPrice===0||parkingSpace===0)?
-                          totalPrice/totalSpace:
-                          (totalPrice-parkingPrice)/(totalSpace-parkingSpace))
+        let parkingSpace = parseFloat((arr[24]/3.305785).toFixed(2))
+        const hasParking = arr[1].includes('車位')
+        if(hasParking){
+          const parkingType = arr[23]
+          if(parkingPrice===0 && parkingSpace===0){
+            switch(parkingType){
+              case '其他': 
+                return false
+              case '坡道平面':
+                parkingSpace = 40*0.3025
+                parkingPrice = Math.round(parkingSpace*200000)
+                break
+              case '坡道機械':
+                parkingSpace = 23*0.3025
+                parkingPrice = Math.round(parkingSpace*170000)
+                break
+              case '升降機械':
+                parkingSpace = 10*0.3025
+                parkingPrice = Math.round(parkingSpace*230000)
+                break
+              case '升降平面':
+                parkingSpace = 25*0.3025
+                parkingPrice = Math.round(parkingSpace*200000)
+                break
+              case '塔式車位':
+                parkingSpace = 10*0.3025
+                parkingPrice = Math.round(parkingSpace*300000)
+                break
+              default:
+                return false
+            }
+          } else if(parkingPrice===0){
+            switch(parkingType){
+              case '坡道平面':
+                parkingPrice = Math.round(parkingSpace*200000)
+                break
+              case '坡道機械':
+                parkingPrice = Math.round(parkingSpace*170000)
+                break
+              case '升降機械':
+                parkingPrice = Math.round(parkingSpace*230000)
+                break
+              case '升降平面':
+                parkingPrice = Math.round(parkingSpace*200000)
+                break
+              case '塔式車位':
+                parkingPrice = Math.round(parkingSpace*300000)
+                break
+              default:
+                return false
+            }
+          } else if(parkingSpace===0){
+            switch(parkingType){
+              case '坡道平面':
+                parkingSpace = parseFloat((parkingPrice/200000).toFixed(2))
+                break
+              case '坡道機械':
+                parkingSpace = parseFloat((parkingPrice/170000).toFixed(2))
+                break
+              case '升降機械':
+                parkingSpace = parseFloat((parkingPrice/230000).toFixed(2))
+                break
+              case '升降平面':
+                parkingSpace = parseFloat((parkingPrice/200000).toFixed(2))
+                break
+              case '塔式車位':
+                parkingSpace = parseFloat((parkingPrice/300000).toFixed(2))
+                break
+              default:
+                return false
+            }
+          }
+          console.log('park',parkingSpace,parkingPrice)
+        } 
+        const unitPrice = Math.round((totalPrice-parkingPrice)/(totalSpace-parkingSpace))
         const soldTime = {
           year:parseInt(arr[7].slice(0,-4)),
           month:parseInt(arr[7].slice(-4,-2)),
@@ -82,10 +153,10 @@ const crawHouses = async ()=>{
               maxFloor:c2n(arr[10])
             },
             age,
-            hasParking: arr[1].includes('車位')
+            hasParking
           }
         }
-      })
+      }).filter(obj=>obj!==false)
     )
     return houses
 }
