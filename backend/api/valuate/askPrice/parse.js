@@ -5,6 +5,7 @@ import Valuate from '../../../model/Valuate'
 const findNear = async (req,res,next) => {
     let {lat,lng,buildingType,floor,age} = req.body
     let {user} = req.session//may be undefined
+    console.log('building type',buildingType)
     lat = parseFloat(lat)
     lng = parseFloat(lng)
     if(floor!== undefined) floor = parseInt(floor)

@@ -30,6 +30,7 @@ import { dbCatch } from "../../error"
  * @apiSuccess {Number} -.similar.coordinate.lat 緯度
  * @apiSuccess {Number} -.similar.coordinate.lng 經度
  * @apiSuccess {Number} -.similar.unitPrice 單位坪數價錢
+ * @apiSuccess {Time} -.similar.created_at 時間 ex：2021-01-20T03:21:37.331Z
  * 
  * @apiError (Server error 500) {Number} statusCode 500
  * @apiError (Server error 500) {String} msg 資料庫發生錯誤
@@ -42,6 +43,7 @@ const show_user = async (req,res,next) => {
         .find({user})
         .populate('similar')
         .catch(dbCatch)
+        console.log(valuates)
     res.status(200).send(valuates)
     await Valuate.updateMany({user},{$set:{unread:false}}).catch(e=>{console.log(e)})
     console.log('user read')

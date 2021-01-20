@@ -10,7 +10,7 @@ const House = new Schema({
         lng:Number//經度，每0.00001差1.0089公尺
     },
     unitPrice: Number,
-    detail:  { type: Schema.Types.ObjectId, ref: 'House_detail_fake' },
+    detail:  { type: Schema.Types.ObjectId, ref: 'House_detail_fake2' },
 })
 
 
@@ -30,4 +30,4 @@ House.methods.score = function(user,rules){
 }
 
 
-export default mongoose.model('House_fake', House)
+export default mongoose.model('House_fake2', House)

@@ -14,7 +14,7 @@ export default async (fromWeb=false)=>{
         try{
             const house = await new House(overview).save()
                 // .catch(e=>{throw new Error()})
-            const {_id} = await House_detail(detail).save()
+            const {_id} = await new House_detail(detail).save()
             console.log('accept',_id)
             house.detail = _id
             house.save()

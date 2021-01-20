@@ -818,6 +818,7 @@ GET /valuate/user
 | &ensp;&ensp;&ensp;lat | `Number` | 緯度 |
 | &ensp;&ensp;&ensp;lng | `Number` | 經度 |
 | &ensp;&ensp;unitPrice | `Number` | 單位坪數價錢 |
+| &ensp;&ensp;created_at | `Time` | 時間 ex：2021-01-20T03:21:37.331Z |
 
 #### Error response
 
