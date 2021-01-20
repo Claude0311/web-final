@@ -7,6 +7,14 @@ export const dateConvert = date => (
     `${date}`.replace(/\B(?=(\d{2})(?!\d))/g, '/')
 )
 
+// const re = (match, r1,r2,r3,r4) => {
+//     return [r1,r2,r3,r4].join('/')
+// }
+
+export const timeConvert = timestamp => (
+    timestamp.substr(2,17).replace('T',' ').replace(/-/g,'\/')
+)
+
 export const clusterConvert = house => {
     const {coordinate,...rest} = house;
     return {

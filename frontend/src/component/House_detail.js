@@ -55,9 +55,9 @@ function House_Detail({detail, onClose}) {
               <Button onClick={onClose} style={{ marginRight: 8 }}>
                 Cancel
               </Button>
-              <Button onClick={onClose} type="primary">
+              {/* <Button onClick={onClose} type="primary">
                 Like
-              </Button>
+              </Button> */}
             </div>
           }
         >

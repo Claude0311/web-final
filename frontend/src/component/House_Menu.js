@@ -15,7 +15,7 @@ import {
     LoadingOutlined
 } from '@ant-design/icons';
 import SubMenu from 'antd/lib/menu/SubMenu';
-import { priceConvert } from '../util/util';
+import { timeConvert } from '../util/util';
 import { Link } from 'react-router-dom';
 
 const LoadingIcon = (props) => {
@@ -105,7 +105,7 @@ const House_Menu = (props) => {
                     onClick={()=>props.showSimilar(house._id)}
                     {...style(house.processed,house.unread)}
                 >
-                    NT$ {priceConvert(house.avgPrice)}
+                    {timeConvert(house.updatedAt)}
                 </Menu.Item>
                 );
             }

@@ -214,11 +214,7 @@ const UserInterface = ({id,isAuth, logout, history,...rest})=> {
         }
     }
 
-    // const searchhouses = (id) => {
-    //     console.log("search",id)
-    //     const house = houses.filter(ele=>ele._id.includes(id));
-    //     setMyPoints(house);
-    // }
+
     // =============== Score ==================
     const onViewScoreRule = async() => {
         const rule = await axiosGetScoreRule();
