@@ -12,7 +12,7 @@ export const dateConvert = date => (
 // }
 
 export const timeConvert = timestamp => (
-    timestamp.substr(2,17).replace('T',' ').replace(/-/g,'\/')
+    timestamp.substr(2,14).replace('T',' ').replace(/-/g,'\/')
 )
 
 export const clusterConvert = house => {
