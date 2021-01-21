@@ -31,7 +31,7 @@ const findNear = async (req,res,next) => {
         await valuate.save()
         return res.send({similar:[],avgPrice:-1})
     }
-    const scoreInput = {age,coordinate:{lat,lng},floor}
+    const scoreInput = {age,coordinate:{lat,lng},floor,buildingType}
     req.nears = nears
     req.scoreInput = scoreInput
     next()
