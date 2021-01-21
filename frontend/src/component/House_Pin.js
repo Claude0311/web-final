@@ -71,7 +71,7 @@ const House_Cluster = ({sum, size, pointSize, hover, click, ...props }) => {
     }
 
     let ratio = (hover)? 8:0;
-    let markSize = Math.floor(ratio+40-0.4*pointSize/size);
+    let markSize = ratio + 40 - Math.round(40/size);
     const content = (
         <div className="cluster">
             <p>平均房價: NT${priceConvert(Math.round(sum/size))} /坪</p>
