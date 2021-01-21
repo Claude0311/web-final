@@ -1,8 +1,8 @@
 import mongoose from 'mongoose'
 import env from 'dotenv'
-env.config('../../../')
+env.config()
 
-const DB_URL1 = ''//'mongodb+srv://ChunFuBank:bankpassword@cluster0.nqvst.mongodb.net/Bank?retryWrites=true&w=majority'
+const DB_URL1 = ''
 const DB_URL = process.env.MONGO_URI||DB_URL1
 console.log(`url:${DB_URL}`)
 
