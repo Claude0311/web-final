@@ -22,6 +22,13 @@ $ yarn dev
 $ yarn build
 $ yarn start-build
 ```
+登入帳密：
+* 一般使用者(也歡迎體驗註冊功能)：
+    * 帳號：eee
+    * 密碼：eee
+* 管理員：
+    * 帳號：ntuee-webprogramming
+    * 密碼：password
 操作方式參見[demo影片](#useful-links)
 ### 使用與參考之框架/模組/原始碼
 * 後端框架：express.js
