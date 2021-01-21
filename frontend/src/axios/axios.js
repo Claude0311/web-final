@@ -12,7 +12,8 @@ const dbCatch = e=>console.log('myError:',e?.response?.data?.msg)
 
 export const axiosGetApi = async () => {
     try {
-        return await instance.get('/apiKey');
+        const {data: r} = await instance.get('/apiKey');
+        return r;
     } catch (e) {
         // console.log("fail",e);
         return '';

@@ -4,6 +4,7 @@ import { House_Pin, House_Cluster,Current_Pin, House_Eval_Pin, Similar_House_Pin
 import House_Detail from '../component/House_detail';
 import { axiosGetDetail } from '../axios/axios';
 import useSupercluster from 'use-supercluster';
+import {Result} from 'antd';
 
 // const AnyReactComponent = ({ text }) => <div>{text}</div>;
 
@@ -315,8 +316,10 @@ const Map = ({ points, houses, setManualPrice, apiKey,
       )
     }): <></>
 
-    if (!apiKey.length) {
-      return <></>
+
+    if (!apiKey || 0 === apiKey.length) {
+      // console.log("api",apiKey)
+      return <h1>Loading Map, you can try to log out if the map doesn't show up!</h1>;
     }
 
     return(
