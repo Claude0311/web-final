@@ -15,7 +15,7 @@ const House_Pin = ({id,buildingType,click,unitPrice,hover,getDetail}) => {
     const content = (
         <>
         <p>Type: {BuildingType[buildingType]}</p>
-        <p>Unit Price: NT${priceConvert(unitPrice)}</p>
+        <p>Unit Price: NT${priceConvert(unitPrice)} /坪</p>
         <a onClick={async()=>{
             await setvisible(false);
             // console.log("in func",id);
@@ -181,7 +181,8 @@ const House_Eval_Pin = (props) => {
         fontSize: '20pt'
     }
     const setPrice = (p) => {
-        props.setManualPrice({_id:props.id, manualPrice:p});
+        const price = Math.round(p);
+        props.setManualPrice({_id:props.id, manualPrice:price});
     }
     const authFunction = (props.auth)
         ?
@@ -196,9 +197,9 @@ const House_Eval_Pin = (props) => {
     
     const content = (
         <div>
-            <p>avg price: NT${priceConvert(props.avgPrice)}</p>
+            <p>avg price: NT${priceConvert(props.avgPrice)} /坪</p>
             <p>time: {timeConvert(props.updatedAt)}</p>
-            {(props.processed)? <p>manual price: NT${priceConvert(props.manualPrice)}</p>:<></>}
+            {(props.processed)? <p>manual price: NT${priceConvert(props.manualPrice)} /坪</p>:<></>}
             {!isNaN(props.buildingType)?<p>type: {BuildingType[props.buildingType]}</p> :<></>}
             {(props.floor)? <p>floor: {props.floor} floor</p> :<></>}
             {(props.age)? <p>age: {props.age} years</p> :<></>}
@@ -234,7 +235,7 @@ const Similar_House_Pin = (props) => {
     // }
     const content = (
         <div>
-            <p>price: NT${priceConvert(props.unitPrice)}</p>
+            <p>price: NT${priceConvert(props.unitPrice)} /坪</p>
         </div>
     );
     return(
@@ -266,7 +267,7 @@ const New_House_pin = (props) => {
     // }
     const content = (
         <div>
-            <p>avg: NT${priceConvert(props.avgPrice)}</p>
+            <p>avg: NT${priceConvert(props.avgPrice)} /坪</p>
             {!isNaN(props.buildingType)?<p>Type: {BuildingType[props.buildingType]}</p> :<></>}
             {(props.floor)? <p>floor: {props.floor} floor</p> :<></>}
             {(props.age)? <p>age: {props.age} years</p> :<></>}
