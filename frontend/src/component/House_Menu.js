@@ -105,7 +105,7 @@ const House_Menu = (props) => {
                     onClick={()=>props.showSimilar(house._id)}
                     {...style(house.processed,house.unread)}
                 >
-                    {house.user} at {timeConvert(house.updatedAt)}
+                    {props.isAdminMode?`${house.user} at `:null}{timeConvert(house.created_at)}
                 </Menu.Item>
                 );
             }
