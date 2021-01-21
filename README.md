@@ -52,6 +52,7 @@ $ yarn start-build
     2. cluster: supercluster, useSupercluster
     3. 可拖曳物件: react-beautiful-dnd
     4. UI: antd
+    5. google-react-map
 ### 組員貢獻
 * b07901029陳君輔
 後端(全) + deploy
