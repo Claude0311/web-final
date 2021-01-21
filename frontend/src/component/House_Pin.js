@@ -181,7 +181,8 @@ const House_Eval_Pin = (props) => {
         fontSize: '20pt'
     }
     const setPrice = (p) => {
-        props.setManualPrice({_id:props.id, manualPrice:p});
+        const price = Math.round(p);
+        props.setManualPrice({_id:props.id, manualPrice:price});
     }
     const authFunction = (props.auth)
         ?
