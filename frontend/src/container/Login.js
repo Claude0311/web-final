@@ -76,10 +76,10 @@ const Login = ({id, login, history}) => {
     // login as an Administrator
 
     useEffect(()=>{
-        if (userRef !== null) { // && !id
+        if (userRef !== null && !id) { // && !id
             userRef.current.focus();
         }
-    }, []);
+    }, [id]);
     
     // render Container
     if (id) {
