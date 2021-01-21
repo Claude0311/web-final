@@ -30,6 +30,12 @@ $ yarn start-build
     * 帳號：ntuee-webprogramming
     * 密碼：password
 操作方式參見[demo影片](#useful-links)
+#### 圖標
+* 藍色：已成交房子資訊
+* 綠色圓圈： 已成交房子集合
+* 綠色： 請求估價房子
+* 紫色： 管理員估價後的房子
+* 黃色： 管理員頁面中請求估價的房子
 ### 使用與參考之框架/模組/原始碼
 * 後端框架：express.js
 * 前端框架：react
