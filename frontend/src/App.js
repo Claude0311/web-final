@@ -8,10 +8,10 @@ import Login from './container/Login'
 import UserInterface from './container/UserInterface';
 import SignUp from './container/SignUp';
 import {PrivateRoute} from './component/PrivateRoute';
-import { getLocalAccount, removeAccount, useAuth } from './Auth/AuthService';
+import { useAuth } from './Auth/AuthService';
 
 function App() {
-  // const [isLoading, setLoading] = useState(true);
+  const [isLoading, setLoading] = useState(false);
   const {username, isAuth, login, logout, autoLogin} = useAuth();
   /*
   const loginAuto = async () => {
@@ -38,30 +38,30 @@ function App() {
   */
   useEffect(() => {
     // do read cache here
+    setLoading(true)
     if (!username) {
-      console.log("this is App");
-      console.log("try login automatically");
+      console.log("Welcome to House Evaluation App");
+      console.log("try login automatically...");
       autoLogin();
     }
-    
+    setLoading(false)
   }, []);
 
-  // const requireLogin = ()
-  // if (isLoading) {
-  //   return <div><p>is loading...</p></div>;
-  // }
+  if (isLoading) {
+    return <div><p>is loading...</p></div>;
+  }
   return (
     <div className="App">
       <Post/>
       <Router>
         <Switch>
-          <PrivateRoute 
-            path="/" exact component={UserInterface} 
-            id={username} isAuth={isAuth} logout={logout}/>
           <Route path="/login" exact render={ (props) => 
             (<Login {...props} id={username} login={login}/> )} />
           <Route path="/register" exact render={ (props) => 
             (<SignUp {...props} logout={logout}/> )} />
+          <PrivateRoute 
+            path="/" component={UserInterface} 
+            id={username} isAuth={isAuth} logout={logout}/>
         </Switch>
       </Router>
     </div>

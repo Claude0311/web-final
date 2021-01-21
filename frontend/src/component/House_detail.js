@@ -55,9 +55,9 @@ function House_Detail({detail, onClose}) {
               <Button onClick={onClose} style={{ marginRight: 8 }}>
                 Cancel
               </Button>
-              <Button onClick={onClose} type="primary">
+              {/* <Button onClick={onClose} type="primary">
                 Like
-              </Button>
+              </Button> */}
             </div>
           }
         >
@@ -117,7 +117,7 @@ function House_Detail({detail, onClose}) {
             <Col span={12}>
               <DescriptionItem
                 title="unitPrice"
-                content={dateConvert(detail.unitPrice)}
+                content={priceConvert(detail.unitPrice)}
                 before="NT$"
               />
             </Col>
@@ -161,7 +161,7 @@ function House_Detail({detail, onClose}) {
               <DescriptionItem
                 title="parking space"
                 content={detail.space?.parkingSpace}
-                after="平方公尺"
+                after="坪"
               />
             </Col>
           </Row>: <></>}

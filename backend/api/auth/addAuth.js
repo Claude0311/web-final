@@ -5,10 +5,10 @@ import asyncHandler from 'express-async-handler'
 import {isAuth} from './isAuth'
 
 /**
- * @api {post} /addAuth 新增/移除管理員
+ * @api {post} /addAuth 新增、移除管理員
  * @apiName addAuth
  * @apiGroup Account 
- * @apidescription 新增/移除管理員
+ * @apidescription 新增、移除管理員
  * 
  * @apiparam {String} user 用戶名
  * @apiparam {boolean} isAuth true新增/false移除

@@ -14,16 +14,16 @@ export const axiosGetApi = async () => {
     try {
         return await instance.get('/apiKey');
     } catch (e) {
-        console.log("fail",e);
+        // console.log("fail",e);
         return '';
     }
 }
 
 export const axiosGetCoor = async (address) => {
     try {
-        console.log(address);
+        // console.log(address);
         const {data: coor} = await instance.get('/geoCode',{params:{address}});
-        console.log(coor);
+        // console.log(coor);
         return coor;
     } catch (e) {
         dbCatch(e);
@@ -44,7 +44,7 @@ export const loginAsAuth = async () => {
     try {
         return await instance.post('/loginAuth');
     } catch (e) {
-        console.log("login auth fail");
+        // console.log("login auth fail");
         throw e;
     }
     
@@ -78,13 +78,13 @@ export const registerUser = async ({user,password}) => {
         const {data: {user: name}} = await instance.post('/register', {user,password});
         return name;
     } catch (e) {
-        console.log("fail to register");
+        // console.log("fail to register");
         throw e;
     }
 }
 
 // ============ houses =============
-export const sendHouseInformation = async(lat, lng, buildingType, floor, age) => {
+export const sendHouseInformation = async({lat, lng, buildingType, floor, age}) => {
     try {
         const {data: {similar, avgPrice}} = await instance.post('/valuate', {lat, lng, buildingType, floor, age})
         return {similar, avgPrice}
@@ -99,18 +99,25 @@ export const updateHouseInformation = async(id, lat, lng, buildingType, floor, a
         const {data: {similar, avgPrice}} = await instance.patch('/valuate/user', {_id: id, lat, lng, buildingType, floor, age})
         return {similar, avgPrice}
     } catch(e) {
-        console.log("fail to update house information")
+        // console.log("fail to update house information")
         return null
     }
 }
 
+export const deleteValuate = async(_id) => {
+    await instance.delete('/valuate/user', {data: {_id}})
+        .catch((err) => {
+            throw err;
+        })
+}
+
 export const axiosGetHouses = async (params) => {
     try {        
-        console.log("get houses", params)
+        // console.log("get houses", params)
         const {data:req_houses} = await instance.get('/houses',{params});
         return req_houses;
     } catch (e) {
-        console.log("fail to get houses")
+        // console.log("fail to get houses")
         return null;
     }
     
@@ -122,12 +129,12 @@ export const axiosGetHouses = async (params) => {
 //         unitPrice:{lb:500000,ub:600000},
 //         hasParking:true
 //     }})
-//     console.log(response)
+//     // console.log(response)
 //     return response
 // }
 export const axiosGetDetail = async (id) => {
     try {
-        // console.log("axios get", id);
+        // // console.log("axios get", id);
         const { data: {
             buildingType,
             unitPrice,
@@ -141,24 +148,24 @@ export const axiosGetDetail = async (id) => {
 
 export const axiosUserGetValuate = async () => {
     try {
-        // console.log("axios get valuate");
+        // // console.log("axios get valuate");
         const { data : valuate } = await instance.get('/valuate/user');
-        // console.log(valuate);
+        // // console.log(valuate);
         return valuate;
     } catch (e) {
-        console.log("fail to get /valuate/user");
+        // console.log("fail to get /valuate/user");
         return null;
     }
 }
 
 export const axiosAdminGetValuate = async () => {
     try {
-        console.log("axios get valuate");
+        // console.log("axios get valuate");
         const { data : valuate } = await instance.get('/valuate/auth');
-        // console.log(valuate);
+        // // console.log(valuate);
         return valuate;
     } catch (e) {
-        console.log("fail to get /valuate/auth");
+        // console.log("fail to get /valuate/auth");
         return null;
     }
 }
@@ -167,12 +174,12 @@ export const axiosAdminGetValuate = async () => {
 
 export const axiosSetManualPrice = async ({_id, manualPrice}) => {
     try {
-        console.log("axios set manual price");
+        // console.log("axios set manual price");
         await instance.patch('/valuate/auth',{_id, manualPrice});
         return true;
     } catch (e) {
-        console.log("error when set manual price")
-        console.log(e);
+        // console.log("error when set manual price")
+        // console.log(e);
         return false;
     }
 }
@@ -181,12 +188,36 @@ export const axiosSetManualPrice = async ({_id, manualPrice}) => {
 
 export const axiosGetScoreRule = async () => {
     try {
-        console.log("axios get score");
+        // console.log("axios get score");
         const {data: rule} = await instance.get('/score');
         return rule;
     } catch (e) {
-        console.log("fail to get /score");
+        // console.log("fail to get /score");
         return null;
+    }
+}
+
+export const axiosResetScore = async () => {
+    try {
+        // console.log("axios reset score");
+        const {data: rule} = await instance.post('/score');
+        return rule;
+    } catch (e) {
+        dbCatch(e);
+        // console.log("fail to post /score");
+        return null;
+    }
+}
+
+export const axiosSetScore = async (myRules) => {
+    try {
+        // console.log("axios set score",myRules);
+        await instance.put('/score',{myRules});
+        return true;
+    } catch (e) {
+        dbCatch(e);
+        // console.log("fail to put /score");
+        return false;
     }
 }
 
@@ -199,10 +230,12 @@ export const init = async () => {
     // const {data:{user,auth}} = await instance.post('/login',{user:'b07901029',password:'123'}).catch(dbCatch)
     // console.log(user,auth)
     // const {data:jif} = await instance.get('/valuate/user',{params:{neighbor:{center:{lat:25,lng:121.5},distance:800}}}).catch(dbCatch)
-    // // jif.forEach(async ({_id})=>{
-    //     const {data:col} = await instance.delete('/valuate/user',{data:{_id:jif[3]._id}}).catch(dbCatch) 
+    // await instance.patch('/valuate/user',{_id:jif[0]._id,buildingType:null}).catch(dbCatch)
+    // jif.forEach(async ({_id})=>{
+    //     // const {data:col} = await instance.delete('/valuate/user',{data:{_id:jif[3]._id}}).catch(dbCatch) 
+    //     const {data:col} = await instance.patch('/valuate/user',{_id}).catch(dbCatch)
     //     console.log(col)
-    // // })
+    // })
 }
 
 export const testErr = async () => {

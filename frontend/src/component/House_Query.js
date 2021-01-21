@@ -15,7 +15,8 @@ import {
     Select,
     Button,
     Modal,
-    InputNumber
+    InputNumber,
+    message
   } from 'antd';
 // import './House_Query.css'
 import { sendHouseInformation } from '../axios/axios';
@@ -44,8 +45,19 @@ const QueryForm = ({name, showForm, lat, lng, moveCen, showNewHouse}) => {
 			numOfFloor,
 			houseAge
 			}) => {
-      const {similar, avgPrice} = await sendHouseInformation(lat, lng, parseInt(buildingType), numOfFloor, houseAge)
-      showNewHouse(similar, avgPrice, buildingType, numOfFloor, houseAge)
+      if(buildingType === undefined) {
+        message.error("Please select a building type!", [1])
+      }
+      else {
+        const data = await sendHouseInformation(lat, lng, parseInt(buildingType), numOfFloor, houseAge)
+        if(data) {
+          const {similar, avgPrice} = data
+          showNewHouse({lat, lng, similar, avgPrice, buildingType, numOfFloor, houseAge})
+          moveCen(lat, lng)
+        }      
+        
+        setVisible(false);         
+      }
 		}
 
     const showQueryForm = () => {
@@ -55,12 +67,10 @@ const QueryForm = ({name, showForm, lat, lng, moveCen, showNewHouse}) => {
 		const resetForm = () => {
 			form.resetFields();
 		}
-		const handleOK = async () => {
-      setLoading(true);
-      await form.submit();
-			setLoading(false);
-      setVisible(false);
-      moveCen(lat, lng)     
+		const handleOK = async() => {
+      setLoading(true)
+      await form.submit()
+      setLoading(false)	    
 		}
 		const handleCancel = () => {
 			setVisible(false);
@@ -110,7 +120,7 @@ const QueryForm = ({name, showForm, lat, lng, moveCen, showNewHouse}) => {
         <Form.Item name="buildingType" label="房屋類型">
           <Select placeholder="Please select building type">
             <Option value={undefined}>不限</Option>
-            <Option value="0">公寓(無電梯)</Option>
+            <Option value="0">公寓(5樓以下無電梯)</Option>
             <Option value="1">電梯大樓(10樓以下有電梯)</Option>
             <Option value="2">華夏(11樓以上有電梯)</Option>
           </Select>

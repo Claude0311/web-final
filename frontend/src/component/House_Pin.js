@@ -1,12 +1,13 @@
-import { Tooltip, Avatar, Popover, Divider, Button } from 'antd';
-import {EnvironmentFilled, HomeFilled} from '@ant-design/icons';
+import {  Avatar, Popover, Divider } from 'antd';
+import {EnvironmentFilled} from '@ant-design/icons';
 import BuildingType from '../axios/buildingType';
 import {useEffect, useState} from 'react'
 import './House_Pin.css';
 import QueryForm from './House_Query';
-import { priceConvert } from '../util/util';
+import { priceConvert, timeConvert } from '../util/util';
 import { SetManualPriceForm } from './House_Valuate';
-import UpdateQueryForm from './Update_Query';
+import UpdateQueryForm from './Update_Query'
+import { deleteValuate } from '../axios/axios';
 
 const House_Pin = ({id,buildingType,click,unitPrice,hover,getDetail}) => {
     const [visible, setvisible] = useState(false); // control Popover
@@ -184,6 +185,11 @@ const House_Eval_Pin = (props) => {
     const setPrice = (p) => {
         props.setManualPrice({_id:props.id, manualPrice:p});
     }
+    
+    const deleteHouseQuery = async() => {
+        await deleteValuate(props.id)
+        props.getMyHouses()
+    }
     const authFunction = (props.auth)
         ?
         <SetManualPriceForm 
@@ -202,15 +208,18 @@ const House_Eval_Pin = (props) => {
                 getMyHouses={props.getMyHouses}
                 showForm={props.showForm}
                 moveCen={props.moveCen}
+                showNewHouse={props.showNewHouse}
             />
+            <a onClick={deleteHouseQuery}>Delete valuate</a>
         </div>
     let style = (props.hover)?  myStyleHover: myStyle;
     
     const content = (
         <div>
-            <p>avg: NT${priceConvert(props.avgPrice)}</p>
+            <p>avg price: NT${priceConvert(props.avgPrice)}</p>
+            <p>time: {timeConvert(props.updatedAt)}</p>
             {(props.processed)? <p>manual price: NT${priceConvert(props.manualPrice)}</p>:<></>}
-            {(props.buildingType)?<p>Type: {BuildingType[props.buildingType]}</p> :<></>}
+            {!isNaN(props.buildingType)?<p>type: {BuildingType[props.buildingType]}</p> :<></>}
             {(props.floor)? <p>floor: {props.floor} floor</p> :<></>}
             {(props.age)? <p>age: {props.age} years</p> :<></>}
             {authFunction}
@@ -220,7 +229,7 @@ const House_Eval_Pin = (props) => {
         <div className="house-pin">
         <Popover 
             placement='right'
-            title={`${props.user}'s house`}
+            title={`${props.user}'s Query`}
             trigger="click"
             visible={props.click}
             content={content}
@@ -249,6 +258,10 @@ const Similar_House_Pin = (props) => {
     const content = (
         <div>
             <p>price: NT${priceConvert(props.unitPrice)}</p>
+            <p>building type: {BuildingType[props.buildingType]}</p>
+            <a onClick={() => {
+                props.getDetail(props.id)
+            }}>more details</a>
         </div>
     );
     return(
@@ -268,20 +281,23 @@ const Similar_House_Pin = (props) => {
 
 // ============ the pin for user when it just complete the query
 const New_House_pin = (props) => {
-    const style = {
+    const myStyle = {
         position: 'absolute',
         bottom: '0',
         left: '-9pt',
         fontSize: '18pt',
         color: 'red'
     }
-    // const onCheckSim = () => {
-    //     props.checkSimilar(id);
-    // }
+    const myStyleHover = {
+        ...myStyle,
+        left: '-10pt',
+        fontSize: '20pt'
+    }
+    let style = (props.hover)?  myStyleHover: myStyle
     const content = (
         <div>
             <p>avg: NT${priceConvert(props.avgPrice)}</p>
-            {(props.buildingType)?<p>Type: {BuildingType[props.buildingType]}</p> :<></>}
+            {!isNaN(props.buildingType)?<p>Type: {BuildingType[props.buildingType]}</p> :<></>}
             {(props.floor)? <p>floor: {props.floor} floor</p> :<></>}
             {(props.age)? <p>age: {props.age} years</p> :<></>}
         </div>
@@ -291,7 +307,7 @@ const New_House_pin = (props) => {
         <Popover 
             placement='top'
             title="Your house"
-            visible={props.showInfor}
+            visible={props.showInfor || props.click}
             content={content}
             trigger="hover"
         >

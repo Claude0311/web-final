@@ -10,6 +10,7 @@ import env from 'dotenv'
 import craw from './util/crawler'
 import cors from 'cors'
 import history from 'connect-history-api-fallback'
+import {wakeDyno} from 'heroku-keep-awake'
 
 env.config({path:'../.env'})
 
@@ -17,7 +18,7 @@ const app = express()
 DB.once('open',()=>{
 	console.log('mongoDB connected')
 
-	cron.schedule('0 0 0 1 * *', () => {//每月的1號0時0分0秒執行
+	cron.schedule('0 0 23 1 * *', () => {//每月的1號23時0分0秒執行
 		console.log('first')
 		craw()
 	})
@@ -64,9 +65,11 @@ DB.once('open',()=>{
 		app.use(api)
 	}
 
-	
-
 	app.listen(process.env.PORT || 4000,  () => {
+		// wakeDyno('https://houses-valuation.herokuapp.com/',{
+		// 	logging: false,
+		// 	stopTimes: { start: '16:00', end: '00:00' }//time zone +0，so -8hr
+		// })
 		// craw()
 		console.log('server connect')
 		console.log(`port name: ${process.env.PORT || 4000}`)

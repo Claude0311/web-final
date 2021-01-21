@@ -29,10 +29,13 @@ const formItemLayout = {
   wrapperCol: { span: 14 },
 };
 
-const UpdateQueryForm = ({name, id, ori_buildingType, ori_floor, ori_age, showForm, ori_lat, ori_lng, getMyHouses, moveCen}) => {
+const UpdateQueryForm = ({name, id, ori_buildingType, ori_floor, ori_age, 
+            showForm, ori_lat, ori_lng, moveCen, showNewHouse}) => {
     const [form] = Form.useForm()
     const [visible, setVisible] = useState(false)
     const [isLoading, setLoading] = useState(false)
+    const [lat, setLat] = useState(ori_lat)
+    const [lng, setLng] = useState(ori_lng)
 
     // self defined var
     const MinFloor = 1
@@ -42,21 +45,29 @@ const UpdateQueryForm = ({name, id, ori_buildingType, ori_floor, ori_age, showFo
 		
 		// get value of requirement 
 		const onFinish = async({
-      lat,
-      lng,
 			buildingType,
 			numOfFloor,
 			houseAge
 			}) => {
-      await updateHouseInformation(id, parseFloat(lat), parseFloat(lng), parseInt(buildingType), numOfFloor, houseAge)
-      getMyHouses()
+      const data = await updateHouseInformation(id, parseFloat(lat), parseFloat(lng), parseInt(buildingType), numOfFloor, houseAge)
       setVisible(false)
-      moveCen(lat, lng)
+      if(data) {
+        const {similar, avgPrice} = data
+        if(buildingType === undefined) buildingType = ori_buildingType
+        if(numOfFloor === undefined) numOfFloor = ori_floor
+        if(houseAge === undefined) houseAge = ori_age
+        showNewHouse(lat, lng, similar, avgPrice, buildingType, numOfFloor, houseAge)
+        moveCen(lat, lng)
+      }
+      
 		}
 
     const showUpdateForm = () => {
       setVisible(true)
       showForm()
+    }
+    const handleReaddress = () => {
+      
     }
 		const resetForm = () => {
 			form.resetFields();
@@ -102,28 +113,19 @@ const UpdateQueryForm = ({name, id, ori_buildingType, ori_floor, ori_age, showFo
           buildingType: undefined,
         }}
       > 
+        {/* <Button key="changeAddress" onClick={handleReaddress}>Change position</Button> */}
         <Form.Item name="lat" label="緯度">
-          <span>
-            <Input 
-              placeholder={ori_lat}
-            />
-            <span className="ant-form-text">(optional)</span>
-          </span>
+          {lat}
         </Form.Item>
 
         <Form.Item name="lng" label="經度">
-          <span>
-            <Input 
-              placeholder={ori_lng}
-            />
-            <span className="ant-form-text">(optional)</span>
-          </span>  
+          {lng}
         </Form.Item>
 
         <Form.Item name="buildingType" label="房屋類型">
           <Select placeholder={buildingType[ori_buildingType]}>
             <Option value={undefined}>不限</Option>
-            <Option value="0">公寓(無電梯)</Option>
+            <Option value="0">公寓(5樓以下無電梯)</Option>
             <Option value="1">電梯大樓(10樓以下有電梯)</Option>
             <Option value="2">華夏(11樓以上有電梯)</Option>
           </Select>

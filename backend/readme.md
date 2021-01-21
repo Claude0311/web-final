@@ -7,7 +7,7 @@
  
 - [功能介紹](#prepend)
  - [Account](#account)
-   - [新增/移除管理員](#新增/移除管理員)
+   - [新增、移除管理員](#新增、移除管理員)
    - [login](#login)
    - [loginAuth](#loginauth)
    - [logout](#logout)
@@ -38,30 +38,36 @@ ___
  
 <a name="prepend"></a>
 ## 功能介紹
-### crawler
-* 用node-cron套件設定每月1日00:00重新抓資料
-* 從永慶房屋爬近一個月永和區的[資料](https://evertrust.yungching.com.tw/regionall/%e6%96%b0%e5%8c%97%e5%b8%82/%e6%b0%b8%e5%92%8c%e5%8d%80?t=1,2&d=1)
-### 評分機制
-* 參考/model/House.js House.methods.score()
-* 順序：
-    1. 1公里內
-    2. 房屋型態
-    2. 是否是一樓(一樓房子參考一樓資料；其餘樓層參考其餘樓層資料)
-    3. 2年內
-    4. 500公尺內
-    5. 半年內
-    6. 屋齡+-5年
-    7. 樓層+-1
+### 爬蟲
+* 用node-cron套件設定每月1日23:00重新抓資料
+* 從內政部爬近一個月永和區的[資料](https://plvr.land.moi.gov.tw/Download?fileName=F_lvr_land_A.csv)
+### 估價公式
+1. 尋找相似交易：依以下規則尋找與待估價房屋最相似的交易資料
+    1. 順位1
+        * 1公里內
+        * 房屋型態相同
+        * 是否是一樓(一樓房子參考一樓資料；其餘樓層參考其餘樓層資料)
+    2. 順位2：2年內交易
+    3. 順位3：500公尺內
+    4. 順位4：半年內交易
+    5. 順位5：屋齡+-5年
+    6. 順位6：樓層+-1層
+2. 價格修正：若交易資料與待估價房屋不同則依**學理數據**修正每坪房價
+    1. 樓層：每高一層加0.5%
+    2. 房屋型態：
+        * 公寓->華夏：*1.25
+        * 華夏->大樓：+40000
+    3. 屋齡：折舊每年2%
 
 ### DB
 * House:
 ```javascript
 {
-  id,//unique id from website
-  buildingType,//公寓(無電梯),大樓(有電梯10樓以下),華夏(有電梯11樓以上)
+  id,//unique id from crawl
+  buildingType,//{0:'公寓(5樓含以下無電梯)',1:華廈(10層含以下有電梯)',2:'住宅大樓(11層含以上有電梯)'}
   coordinate:{lat,lng},//緯度、經度
   unitPrice,//每坪的價格
-  //detail, //house_detail's _id
+  detail, //house_detail's _id
 }
 ```
 * House_detail:
@@ -82,10 +88,10 @@ ___
 
 ## Account
 
-### 新增/移除管理員
+### 新增、移除管理員
 [Back to top](#top)
 
-新增/移除管理員
+新增、移除管理員
 
 ```
 POST /addAuth
@@ -812,6 +818,7 @@ GET /valuate/user
 | &ensp;&ensp;&ensp;lat | `Number` | 緯度 |
 | &ensp;&ensp;&ensp;lng | `Number` | 經度 |
 | &ensp;&ensp;unitPrice | `Number` | 單位坪數價錢 |
+| &ensp;&ensp;created_at | `Time` | 時間 ex：2021-01-20T03:21:37.331Z |
 
 #### Error response
 
