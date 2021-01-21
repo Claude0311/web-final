@@ -75,6 +75,13 @@ const Map = ({ points, houses, setManualPrice, apiKey,
 
     const onMarkClick = (key, childprops) => {
       // console.log("click",key);
+      if(newHouse) {
+        setNewHouse(null)
+        getMyHouses()
+      }
+      if(similarHouses) {
+        setSimilarHouses(null)
+      }
       const {lat, lng} = childprops;
       // compute elipse radius from center
       const dely = 2.8*(lat-cen.lat)/(bounds[3]-bounds[1]);

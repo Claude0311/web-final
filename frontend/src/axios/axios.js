@@ -84,9 +84,9 @@ export const registerUser = async ({user,password}) => {
 }
 
 // ============ houses =============
-export const sendHouseInformation = async({lat, lng, buildingType, floor, age}) => {
+export const sendHouseInformation = async(house) => {
     try {
-        const {data: {similar, avgPrice}} = await instance.post('/valuate', {lat, lng, buildingType, floor, age})
+        const {data: {similar, avgPrice}} = await instance.post('/valuate', house)
         return {similar, avgPrice}
     } catch(err)  {
         console.log("fail to send house information")
@@ -94,9 +94,9 @@ export const sendHouseInformation = async({lat, lng, buildingType, floor, age}) 
     }
 }
 
-export const updateHouseInformation = async(id, lat, lng, buildingType, floor, age) => {
+export const updateHouseInformation = async(house) => {
     try {
-        const {data: {similar, avgPrice}} = await instance.patch('/valuate/user', {_id: id, lat, lng, buildingType, floor, age})
+        const {data: {similar, avgPrice}} = await instance.patch('/valuate/user', house)
         return {similar, avgPrice}
     } catch(e) {
         // console.log("fail to update house information")

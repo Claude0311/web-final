@@ -49,10 +49,17 @@ const QueryForm = ({name, showForm, lat, lng, moveCen, showNewHouse}) => {
         message.error("Please select a building type!", [1])
       }
       else {
-        const data = await sendHouseInformation(lat, lng, parseInt(buildingType), numOfFloor, houseAge)
+        const house = {
+          lat,
+          lng,
+          buildingType: parseInt(buildingType),
+          floor: numOfFloor,
+          age: houseAge
+        }
+        const data = await sendHouseInformation(house)
         if(data) {
           const {similar, avgPrice} = data
-          showNewHouse({lat, lng, similar, avgPrice, buildingType, numOfFloor, houseAge})
+          showNewHouse(lat, lng, similar, avgPrice, buildingType, numOfFloor, houseAge)
           moveCen(lat, lng)
         }      
         

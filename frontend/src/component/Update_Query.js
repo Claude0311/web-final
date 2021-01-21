@@ -49,7 +49,15 @@ const UpdateQueryForm = ({name, id, ori_buildingType, ori_floor, ori_age,
 			numOfFloor,
 			houseAge
 			}) => {
-      const data = await updateHouseInformation(id, parseFloat(lat), parseFloat(lng), parseInt(buildingType), numOfFloor, houseAge)
+      const house = {
+        _id: id,
+        lat,
+        lng,
+        buildingType: parseInt(buildingType),
+        floor: numOfFloor,
+        age: houseAge
+      }
+      const data = await updateHouseInformation(house)
       setVisible(false)
       if(data) {
         const {similar, avgPrice} = data
