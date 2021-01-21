@@ -14,8 +14,8 @@ const House_Pin = ({id,buildingType,click,unitPrice,hover,getDetail}) => {
     );
     const content = (
         <>
-        <p>Type: {BuildingType[buildingType]}</p>
-        <p>Unit Price: NT${priceConvert(unitPrice)} /坪</p>
+        <p>類型: {BuildingType[buildingType]}</p>
+        <p>單位房價: NT${priceConvert(unitPrice)} /坪</p>
         <a onClick={async()=>{
             await setvisible(false);
             // console.log("in func",id);
@@ -74,16 +74,16 @@ const House_Cluster = ({sum, size, pointSize, hover, click, ...props }) => {
     let markSize = Math.floor(ratio+40-0.4*pointSize/size);
     const content = (
         <div className="cluster">
-            <p>Average: NT${priceConvert(Math.round(sum/size))}</p>
+            <p>平均房價: NT${priceConvert(Math.round(sum/size))} /坪</p>
             {(points && points.length > 0)
-                ?<p>Type: {BuildingType[points[0].buildingType]}</p>
+                ?<p>類型: {BuildingType[points[0].buildingType]}</p>
                 :<a onClick={handleClick}>get more</a>
             }
             {(points && points.length > 0)
                 ?points.map((l,ind) => (
                     <>
                         <Divider plain>house {ind+1}</Divider>
-                        <p>Unit Price: NT${priceConvert(l.unitPrice)}</p>
+                        <p>每坪房價: NT${priceConvert(l.unitPrice)}</p>
                         <a onClick={async()=>{
                             // await setvisible(false);
                             props.getDetail(l.id);
@@ -197,12 +197,12 @@ const House_Eval_Pin = (props) => {
     
     const content = (
         <div>
-            <p>avg price: NT${priceConvert(props.avgPrice)} /坪</p>
-            <p>time: {timeConvert(props.updatedAt)}</p>
-            {(props.processed)? <p>manual price: NT${priceConvert(props.manualPrice)} /坪</p>:<></>}
-            {!isNaN(props.buildingType)?<p>type: {BuildingType[props.buildingType]}</p> :<></>}
-            {(props.floor)? <p>floor: {props.floor} floor</p> :<></>}
-            {(props.age)? <p>age: {props.age} years</p> :<></>}
+            <p>平均價格: NT${priceConvert(props.avgPrice)} /坪</p>
+            <p>時間: {timeConvert(props.updatedAt)}</p>
+            {(props.processed)? <p>管理員估價: NT${priceConvert(props.manualPrice)} /坪</p>:<></>}
+            {!isNaN(props.buildingType)?<p>類型: {BuildingType[props.buildingType]}</p> :<></>}
+            {(props.floor)? <p>樓層: {props.floor} 樓</p> :<></>}
+            {(props.age)? <p>屋齡: {props.age} 年</p> :<></>}
             {authFunction}
         </div>
     );
@@ -235,7 +235,7 @@ const Similar_House_Pin = (props) => {
     // }
     const content = (
         <div>
-            <p>price: NT${priceConvert(props.unitPrice)} /坪</p>
+            <p>價格: NT${priceConvert(props.unitPrice)} /坪</p>
         </div>
     );
     return(
@@ -267,10 +267,10 @@ const New_House_pin = (props) => {
     // }
     const content = (
         <div>
-            <p>avg: NT${priceConvert(props.avgPrice)} /坪</p>
-            {!isNaN(props.buildingType)?<p>Type: {BuildingType[props.buildingType]}</p> :<></>}
-            {(props.floor)? <p>floor: {props.floor} floor</p> :<></>}
-            {(props.age)? <p>age: {props.age} years</p> :<></>}
+            <p>平均價格: NT${priceConvert(props.avgPrice)} /坪</p>
+            {!isNaN(props.buildingType)?<p>類型: {BuildingType[props.buildingType]}</p> :<></>}
+            {(props.floor)? <p>樓層: {props.floor} 樓</p> :<></>}
+            {(props.age)? <p>屋齡: {props.age} 年</p> :<></>}
         </div>
     );
     return(

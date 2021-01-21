@@ -42,7 +42,7 @@ const formItemLayout = {
 
 
 
-const SearchForm = ({isAdminMode,setCriteria,onSearch}) => {
+const SearchForm = ({setCriteria,onSearch}) => {
   const [form] = Form.useForm();
   const [visible, setVisible] = useState(false);
   const [isLoading, setLoading] = useState(false);
@@ -99,9 +99,7 @@ const SearchForm = ({isAdminMode,setCriteria,onSearch}) => {
     setCriteria(criteria);
   };
   const showSearchForm = ()=> {
-    if (!isAdminMode){
       setVisible(true);
-    }
   }
   const resetForm = () => {
     form.resetFields();
@@ -121,7 +119,7 @@ const SearchForm = ({isAdminMode,setCriteria,onSearch}) => {
                     placeholder="Search in Address"
                     style={{ width: 500, margin: '0 20px' }}
                     addonBefore={
-                      <Tooltip title={isAdminMode?"Not availabe in Admin mode":"Search Option"} placement="bottom">
+                      <Tooltip title="Search Option" placement="bottom">
                         <Button 
                         type="text" 
                         size="small"
@@ -134,7 +132,6 @@ const SearchForm = ({isAdminMode,setCriteria,onSearch}) => {
                     onPressEnter={e=>onSearch(e.target.value)}
                     onSearch={onSearch}
                     allowClear
-                    disabled={isAdminMode}
                 />
       <Modal
 
