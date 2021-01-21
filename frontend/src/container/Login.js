@@ -27,7 +27,7 @@ const Login = ({id, login, history}) => {
         if (checkUserName(user) && checkPassWord(password)) {
             const result = await login({user,password});
             if (result === 'success') {
-                console.log("log in successfully, redirect to /");
+                // console.log("log in successfully, redirect to /");
                 history.push("/");
             } else {
                 setStatus('user');
@@ -76,7 +76,7 @@ const Login = ({id, login, history}) => {
     // login as an Administrator
 
     useEffect(()=>{
-        if (userRef !== null && !id) {
+        if (userRef !== null) { // && !id
             userRef.current.focus();
         }
     }, []);
@@ -84,7 +84,7 @@ const Login = ({id, login, history}) => {
     // render Container
     if (id) {
         // approach 1
-        console.log("has id, redirect to /")
+        // console.log("has id, redirect to /")
         return <Redirect to="/" />;
     }
     return(
