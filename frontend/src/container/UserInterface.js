@@ -331,6 +331,7 @@ const UserInterface = ({id,isAuth, logout, history,...rest})=> {
                       name="Search Options"
                       setCriteria={handleCriteria}
                       onSearch={searchHousebyAddr}
+                      isAdminMode={isAdminMode}
                   />
               </span>
               <span>

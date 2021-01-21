@@ -18,7 +18,7 @@ const House_Pin = ({id,buildingType,click,unitPrice,hover,getDetail}) => {
         <p>Unit Price: NT${priceConvert(unitPrice)}</p>
         <a onClick={async()=>{
             await setvisible(false);
-            console.log("in func",id);
+            // console.log("in func",id);
             getDetail(id);
         }}>more details</a>
         </>
