@@ -53,7 +53,7 @@ const House_Menu = (props) => {
                 icon={<LoadingIcon isLoading={props.isLoading} icon={SettingOutlined} />}
                 onClick={props.onUserMode}
             >
-                User Mode
+                Back to User Mode
             </Menu.Item>
             </>
         ):<>
@@ -77,7 +77,7 @@ const House_Menu = (props) => {
                 icon={<LoadingIcon isLoading={props.isLoading} icon={SettingOutlined} />}
                 onClick={props.onAdminMode}
             >
-                Admin Mode
+                Go to Admin Mode
             </Menu.Item>
             :<></>}
 
@@ -105,7 +105,7 @@ const House_Menu = (props) => {
                     onClick={()=>props.showSimilar(house._id)}
                     {...style(house.processed,house.unread)}
                 >
-                    {timeConvert(house.updatedAt)}
+                    {house.user} at {timeConvert(house.updatedAt)}
                 </Menu.Item>
                 );
             }
