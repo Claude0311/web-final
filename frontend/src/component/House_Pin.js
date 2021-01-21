@@ -6,6 +6,8 @@ import './House_Pin.css';
 import QueryForm from './House_Query';
 import { priceConvert, timeConvert } from '../util/util';
 import { SetManualPriceForm } from './House_Valuate';
+import UpdateQueryForm from './Update_Query'
+import { deleteValuate } from '../axios/axios';
 
 const House_Pin = ({id,buildingType,click,unitPrice,hover,getDetail}) => {
     const [visible, setvisible] = useState(false); // control Popover
@@ -136,7 +138,7 @@ const Current_Pin = ({hover, showForm, click, lat, lng, moveCen, handleAddHouses
     const content = (
         <div>
             <QueryForm 
-                name="inquire house price" 
+                name="Inquire house price" 
                 showForm={showForm} 
                 lat={lat} 
                 lng={lng}
@@ -184,15 +186,33 @@ const House_Eval_Pin = (props) => {
         const price = Math.round(p);
         props.setManualPrice({_id:props.id, manualPrice:price});
     }
+    
+    const deleteHouseQuery = async() => {
+        await deleteValuate(props.id)
+        props.getMyHouses()
+    }
     const authFunction = (props.auth)
         ?
         <SetManualPriceForm 
             setPrice={setPrice}
-        >Set Manual Price</SetManualPriceForm>
+        >Set manual price</SetManualPriceForm>
         : <div className="eval-pin">
-            <a onClick={props.showSim}>view similar houses</a>
-            <a onClick={props.updateInfo} >Update information</a>
-            </div>
+            <a onClick={props.showSim}>View similar houses</a>
+            <UpdateQueryForm
+                name="Update information"
+                id={props.id}
+                ori_lat={props.lat}
+                ori_lng={props.lng}
+                ori_buildingType={props.buildingType}
+                ori_floor={props.floor}
+                ori_age={props.age}
+                getMyHouses={props.getMyHouses}
+                showForm={props.showForm}
+                moveCen={props.moveCen}
+                showNewHouse={props.showNewHouse}
+            />
+            <a onClick={deleteHouseQuery}>Delete valuate</a>
+        </div>
     let style = (props.hover)?  myStyleHover: myStyle;
     
     const content = (
@@ -223,19 +243,26 @@ const House_Eval_Pin = (props) => {
 
 // ====== the pin for similar houses
 const Similar_House_Pin = (props) => {
-    const style = {
+    const myStyle = {
         position: 'absolute',
         bottom: '0',
         left: '-9pt',
         fontSize: '18pt',
         color: 'rgb(240, 102, 11)'
     }
-    // const onCheckSim = () => {
-    //     props.checkSimilar(id);
-    // }
+    const myStyleHover = {
+        ...myStyle,
+        left: '-10pt',
+        fontSize: '20pt'
+    }
+    let style = (props.hover)?  myStyleHover: myStyle;
     const content = (
         <div>
             <p>價格: NT${priceConvert(props.unitPrice)} /坪</p>
+            <p>類型: {BuildingType[props.buildingType]}</p>
+            <a onClick={() => {
+                props.getDetail(props.id)
+            }}>more details</a>
         </div>
     );
     return(
@@ -243,7 +270,7 @@ const Similar_House_Pin = (props) => {
         <Popover 
             placement='top'
             title="Similar house"
-            visible={true}
+            visible={props.click || props.hover}
             content={content}
             trigger="hover"
         >
@@ -255,16 +282,19 @@ const Similar_House_Pin = (props) => {
 
 // ============ the pin for user when it just complete the query
 const New_House_pin = (props) => {
-    const style = {
+    const myStyle = {
         position: 'absolute',
         bottom: '0',
         left: '-9pt',
         fontSize: '18pt',
         color: 'red'
     }
-    // const onCheckSim = () => {
-    //     props.checkSimilar(id);
-    // }
+    const myStyleHover = {
+        ...myStyle,
+        left: '-10pt',
+        fontSize: '20pt'
+    }
+    let style = (props.hover)?  myStyleHover: myStyle
     const content = (
         <div>
             <p>平均價格: NT${priceConvert(props.avgPrice)} /坪</p>
@@ -278,7 +308,7 @@ const New_House_pin = (props) => {
         <Popover 
             placement='top'
             title="Your house"
-            visible={props.showInfor}
+            visible={props.showInfor || props.click}
             content={content}
             trigger="hover"
         >

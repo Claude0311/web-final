@@ -16,10 +16,11 @@ import {
     Button,
     Modal,
     InputNumber,
-    message
+    Input
   } from 'antd';
 // import './House_Query.css'
-import { sendHouseInformation } from '../axios/axios';
+import { updateHouseInformation } from '../axios/axios';
+import buildingType from '../axios/buildingType';
 
 const { Option } = Select;
 
@@ -28,10 +29,13 @@ const formItemLayout = {
   wrapperCol: { span: 14 },
 };
 
-const QueryForm = ({name, showForm, lat, lng, moveCen, showNewHouse}) => {
+const UpdateQueryForm = ({name, id, ori_buildingType, ori_floor, ori_age, 
+            showForm, ori_lat, ori_lng, moveCen, showNewHouse}) => {
     const [form] = Form.useForm()
     const [visible, setVisible] = useState(false)
     const [isLoading, setLoading] = useState(false)
+    const [lat, setLat] = useState(ori_lat)
+    const [lng, setLng] = useState(ori_lng)
 
     // self defined var
     const MinFloor = 1
@@ -45,39 +49,41 @@ const QueryForm = ({name, showForm, lat, lng, moveCen, showNewHouse}) => {
 			numOfFloor,
 			houseAge
 			}) => {
-      if(buildingType === undefined) {
-        message.error("Please select a building type!", [1])
+      const house = {
+        _id: id,
+        lat,
+        lng,
+        buildingType: parseInt(buildingType),
+        floor: numOfFloor,
+        age: houseAge
       }
-      else {
-        const house = {
-          lat,
-          lng,
-          buildingType: parseInt(buildingType),
-          floor: numOfFloor,
-          age: houseAge
-        }
-        const data = await sendHouseInformation(house)
-        if(data) {
-          const {similar, avgPrice} = data
-          showNewHouse(lat, lng, similar, avgPrice, buildingType, numOfFloor, houseAge)
-          moveCen(lat, lng)
-        }      
-        
-        setVisible(false);         
+      const data = await updateHouseInformation(house)
+      setVisible(false)
+      if(data) {
+        const {similar, avgPrice} = data
+        if(buildingType === undefined) buildingType = ori_buildingType
+        if(numOfFloor === undefined) numOfFloor = ori_floor
+        if(houseAge === undefined) houseAge = ori_age
+        showNewHouse(lat, lng, similar, avgPrice, buildingType, numOfFloor, houseAge)
+        moveCen(lat, lng)
       }
+      
 		}
 
-    const showQueryForm = () => {
+    const showUpdateForm = () => {
       setVisible(true)
       showForm()
+    }
+    const handleReaddress = () => {
+      
     }
 		const resetForm = () => {
 			form.resetFields();
 		}
-		const handleOK = async() => {
-      setLoading(true)
-      await form.submit()
-      setLoading(false)	    
+		const handleOK = async () => {
+      setLoading(true);
+      await form.submit();
+			setLoading(false)    
 		}
 		const handleCancel = () => {
 			setVisible(false);
@@ -85,11 +91,10 @@ const QueryForm = ({name, showForm, lat, lng, moveCen, showNewHouse}) => {
 
   return (
     <>
-      <Button 
-        type="primary" 
-        onClick={showQueryForm}>
+      <a 
+        onClick={showUpdateForm}>
         {name}
-      </Button>
+      </a>
       <Modal
         visible={visible}
         title="House Condition"
@@ -116,6 +121,7 @@ const QueryForm = ({name, showForm, lat, lng, moveCen, showNewHouse}) => {
           buildingType: undefined,
         }}
       > 
+        {/* <Button key="changeAddress" onClick={handleReaddress}>Change position</Button> */}
         <Form.Item name="lat" label="緯度">
           {lat}
         </Form.Item>
@@ -125,7 +131,7 @@ const QueryForm = ({name, showForm, lat, lng, moveCen, showNewHouse}) => {
         </Form.Item>
 
         <Form.Item name="buildingType" label="房屋類型">
-          <Select placeholder="Please select building type">
+          <Select placeholder={buildingType[ori_buildingType]}>
             <Option value={undefined}>不限</Option>
             <Option value="0">公寓(5樓以下無電梯)</Option>
             <Option value="1">電梯大樓(10樓以下有電梯)</Option>
@@ -136,6 +142,7 @@ const QueryForm = ({name, showForm, lat, lng, moveCen, showNewHouse}) => {
         <Form.Item name="numOfFloor" label="樓層">
           <span>
             <InputNumber 
+              placeholder={ori_floor}
               min={MinFloor}
               max={MaxFloor}
             /> 
@@ -146,6 +153,7 @@ const QueryForm = ({name, showForm, lat, lng, moveCen, showNewHouse}) => {
         <Form.Item name="houseAge" label="屋齡">
           <span>
             <InputNumber 
+              placeholder={ori_age}
               min={MinAge}
               max={MaxAge}
             /> 
@@ -158,4 +166,4 @@ const QueryForm = ({name, showForm, lat, lng, moveCen, showNewHouse}) => {
   )
 }
 
-export default QueryForm
+export default UpdateQueryForm

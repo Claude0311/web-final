@@ -136,7 +136,7 @@ const SearchForm = ({setCriteria,onSearch}) => {
       <Modal
 
         visible={visible}
-        title="Search with Condition"
+        title="Search With Condition"
         onOk={handleOK}
         onCancel={handleCancel}
         footer={[

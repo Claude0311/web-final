@@ -1,4 +1,5 @@
 import axios from 'axios'
+import buildingType from './buildingType'
 // import {useState} from 'react'
 console.log('NODE_ENV',process.env.NODE_ENV)
 const API_ROOT = (process.env.NODE_ENV==='production')?'/api':'http://localhost:4000'
@@ -11,7 +12,8 @@ const dbCatch = e=>console.log('myError:',e?.response?.data?.msg)
 
 export const axiosGetApi = async () => {
     try {
-        return await instance.get('/apiKey');
+        const {data: r} = await instance.get('/apiKey');
+        return r;
     } catch (e) {
         // console.log("fail",e);
         return '';
@@ -83,15 +85,33 @@ export const registerUser = async ({user,password}) => {
 }
 
 // ============ houses =============
-export const sendHouseInformation = async(lat, lng, buildingType, floor, age) => {
+export const sendHouseInformation = async(house) => {
     try {
-        const {data: {similar, avgPrice}} = await instance.post('/valuate', {lat, lng, buildingType, floor, age})
+        const {data: {similar, avgPrice}} = await instance.post('/valuate', house)
         return {similar, avgPrice}
     } catch(err)  {
-        // console.log("fail to send houseImformation")
+        console.log("fail to send house information")
         return null;
     }
 }
+
+export const updateHouseInformation = async(house) => {
+    try {
+        const {data: {similar, avgPrice}} = await instance.patch('/valuate/user', house)
+        return {similar, avgPrice}
+    } catch(e) {
+        // console.log("fail to update house information")
+        return null
+    }
+}
+
+export const deleteValuate = async(_id) => {
+    await instance.delete('/valuate/user', {data: {_id}})
+        .catch((err) => {
+            throw err;
+        })
+}
+
 export const axiosGetHouses = async (params) => {
     try {        
         // console.log("get houses", params)
@@ -122,7 +142,7 @@ export const axiosGetDetail = async (id) => {
             detail } } = await instance.get(`/houses/${id}`,{params:{id}});
         return { buildingType, unitPrice, ...detail};
     } catch (e) {
-        // console.log("fail to get detail");
+        console.log("fail to get detail");
         throw e;
     }
 }

@@ -4,11 +4,12 @@ import { House_Pin, House_Cluster,Current_Pin, House_Eval_Pin, Similar_House_Pin
 import House_Detail from '../component/House_detail';
 import { axiosGetDetail } from '../axios/axios';
 import useSupercluster from 'use-supercluster';
+import {Result} from 'antd';
 
 // const AnyReactComponent = ({ text }) => <div>{text}</div>;
 
 const Map = ({ points, houses, setManualPrice, apiKey, 
-    getMyHouses, isAdminMode, cen, setCen, ...rest }) => { //
+    getMyHouses, isAdminMode, cen, setCen, showSimilar, setMyHouseOnly, ...rest }) => { //
     const [zoom,setZoom] = useState(14.0);
     const [bounds, setBounds] = useState(null);
     const [ptrCoordinate, setPtrCod] = useState(null);
@@ -17,6 +18,9 @@ const Map = ({ points, houses, setManualPrice, apiKey,
     const [clickKey, setClickKey] = useState(null);
     const [newHouse, setNewHouse] = useState(null)
     const [similarHouses, setSimilarHouses] = useState(null)
+    const [reAddress, setReAddress] = useState(false)
+    const [newPosition, setNewPosition] = useState(null)
+    const [updatedHouseID, setUpdatedHouseID] = useState(null)
 
     const { clusters, supercluster } = useSupercluster({
       points,
@@ -39,6 +43,13 @@ const Map = ({ points, houses, setManualPrice, apiKey,
 
     const getHouseDetail = async (id) => {
       // console.log(id);
+      if(newHouse) {
+        if(newHouse.showInfor) {
+          let tempHouse = newHouse
+          tempHouse.showInfor = false
+          setNewHouse(tempHouse)
+        }
+      }
       setClickKey(null);
       // console.log("getting detail...",id);
       try {
@@ -112,6 +123,14 @@ const Map = ({ points, houses, setManualPrice, apiKey,
     }
 
     const onSetMark = (point) => {
+      if(reAddress) {
+        const {lat, lng} = point
+        setNewPosition({lat, lng})
+        return
+      }
+      if(updatedHouseID) {
+        setUpdatedHouseID(null)
+      }
       if(similarHouses) {
         setSimilarHouses(null)
       }
@@ -166,10 +185,10 @@ const Map = ({ points, houses, setManualPrice, apiKey,
       setCen({lat, lng})
     }
 
-    const showNewHouse = async(similar, avgPrice, buildingType, floor, age) => {
+    const showNewHouse = async(lat, lng, similar, avgPrice, buildingType, floor, age) => {
       await setNewHouse({
-        lat: ptrCoordinate.lat,
-        lng: ptrCoordinate.lng,
+        lat,
+        lng,
         avgPrice,
         buildingType,
         floor,
@@ -177,12 +196,16 @@ const Map = ({ points, houses, setManualPrice, apiKey,
         showInfor: true
       })
       setPtrCod(null)
+      showSim(similar)
+    }
+
+    const showSim = (similar) => {
+      setMyHouseOnly()
       setSimilarHouses(similar)
     }
 
-    const handleAddHouses = () => {
-      if(newHouse) setNewHouse(null)
-      getMyHouses()
+    const onReAddress = () => {
+      setReAddress(true)
     }
 
     // ========== set Boundaries ========
@@ -255,9 +278,6 @@ const Map = ({ points, houses, setManualPrice, apiKey,
     // ============ render myhouses =======
     const houseMarkers = (houses)? houses.map( house => {
       const {coordinate,similar,_id, ...rest} = house;
-      const showSim = () => {
-        setSimilarHouses(similar)
-      }
       // console.log("housemarker",house);
       return (
       <House_Eval_Pin
@@ -268,7 +288,11 @@ const Map = ({ points, houses, setManualPrice, apiKey,
         hover={hoverKey === _id}
         click={clickKey === _id}
         setManualPrice={setManualPrice}
-        showSim={showSim}
+        showSim={() => {showSim(similar)}}
+        getMyHouses={getMyHouses}
+        showForm={showForm}
+        moveCen={moveCen}
+        showNewHouse={showNewHouse}
         {...rest}
       />
     )}
@@ -280,17 +304,22 @@ const Map = ({ points, houses, setManualPrice, apiKey,
       return (
         <Similar_House_Pin 
           key={_id}
+          id={_id}
           unitPrice={unitPrice}
           lat={coordinate.lat}
           lng={coordinate.lng}
+          hover={hoverKey === _id}
+          click={clickKey === _id}
+          getDetail={getHouseDetail}
           {...rest}
         />
       )
     }): <></>
 
 
-    if (!apiKey.length) {
-      return <></>
+    if (!apiKey || 0 === apiKey.length) {
+      // console.log("api",apiKey)
+      return <h1>Loading Map, you can try to log out if the map doesn't show up!</h1>;
     }
 
     return(
@@ -320,10 +349,12 @@ const Map = ({ points, houses, setManualPrice, apiKey,
                 lng={ptrCoordinate.lng}
                 moveCen={moveCen}
                 showNewHouse={showNewHouse}
-                handleAddHouses={handleAddHouses}
               />
             ): newHouse? (
               <New_House_pin 
+                key="newPin"
+                hover={hoverKey==="newPin"}
+                click={clickKey==="newPin"}
                 lat={newHouse.lat}
                 lng={newHouse.lng}
                 avgPrice={newHouse.avgPrice}
@@ -335,6 +366,7 @@ const Map = ({ points, houses, setManualPrice, apiKey,
             ): <></>}
             {similarMarkers}
           </GoogleMapReact>
+          
           {(houseDetail)?
             <House_Detail detail={houseDetail} onClose={closeDetail}/>
             : <></>
