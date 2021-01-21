@@ -119,6 +119,7 @@ function House_Detail({detail, onClose}) {
                 title="unitPrice"
                 content={priceConvert(detail.unitPrice)}
                 before="NT$"
+                after=" / 坪"
               />
             </Col>
             <Col span={12}>

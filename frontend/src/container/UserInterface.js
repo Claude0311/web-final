@@ -75,6 +75,8 @@ const UserInterface = ({id,isAuth, logout, history,...rest})=> {
         setPoints([]);
         setMyPoints(houses);
     }
+
+
     // view all houses i have
     const getMyHouses = async ()  => {
         const myHouses = await axiosUserGetValuate();
@@ -331,7 +333,6 @@ const UserInterface = ({id,isAuth, logout, history,...rest})=> {
                       name="Search Options"
                       setCriteria={handleCriteria}
                       onSearch={searchHousebyAddr}
-                      isAdminMode={isAdminMode}
                   />
               </span>
               <span>
@@ -364,6 +365,8 @@ const UserInterface = ({id,isAuth, logout, history,...rest})=> {
                         isAdminMode={isAdminMode}
                         setManualPrice={setManualPrice}
                         getMyHouses={getMyHouses}
+                        showSimilar={showSimilar}
+                        setMyHouseOnly={setMyHouseOnly}
                         cen={cen}
                         setCen={setCen}
                     /> )}

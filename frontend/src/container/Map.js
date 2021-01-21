@@ -8,7 +8,7 @@ import useSupercluster from 'use-supercluster';
 // const AnyReactComponent = ({ text }) => <div>{text}</div>;
 
 const Map = ({ points, houses, setManualPrice, apiKey, 
-    getMyHouses, isAdminMode, cen, setCen, ...rest }) => { //
+    getMyHouses, isAdminMode, cen, setCen, showSimilar, setMyHouseOnly, ...rest }) => { //
     const [zoom,setZoom] = useState(14.0);
     const [bounds, setBounds] = useState(null);
     const [ptrCoordinate, setPtrCod] = useState(null);
@@ -75,13 +75,6 @@ const Map = ({ points, houses, setManualPrice, apiKey,
 
     const onMarkClick = (key, childprops) => {
       // console.log("click",key);
-      if(newHouse) {
-        setNewHouse(null)
-        getMyHouses()
-      }
-      if(similarHouses) {
-        setSimilarHouses(null)
-      }
       const {lat, lng} = childprops;
       // compute elipse radius from center
       const dely = 2.8*(lat-cen.lat)/(bounds[3]-bounds[1]);
@@ -202,6 +195,11 @@ const Map = ({ points, houses, setManualPrice, apiKey,
         showInfor: true
       })
       setPtrCod(null)
+      showSim(similar)
+    }
+
+    const showSim = (similar) => {
+      setMyHouseOnly()
       setSimilarHouses(similar)
     }
 
@@ -279,9 +277,6 @@ const Map = ({ points, houses, setManualPrice, apiKey,
     // ============ render myhouses =======
     const houseMarkers = (houses)? houses.map( house => {
       const {coordinate,similar,_id, ...rest} = house;
-      const showSim = () => {
-        setSimilarHouses(similar)
-      }
       // console.log("housemarker",house);
       return (
       <House_Eval_Pin
@@ -292,7 +287,7 @@ const Map = ({ points, houses, setManualPrice, apiKey,
         hover={hoverKey === _id}
         click={clickKey === _id}
         setManualPrice={setManualPrice}
-        showSim={showSim}
+        showSim={() => {showSim(similar)}}
         getMyHouses={getMyHouses}
         showForm={showForm}
         moveCen={moveCen}
