@@ -44,7 +44,7 @@ const show_user = async (req,res,next) => {
         .populate('similar')
         .catch(dbCatch)
     res.status(200).send(valuates)
-    await Valuate.updateMany({user},{$set:{unread:false}}).catch(e=>{console.log(e)})
+    await Valuate.updateMany({user,unread:true},{$set:{unread:false}}).catch(e=>{console.log(e)})
 }
 
 export default asyncHandler(show_user)

@@ -20,7 +20,7 @@ import { dbCatch } from "../../error"
 const update_auth = async (req,res,next) => {
     const {_id,manualPrice} = req.body
     await Valuate
-      .updateOne({_id},{manualPrice,processed:true, unread: true})
+      .updateOne({_id},{manualPrice:Math.round(manualPrice),processed:true, unread: true})
       .catch(dbCatch)
     res.status(204).end()
 }

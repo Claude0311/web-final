@@ -58,7 +58,7 @@ const scoreTemplate = {
     buildType:{
         description:{prefix:'同類房屋(公寓、華夏、大樓)'},
         rule:(param)=>{
-            return ({buildType:userB},{buildType:dbB})=>{
+            return ({buildingType:userB},{buildingType:dbB})=>{
                 return userB===dbB
             }
         }
