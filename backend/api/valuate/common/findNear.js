@@ -9,7 +9,6 @@ import Score from '../../../model/Score'
 
 const findNear = async (req,res,next) => {
     const {coordinate:{lat,lng},buildingType,floor,age} = req.valuate
-    // console.log(lat,lng,buildingType,age,floor)
     const {outline,detail} = await Score.mustRule(req.valuate)
     let nears = await House
         .find(outline)
@@ -20,7 +19,6 @@ const findNear = async (req,res,next) => {
         .sort({_id:-1})
         .catch(dbCatch)
     nears = nears.filter(({detail})=>detail!==null)
-    // console.log('nears',nears)
     if(nears.length===0){
         console.log('too far', {lat,lng})
         const valuate = req.valuate

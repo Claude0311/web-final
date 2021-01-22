@@ -1,6 +1,7 @@
 import mongoose from 'mongoose'
 const Schema = mongoose.Schema
 import scoreTemplate from './scoreTemplate'
+import _ from 'lodash'
 
 const Score = new Schema({
     priority:{type:Number,required:true},
@@ -61,8 +62,8 @@ Score.statics.mustRule = async function(users){
      */
     const reduce = ({outline,detail},{must},currentIndex,array)=>{
         const [boo, que] = must(users)
-        if(boo) return {outline:{...outline,...que},detail}
-        else return {outline,detail:{...detail,...que}}
+        if(boo) return {outline:_.merge(outline,que),detail}
+        else return {outline,detail:_.merge(detail,que)}
     }
     const mustRules = await this.find({priority:1})
     const query = mustRules.reduce(reduce,{outline:{},detail:{}})
@@ -70,4 +71,4 @@ Score.statics.mustRule = async function(users){
     return query
 }
 
-export default mongoose.model('Score', Score)
+export default mongoose.model('Score2', Score)

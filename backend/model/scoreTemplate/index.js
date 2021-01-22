@@ -27,7 +27,7 @@ const scoreTemplate = {
         must:(param)=>{
             return ({floor})=>{
                 if(floor===undefined) return [false,{}]
-                if(floor===1) return [false,{'detail.floor.floor':{$eq:1}}]
+                if(floor===1) return [false,{'floor.floor':{$eq:1}}]
                 return [false, {'floor.floor':{$gt:1}}]
             }
         }
