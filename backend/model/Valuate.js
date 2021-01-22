@@ -18,4 +18,4 @@ const Valuate = new Schema({
     manualPrice: Number
 }, { timestamps: { createdAt: 'created_at' }})
 
-export default mongoose.model('Valuate_fake2', Valuate)
+export default mongoose.model('Valuate_fake3', Valuate)

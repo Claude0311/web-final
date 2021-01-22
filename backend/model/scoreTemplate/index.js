@@ -8,6 +8,12 @@ const scoreTemplate = {
                 if(user.floor===undefined || db.detail.floor.floor === -1) return false
                 return Math.abs(user.floor-db.detail.floor.floor)<=param
             }
+        },
+        must:(param)=>{
+            return ({floor})=>{
+                if(floor===undefined) return [false,{}]
+                return [false, {'floor.floor':{ $lte:floor+param, $gte:floor-param }}]
+            }
         }
     },
     IsFirstFloor:{
@@ -17,6 +23,13 @@ const scoreTemplate = {
                 if(user.floor===undefined || db.detail.floor.floor === -1) return false
                 return !((user.floor===1) ^ (db.detail.floor.floor===1))
             }
+        },
+        must:(param)=>{
+            return ({floor})=>{
+                if(floor===undefined) return [false,{}]
+                if(floor===1) return [false,{'detail.floor.floor':{$eq:1}}]
+                return [false, {'floor.floor':{$gt:1}}]
+            }
         }
     },
     Age:{
@@ -25,6 +38,12 @@ const scoreTemplate = {
             return ({age},{detail})=>{
                 if(age===undefined) return false
                 return Math.abs(age-detail.age)<=param
+            }
+        },
+        must:(param=5)=>{
+            return ({age})=>{
+                if(age===undefined) return [false,{}]
+                return [false, {'age':{ $gte:age-param, $lte:age+param }}]
             }
         }
     },
@@ -42,6 +61,14 @@ const scoreTemplate = {
                 ) return true
                 else return false
             }
+        },
+        must:(param)=>{
+            return ({coordinate:{lat,lng}})=>{
+                return [true, {
+                    'coordinate.lat':{$gt:lat-meter2Lat*param,$lt:lat+meter2Lat*param},
+                    'coordinate.lng':{$gt:lng-meter2Lng*param,$lt:lng+meter2Lng*param}
+                }]
+            }
         }
     },
     Time:{
@@ -53,6 +80,14 @@ const scoreTemplate = {
                 const ago = (nowTime.getFullYear()-1911)*100+nowTime.getMonth()
                 return ago<=soldTime
             }
+        },
+        must:(param=6)=>{
+            return ()=>{
+                const nowTime = new Date()
+                nowTime.setMonth(nowTime.getMonth()-param)
+                const ago = (nowTime.getFullYear()-1911)*100+nowTime.getMonth()
+                return [false, {'soldTime':{$gte:ago}}]
+            }
         }
     },
     buildType:{
@@ -61,7 +96,8 @@ const scoreTemplate = {
             return ({buildingType:userB},{buildingType:dbB})=>{
                 return userB===dbB
             }
-        }
+        },
+        must:(param)=>(({buildingType})=>([true,{buildingType}]))
     }
 }
 

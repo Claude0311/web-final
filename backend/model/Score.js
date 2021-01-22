@@ -22,7 +22,10 @@ Score.virtual('description').get(function(){
     return myDescription
 })
 
-
+Score.virtual('must').get(function(){
+    const mustRule = scoreTemplate[this.className].must
+    return mustRule(this.param)//user=>query
+})
 
 Score.statics.myRule = async function myRule(){
     let lastPri = 0
@@ -46,6 +49,25 @@ Score.statics.myRule = async function myRule(){
     const rules = (await this.find().sort({priority:1})).reduce(reduce,[])
     // console.log({rules})
     return rules
+}
+
+Score.statics.mustRule = async function(users){
+    /**
+     * 
+     * @param {Object} accumulator 
+     * @param {Object} currentValue 
+     * @param {Number} currentIndex 
+     * @param {Array} array 
+     */
+    const reduce = ({outline,detail},{must},currentIndex,array)=>{
+        const [boo, que] = must(users)
+        if(boo) return {outline:{...outline,...que},detail}
+        else return {outline,detail:{...detail,...que}}
+    }
+    const mustRules = await this.find({priority:1})
+    const query = mustRules.reduce(reduce,{outline:{},detail:{}})
+    console.log('query',query)
+    return query
 }
 
 export default mongoose.model('Score', Score)

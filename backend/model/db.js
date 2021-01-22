@@ -4,7 +4,7 @@ env.config()
 
 const DB_URL1 = ''
 const DB_URL = process.env.MONGO_URI||DB_URL1
-console.log(`url:${DB_URL}`)
+// console.log(`url:${DB_URL}`)
 
 mongoose.set('useUnifiedTopology', true)
 mongoose.set('useCreateIndex', true)
