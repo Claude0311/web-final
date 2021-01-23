@@ -5,7 +5,6 @@ import houseType from './houseType';
 
 const url1 = "https://plvr.land.moi.gov.tw/Download?fileName=F_lvr_land_A.csv"
 const url2 = "https://plvr.land.moi.gov.tw/DownloadSeason?season=109S4&fileName=F_lvr_land_A.csv"
-const url3 = "https://sample-videos.com/csv/Sample-Spreadsheet-10-rows.csv"
 
 const c2n = (chin)=>{
   let floor = 0 
@@ -29,7 +28,7 @@ const crawHouses = async ()=>{
     // console.log(parsedCsv[0].map((elem,index)=>(`#${index}: ${elem}`)))
     const houses = await Promise.all(
       parsedCsv.filter((arr)=>(
-        arr[0]==='永和區' && 
+        (arr[0]==='永和區'||arr[0]==='中和區') && 
         arr[1].includes('房地') &&
         houseType.includes(arr[11]) &&
         arr[9].includes('層') && !(arr[9].includes('，')) &&

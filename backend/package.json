@@ -28,6 +28,7 @@
     "server": "nodemon --experimental-specifier-resolution=node --experimental-modules server.js",
     "test": "nodemon --experimental-specifier-resolution=node --experimental-modules test.js",
     "start": "node --experimental-specifier-resolution=node server.js",
+    "preload": "nodemon --experimental-specifier-resolution=node --experimental-modules model/preload.js",
     "doc": "apidoc -i ./api -o apidoc-out && apidoc-markdown -p apidoc-out --prepend docTemplate/prepend.md -o readme.md -t docTemplate/plate.md"
   },
   "type": "module"

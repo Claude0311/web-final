@@ -14,4 +14,5 @@ Hash.statics.getHash = async function(){
     return hash
 }
 
+export {Hash}
 export default mongoose.model('hash',Hash)

@@ -7,7 +7,7 @@ import getData from './getData'
 import DB from '../model/db'
 
 
-export default async (fromWeb=false)=>{
+export default async (init=false)=>{
     const data = await getData()
     console.log('selected data:',data.length)
     data.forEach(async({overview,detail})=>{

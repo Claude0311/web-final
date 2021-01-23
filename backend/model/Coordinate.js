@@ -12,4 +12,5 @@ const Cor = new Schema({
     }
 })
 
+export {Cor}
 export default mongoose.model('Coordinate', Cor)

@@ -71,4 +71,5 @@ Score.statics.mustRule = async function(users){
     return query
 }
 
-export default mongoose.model('Score2', Score)
+export {Score}
+export default mongoose.model('Score', Score)

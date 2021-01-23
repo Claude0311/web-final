@@ -79,9 +79,15 @@ const getHouses = async (req,res,next) => {
         (space===undefined || Object.entries(space).length===0)
     ){
         houses = await House
-            .find(query,{_id:0,id:1,buildingType:1,coordinate:1,unitPrice:1})
-            .sort({ _id: -1 }).limit(100)
+            .find(query,{_id:0,id:1,buildingType:1,coordinate:1,unitPrice:1,detail:1})
+            .populate({
+                path:'detail',
+                options: { sort: {soldTime:-1}  } ,
+                select:'soldTime',
+            }).sort({'detail.soldTime':-1})
+            .limit(100)
             .catch(dbCatch)
+        console.log(houses.map(({unitPrice,coordinate:{lat},detail:{soldTime}})=>soldTime))
     }else{
         houses = await House
             .find(query,{_id:0,id:1,buildingType:1,coordinate:1,unitPrice:1,detail:1})
