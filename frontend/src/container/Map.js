@@ -9,7 +9,7 @@ import {Result} from 'antd';
 // const AnyReactComponent = ({ text }) => <div>{text}</div>;
 
 const Map = ({ points, houses, setManualPrice, apiKey, 
-    getMyHouses, isAdminMode, cen, setCen, showSimilar, setMyHouseOnly, ...rest }) => { //
+    getMyHouses, isAdminMode, cen, setCen, showSimilar, setMyHouseOnly, onHome, ...rest }) => { //
     const [zoom,setZoom] = useState(14.0);
     const [bounds, setBounds] = useState(null);
     const [ptrCoordinate, setPtrCod] = useState(null);
@@ -86,7 +86,8 @@ const Map = ({ points, houses, setManualPrice, apiKey,
         handleMove(key,{lat,lng});
       } else {
         setClickKey(key);
-      }        
+      }
+      if(key !== "myPin") setPtrCod(null)        
     }
 
     const getClusterClick = (key) => { // key: Number
@@ -123,37 +124,39 @@ const Map = ({ points, houses, setManualPrice, apiKey,
     }
 
     const onSetMark = (point) => {
-      if(reAddress) {
-        const {lat, lng} = point
-        setNewPosition({lat, lng})
-        return
-      }
-      if(updatedHouseID) {
-        setUpdatedHouseID(null)
-      }
+      // if(reAddress) {
+      //   const {lat, lng} = point
+      //   setNewPosition({lat, lng})
+      //   return
+      // }
+      // if(updatedHouseID) {
+      //   setUpdatedHouseID(null)
+      // }
       if(similarHouses) {
         setSimilarHouses(null)
+        onHome()
+        setNewHouse(null)
       }
       if (clickKey || isAdminMode) {
         setClickKey(null);
         return;
       }
-      if(newHouse) {
-        if(newHouse.showInfor) {
-          let tempHouse = newHouse
-          tempHouse.showInfor = false
-          setNewHouse(tempHouse)
-          return
-        }
-      }
+      // if(newHouse) {
+      //   if(newHouse.showInfor) {
+      //     let tempHouse = newHouse
+      //     tempHouse.showInfor = false
+      //     setNewHouse(tempHouse)
+      //     return
+      //   }
+      // }
       if (ptrCoordinate) {
         setPtrCod(null);
         return;
       }
-      if(newHouse) {
-        setNewHouse(null)
-        getMyHouses()
-      }
+      // if(newHouse) {
+      //   setNewHouse(null)
+      //   getMyHouses()
+      // }
       const {lat, lng} = point;
       setPtrCod({lat, lng});
       
