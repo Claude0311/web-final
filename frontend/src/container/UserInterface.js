@@ -369,6 +369,7 @@ const UserInterface = ({id,isAuth, logout, history,...rest})=> {
                         setMyHouseOnly={setMyHouseOnly}
                         cen={cen}
                         setCen={setCen}
+                        onHome={onHome}
                     /> )}
                 />
                 <Route path='/score' render={ (props) => 
