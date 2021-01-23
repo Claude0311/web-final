@@ -4,7 +4,9 @@ import getCor from './getCoordinate'
 import houseType from './houseType';
 
 const url1 = "https://plvr.land.moi.gov.tw/Download?fileName=F_lvr_land_A.csv"
-const url2 = "https://plvr.land.moi.gov.tw/DownloadSeason?season=109S4&fileName=F_lvr_land_A.csv"
+const url2 = "https://plvr.land.moi.gov.tw/DownloadSeason?season=109S3&fileName=F_lvr_land_A.csv"
+const url3 = "https://plvr.land.moi.gov.tw/DownloadSeason?season=109S4&fileName=H_lvr_land_A.csv"
+const url4 = "https://plvr.land.moi.gov.tw/Download?fileName=H_lvr_land_A.csv"
 
 const c2n = (chin)=>{
   let floor = 0 
@@ -22,17 +24,17 @@ const c2n = (chin)=>{
   }
 }
 
-const crawHouses = async ()=>{
-    const {data} = await axios.get(url1)//,{responseType: 'blob'})
+const crawHouses = async (url,isTai)=>{
+    const {data} = await axios.get(url)//,{responseType: 'blob'})
     const parsedCsv = CSV.parse(data);
     // console.log(parsedCsv[0].map((elem,index)=>(`#${index}: ${elem}`)))
     const houses = await Promise.all(
       parsedCsv.filter((arr)=>(
-        (arr[0]==='永和區'||arr[0]==='中和區') && 
+        (!isTai || arr[0]==='永和區'||arr[0]==='中和區') && 
         arr[1].includes('房地') &&
         houseType.includes(arr[11]) &&
         arr[9].includes('層') && !(arr[9].includes('，')) &&
-        !(arr[26].includes('間之交易')) &&
+        !(arr[26].includes('間之交易')) && !(arr[26].includes('含')) &&
         arr[14]!=='' && arr[7]!=='' &&
         arr[27]!=='' &&
         parseInt(arr[7])>1070000
@@ -114,7 +116,7 @@ const crawHouses = async ()=>{
                 return false
             }
           }
-          console.log('park',parkingSpace,parkingPrice)
+          // console.log('park',parkingSpace,parkingPrice)
         } 
         const unitPrice = Math.round((totalPrice-parkingPrice)/(totalSpace-parkingSpace))
         const soldTime = {
@@ -139,6 +141,7 @@ const crawHouses = async ()=>{
           },
           detail:{
             soldTime:soldTime.year*100+soldTime.month,
+            note:arr[26],
             address,
             price:{
               totalPrice,

@@ -7,17 +7,18 @@ import getData from './getData'
 import DB from '../model/db'
 
 
-export default async (init=false)=>{
-    const data = await getData()
+export default async (url,isTai)=>{
+    const data = await getData(url,isTai)
     console.log('selected data:',data.length)
     data.forEach(async({overview,detail})=>{
         try{
+            if(overview===undefined || detail===undefined) return
             const house = await new House(overview).save()
                 // .catch(e=>{throw new Error()})
             const {_id} = await new House_detail(detail).save()
-            console.log('accept',_id)
             house.detail = _id
             await house.save()
+            console.log('accept',_id)
         }catch(e){
             console.log('skip',overview.id)
         }

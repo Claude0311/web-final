@@ -4,6 +4,7 @@ const Schema = mongoose.Schema
 const House_detail = new Schema({
     soldTime: Number,
     address: String,
+    note: String,
     price: {
         totalPrice: Number,
         parkingPrice: {type:Number,default:0}

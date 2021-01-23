@@ -20,7 +20,8 @@ DB.once('open',()=>{
 
 	cron.schedule('0 0 23 1 * *', () => {//每月的1號23時0分0秒執行
 		console.log('first')
-		craw()
+		craw("https://plvr.land.moi.gov.tw/Download?fileName=F_lvr_land_A.csv",true)
+		craw("https://plvr.land.moi.gov.tw/Download?fileName=H_lvr_land_A.csv",false)
 	})
 	//post, get時的解碼json type
 	app.use(bodyParser.urlencoded({ extended: true }))
