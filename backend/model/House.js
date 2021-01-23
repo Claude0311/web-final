@@ -10,6 +10,7 @@ const House = new Schema({
         lng:Number//經度，每0.00001差1.0089公尺
     },
     unitPrice: Number,
+    soldTime: Number,
     detail:  { type: Schema.Types.ObjectId, ref: 'house_detail' },
 })
 

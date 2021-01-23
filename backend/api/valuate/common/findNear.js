@@ -16,7 +16,7 @@ const findNear = async (req,res,next) => {
             path:'detail',
             match:detail
         })
-        .sort({_id:-1})
+        .sort({soldTime:-1})
         .catch(dbCatch)
     nears = nears.filter(({detail})=>detail!==null)
     if(nears.length===0){

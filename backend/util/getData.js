@@ -134,7 +134,8 @@ const crawHouses = async ()=>{
             id:arr[27],
             buildingType:houseType.indexOf(arr[11]),
             coordinate,
-            unitPrice
+            unitPrice,
+            soldTime:soldTime.year*100+soldTime.month
           },
           detail:{
             soldTime:soldTime.year*100+soldTime.month,

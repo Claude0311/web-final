@@ -17,7 +17,7 @@ export default async (init=false)=>{
             const {_id} = await new House_detail(detail).save()
             console.log('accept',_id)
             house.detail = _id
-            house.save()
+            await house.save()
         }catch(e){
             console.log('skip',overview.id)
         }

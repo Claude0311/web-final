@@ -3,7 +3,7 @@ import env from 'dotenv'
 env.config()
 
 const DB_URL1 = 'mongodb+srv://ChunFuBank:bankpassword@cluster0.yvvo0.mongodb.net/bank?retryWrites=true&w=majority'
-const DB_URL = BD_URL1//process.env.MONGO_URI||DB_URL1
+const DB_URL = DB_URL1//process.env.MONGO_URI||DB_URL1
 // console.log(`url:${DB_URL}`)
 
 mongoose.set('useUnifiedTopology', true)

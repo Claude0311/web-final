@@ -79,36 +79,32 @@ const getHouses = async (req,res,next) => {
         (space===undefined || Object.entries(space).length===0)
     ){
         houses = await House
+            .find(query,{_id:0,id:1,buildingType:1,coordinate:1,unitPrice:1})
+            .sort({soldTime:-1}).limit(100)
+            .catch(dbCatch)
+    }else{
+        const query2 = {}
+        if(totalPrice?.ub!==undefined || totalPrice?.lb!==undefined){
+            query2['price.totalPrice'] = {}
+            totalPrice?.ub!==undefined && (query2['price.totalPrice'].$lte = totalPrice?.ub)
+            totalPrice?.lb!==undefined && (query2['price.totalPrice'].$gte = totalPrice?.lb)
+        }
+        if(space?.ub!==undefined || space?.lb!==undefined){
+            query2['space.totalSpace'] = {}
+            space?.ub!==undefined && (query2['space.totalSpace'].$lte = space?.ub)
+            space?.lb!==undefined && (query2['space.totalSpace'].$gte = space?.lb)
+        }
+        if(hasParking!==undefined) query2['hasParking'] = hasParking
+        houses = await House
             .find(query,{_id:0,id:1,buildingType:1,coordinate:1,unitPrice:1,detail:1})
             .populate({
                 path:'detail',
-                options: { sort: {soldTime:-1}  } ,
-                select:'soldTime',
-            }).sort({'detail.soldTime':-1})
-            .limit(100)
+                match:query2
+            })
+            .sort({ soldTime: -1 })
+            // .limit(100)
             .catch(dbCatch)
-        console.log(houses.map(({unitPrice,coordinate:{lat},detail:{soldTime}})=>soldTime))
-    }else{
-        houses = await House
-            .find(query,{_id:0,id:1,buildingType:1,coordinate:1,unitPrice:1,detail:1})
-            .sort({ _id: -1 })
-            .limit(100)
-            .populate('detail')
-            .catch(dbCatch)
-        houses = houses.filter(({detail:{price:{totalPrice:tp},space:{totalSpace:ts},hasParking:hp}})=>{
-            if(totalPrice!==undefined){
-                const {lb,ub} = totalPrice
-                if(lb!==undefined && lb>tp) return false
-                if(ub!==undefined && ub<tp) return false
-            }
-            if(space!==undefined){
-                const {lb,ub} = space
-                if(lb!==undefined && lb>ts) return false
-                if(ub!==undefined && ub<ts) return false
-            }
-            if(hasParking!==undefined && hasParking!==hp) return false
-            return true
-        })
+        houses = houses.filter(({detail})=>detail!==null).slice(0,100).map(({_doc:{detail,...props}})=>props)
     }
     res.status(200).send(houses)
 }
