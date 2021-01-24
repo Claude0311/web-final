@@ -14,6 +14,12 @@
 $ yarn install-all
 ```
 #### develop mode
+請在/backend/.env中設定：
+```
+USE_AUTH = true
+MONGO_URI=mongodb+srv://ChunFuBank:bankpassword@cluster0.nqvst.mongodb.net/Bank?retryWrites=true&w=majority
+```
+並在terminal跑：
 ```
 $ yarn dev
 ```
