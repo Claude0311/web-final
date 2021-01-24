@@ -18,8 +18,8 @@ const app = express()
 DB.once('open',()=>{
 	console.log('mongoDB connected')
 
-	cron.schedule('0 0 23 1 * *', () => {//每月的1號23時0分0秒執行
-		console.log('first')
+	cron.schedule('0 59 15 1 * *', () => {//每月的1號23時0分0秒執行
+		console.log('loading new data')
 		craw("https://plvr.land.moi.gov.tw/Download?fileName=F_lvr_land_A.csv",true)
 		craw("https://plvr.land.moi.gov.tw/Download?fileName=H_lvr_land_A.csv",false)
 	})
