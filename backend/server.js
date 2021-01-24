@@ -67,7 +67,7 @@ DB.once('open',()=>{
 	}
 
 	app.listen(process.env.PORT || 4000,  () => {
-		wakeDyno('https://houses-valuation.herokuapp.com/',{
+		wakeDyno('https://waketester.herokuapp.com',{
 			logging: false,
 			stopTimes: { start: '16:00', end: '00:00' }//time zone +0，so -8hr
 		})
