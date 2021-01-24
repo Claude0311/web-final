@@ -80,7 +80,7 @@ const getHouses = async (req,res,next) => {
     ){
         houses = await House
             .find(query,{_id:0,id:1,buildingType:1,coordinate:1,unitPrice:1})
-            .sort({soldTime:-1})//.limit(100)
+            // .sort({soldTime:-1}).limit(100)
             .catch(dbCatch)
     }else{
         const query2 = {}
@@ -101,10 +101,10 @@ const getHouses = async (req,res,next) => {
                 path:'detail',
                 match:query2
             })
-            .sort({ soldTime: -1 })
+            // .sort({ soldTime: -1 })
             // .limit(100)
             .catch(dbCatch)
-        houses = houses.filter(({detail})=>detail!==null).slice(0,100).map(({_doc:{detail,...props}})=>props)
+        houses = houses.filter(({detail})=>detail!==null).map(({_doc:{detail,...props}})=>props)//.slice(0,100)
     }
     res.status(200).send(houses)
 }
